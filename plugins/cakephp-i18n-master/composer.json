@@ -1,0 +1,25 @@
+{
+    "name": "dvdglth/cakephp-i18n",
+    "description": "MultiLanguage plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.5.9",
+        "cakephp/cakephp": ">=3.3.2 <4.0.0",
+        "admad/cakephp-i18n": "^1.0",
+        "cakephp/localized": "^3.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MultiLanguage\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MultiLanguage\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
