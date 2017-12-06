@@ -85,8 +85,16 @@
                       <div class="panel-heading">
                         <h4 class="panel-title">
                           <label for='r14' style='width: auto;'>
+                             
+                            <?php if($transportation->id == $trip['transportation_id']){ ?>
+                              <input type='radio' name='transportation_id' value='<?php echo $transportation->id; ?>'  checked="" required />
+                            <?php echo $transportation['title_'.$config_language]; ?>
+                            <?php }else{ ?>
                             <input type='radio' name='transportation_id' value='<?php echo $transportation->id; ?>' required />
-                            <?php echo $transportation['title_'.$config_language]; ?></label>
+                            <?php echo $transportation['title_'.$config_language]; ?>
+                            <?php } ?>
+                            
+                            </label>
                         </h4>
                       </div>
                       <div id="collapseFive" class="transportv-acc">
@@ -96,7 +104,11 @@
                               <?php foreach ($transportation->transportationvehicles as $vehicle) { ?>
                                 <div class="col-md-4 padding-left-n">
                                     <div class="form-group">
+                                        <?php if($vehicle['id'] == $trip['transportationvehicle_id']){ ?>
+                                        <input type="radio" value="<?php echo $vehicle['id'] ?>" name="transportationvehicle_id" id="c11" checked="" required>
+                                        <?php }else{ ?>
                                         <input type="radio" value="<?php echo $vehicle['id'] ?>" name="transportationvehicle_id" id="c11" required>
+                                        <?php } ?>
                                         <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/shirt.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/shirtb.png" alt="">
                                         </label>
                                         <p><?php echo $vehicle['title_'.$config_language] ?></p>
@@ -117,8 +129,8 @@
                   </div>
                 </div>
                 <div class="right">
-                  <button type="submit" class="btn btn-primary blue">Save</button>
-                  <button type="submit" class="btn btn-default blue grey">Next</button>
+                  <button type="submit" class="btn btn-primary blue"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="submit" class="btn btn-default blue grey"><?php echo $this->Text->lang('text_next'); ?></button>
                 </div>
               </div>
           <?= $this->Form->end() ?>
@@ -126,30 +138,36 @@
             
             
             <div id="Paris" class="tabcontent">
+                <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data')) ?>
               <h3 class="subheadb"><?php echo $this->Text->lang('text_overview'); ?></h3>
               <div class="overview">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Name your trip</label>
-                  <input type="text" class="form-control" id="InputText">
-                  <p class="help-block right">150 Characters left</p>
+                  <label for="exampleInputEmail1"><?php echo $this->Text->lang('text_name_your_trip'); ?></label>
+                  <?php echo $this->Form->control('title_'.$config_language, array('class' => 'form-control', 'label' => false)); ?>
+<!--                  <p class="help-block right">150 Characters left</p>-->
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputSummary">Summary of your trip</label>
-                  <textarea class="form-control" rows="3"></textarea>
-                  <p class="help-block right">250 Characters left</p>
+                  <label for="exampleInputSummary"><?php echo $this->Text->lang('text_summary_your_trip'); ?></label>
+                  <?php echo $this->Form->control('summary_'.$config_language, array('class' => 'form-control', 'label' => false)); ?>
+<!--                  <p class="help-block right">250 Characters left</p>-->
                 </div>
                 <div class="form-group photos">
-                  <label for="exampleInputPassword1">Photos</label>
-                  <p class="help-block">Please upload atleast 3 pictures.<br>
-                    Click on photo to make cover, Tell more detail about your picture</p>
+                  <label for="exampleInputPassword1"><?php echo $this->Text->lang('text_photos'); ?></label>
+                  <p class="help-block"><?php echo $this->Text->lang('text_upload_only_photos'); ?></p>
+                  <div class="gallery"></div>
                   <span class="document">
-                  <input type="file" id="exampleInputFile" multiple>
-                  <a>+ Add Photos</a> </span> </div>
+                      <input type="file" name="images[]" id="gallery-photo-add" class="form-control" multiple>
+            
+                  <a>+ <?php echo $this->Text->lang('text_add_photos'); ?></a> </span> </div>
+                  
+                  <input type="hidden" name="tab" value="overview">
+                  
                 <div class="right">
-                  <button type="submit" class="btn btn-primary blue">Save</button>
-                  <button type="submit" class="btn btn-default blue grey">Next</button>
+                  <button type="submit" class="btn btn-primary blue"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="submit" class="btn btn-default blue grey"><?php echo $this->Text->lang('text_next'); ?></button>
                 </div>
               </div>
+              <?= $this->Form->end() ?>
             </div>
             
             <div id="Tokyo" class="tabcontent">
@@ -790,6 +808,9 @@ $(document).ready(function() {
 
 $(document).ready(function(){
  $('.transportv-acc').slideUp();
+    if($('.transportv-acc input[name="transportation_id"]').is(':checked')){
+        $(this).slideDown();
+    }
   $('input[name="transportation_id"]').click(function(){
     $('.transportv-acc').slideUp();
 
@@ -801,4 +822,35 @@ $(document).ready(function(){
   });
 });
 
+/**** Multiple image Preview ***/
+$(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    //$($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview).css({"width":"100px","height":"100px"});     
+                    //console.log(input.files);
+                    
+                    $(placeToInsertImagePreview).append('<img src="'+event.target.result+'"><span class="remove_img" data-id="'+input.files[i].name+'"></span>').css({"width":"100px","height":"100px"}); 
+                    
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+
+    $('#gallery-photo-add').on('change', function() {
+        imagesPreview(this, 'div.gallery');
+        //$(this).find('img').css({"width":"100px","height":"100px"});
+    });
+});
+/**** Multiple image Preview (END) ***/
 </script>

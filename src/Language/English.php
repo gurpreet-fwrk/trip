@@ -57,6 +57,7 @@ class English{
 
 		$lang['text_banner']					=	'find your special tour today';
 		$lang['text_save']						=	'SAVE';
+                $lang['text_next']						=	'NEXT';
 
 		/*** Validations ***/
 
@@ -176,6 +177,12 @@ class English{
 		$lang['text_stopped_location']			=	'Stopped By Location';
 		$lang['text_main_activities']			=	'Main Activities';
 		$lang['text_main_transportation']		=	'Main Transportation';
+                
+                $lang['text_name_your_trip']		=	'Name your trip';
+                $lang['text_summary_your_trip']		=	'Summary of your trip';
+                $lang['text_photos']                    =	'Photos';
+                $lang['text_upload_only_photos']        =	'Please upload atleast 3 pictures.<br>Click on photo to make cover, Tell more detail about your picture';
+                $lang['text_add_photos']                    =	'Add Photos';
 
 		/***** Add Trip Page (End) *****/
 

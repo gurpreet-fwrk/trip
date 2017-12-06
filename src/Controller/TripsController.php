@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 
+use \Statickidz\GoogleTranslate;
+
 /**
  * Trips Controller
  *
@@ -127,11 +129,11 @@ class TripsController extends AppController
                 
                 if($this->request->data['stopped_locations'] != ''){
                     
+                    $this->Triplocations->deleteAll(['trip_id' => $id]);
+                    
                     $post = array();
                     
-                    for($i=0; $i<count($this->request->data['stopped_locations']); $i++){  
-                        
-                        $this->Triplocations->deleteAll(['trip_id' => $id]);
+                    for($i=0; $i<count($this->request->data['stopped_locations']); $i++){                          
                         
                         $post['trip_id'] = $id;
                         $post['location_id'] = $this->request->data['stopped_locations'][$i];
@@ -143,9 +145,10 @@ class TripsController extends AppController
                 }    
                 
                 if($this->request->data['activities'] != ''){
-                    for($i=0; $i<count($this->request->data['activities']); $i++){
-                        
-                        $this->Tripactivities->deleteAll(['trip_id' => $id]);
+                    
+                    $this->Tripactivities->deleteAll(['trip_id' => $id]);
+                    
+                    for($i=0; $i<count($this->request->data['activities']); $i++){      
                         
                         $this->request->data['activity_id'] = $this->request->data['activities'][$i];
                         
@@ -156,8 +159,42 @@ class TripsController extends AppController
                 }    
             }
             
+            if($this->request->data['tab'] == 'overview'){
+                
+                 $session = $this->request->session();
+
+                 echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+                 
+                $session->read('Config.language');
+                $title = $this->language($this->request->data['title_'.$session->read('Config.language')]);
+                $summary = $this->language($this->request->data['summary_'.$session->read('Config.language')]);
+                
+                $change_language = $session->read('Config.language') == 'en' ? 'ar' : 'en';
+                
+                $this->request->data['title_'.$change_language] = $title;
+                $this->request->data['summary_'.$change_language] = $summary;
+                
+                if($this->request->data['images'][0]['name'] != ''){
+                    for($i=0; $i<count($this->request->data['images']);$i++){
+                        $fileName = $this->request->data['images'][$i]['name'];
+                        $fileName = date('His') . $fileName;
+                        $uploadPath = WWW_ROOT . '/images/trips/'.$fileName;
+                        $actual_file[] = $fileName;
+                        move_uploaded_file($this->request->data['images'][$i]['tmp_name'], $uploadPath);
+                      
+                        $this->loadModel('Tripgallery');
+                        
+                        $post['trip_id'] = $id;
+                        $post['file']    = $fileName;
+                        
+                        $tripgallery = $this->Tripgallery->newEntity();                    
+                        $tripgallery = $this->Tripgallery->patchEntity($tripgallery,$post);            
+                        $this->Tripgallery->save($tripgallery);
+                    } 
+                }
+            }
             
-            $trip = $this->Trips->patchEntity($trip, $this->request->getData());
+            $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
                 $this->Flash->success(__('The trip has been saved.'));
 
@@ -215,4 +252,27 @@ class TripsController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    public function language($text){
+
+                $session = $this->request->session();
+        
+		//$source = 'en';
+                $source = $session->read('Config.language');
+
+		$target = $session->read('Config.language') == 'en' ? 'ar' : 'en';
+
+		//$text = 'Simple PHP library for talking to Googles Translate API for free.';
+
+		
+
+		$trans = new GoogleTranslate();
+
+		$result = $trans->translate($source, $target, $text);
+
+		
+
+		return $result;
+
+	}
 }

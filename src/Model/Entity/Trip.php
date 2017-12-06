@@ -59,7 +59,6 @@ class Trip extends Entity
         'title_ar' => true,
         'summary_en' => true,
         'summary_ar' => true,
-        'images' => true,
         'meetinpoint_location' => true,
         'meetingpoint_id' => true,
         'meetingpointtype_id' => true,

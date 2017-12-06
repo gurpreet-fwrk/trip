@@ -38,7 +38,7 @@
           </div>
           <form>
            <div class="row">
-               
+               <?php echo $this->Flash->render(); ?>
                <?php //echo "<pre>"; print_r($trips); echo "</pre>"; ?>
                
                <?php foreach ($trips as $trip){ ?>

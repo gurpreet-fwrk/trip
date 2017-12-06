@@ -58,7 +58,8 @@ class Arabic{
 
 		$lang['text_banner']					=	'تجد جولة خاصة بك اليوم';
 		$lang['text_save']						=	'حفظ';
-
+                $lang['text_next']						=	'التالى';
+                
 		/*** Validations ***/
 
 		$lang['error_username']					=	'الرجاء إدخال اسم المستخدم!';
@@ -173,7 +174,13 @@ class Arabic{
 		$lang['text_stopped_location']			=	'توقف عن طريق الموقع';
 		$lang['text_main_activities']			=	'الأنشطة الرئيسية';
 		$lang['text_main_transportation']		=	'النقل الرئيسي';
-
+                
+                $lang['text_name_your_trip']		=	'اسم رحلتك';
+                $lang['text_summary_your_trip']		=	'ملخص لرحلتك';
+                $lang['text_photos']                    =	'الصور';
+                $lang['text_upload_only_photos']        =	'يرجى تحميل أتليست 3 صور.<br>انقر على الصورة لجعل غطاء، مزيد من التفاصيل حول صورتك';
+                $lang['text_add_photos']                    =	'إضافة الصور';
+                
 		/***** Add Trip Page (End) *****/
 
 		if(isset($lang[$text])){
