@@ -118,14 +118,18 @@ class TripsController extends AppController
         
         $this->loadModel('Triplocations');
         $this->loadModel('Tripactivities');
+        $this->loadModel('Tripgallery');
+        $this->loadModel('Meetingpoints');
+        $this->loadModel('Meetingpointtypes');
+        
         if ($this->request->is(['patch', 'post', 'put'])) {
             
             //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
             $this->request->data['trip_id'] = $id;
             
+            /***** Tab BASIC ******/
+            
             if($this->request->data['tab'] == 'basic'){
-                
-                
                 
                 if($this->request->data['stopped_locations'] != ''){
                     
@@ -159,11 +163,13 @@ class TripsController extends AppController
                 }    
             }
             
+            /***** Tab BASIC (END) ******/
+            
+            /***** Tab OVERVIEW ******/
+            
             if($this->request->data['tab'] == 'overview'){
                 
-                 $session = $this->request->session();
-
-                 echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+                $session = $this->request->session();
                  
                 $session->read('Config.language');
                 $title = $this->language($this->request->data['title_'.$session->read('Config.language')]);
@@ -174,7 +180,7 @@ class TripsController extends AppController
                 $this->request->data['title_'.$change_language] = $title;
                 $this->request->data['summary_'.$change_language] = $summary;
                 
-                if($this->request->data['images'][0]['name'] != ''){
+                if(isset($this->request->data['images'])){
                     for($i=0; $i<count($this->request->data['images']);$i++){
                         $fileName = $this->request->data['images'][$i]['name'];
                         $fileName = date('His') . $fileName;
@@ -194,6 +200,53 @@ class TripsController extends AppController
                 }
             }
             
+            /***** Tab OVERVIEW (END) ******/
+            
+            /***** REMOVE GALLERY IMAGES ******/
+            
+            if($this->request->data['tab'] == 'remove_gallery_image'){
+                
+                if($this->Tripgallery->deleteAll(['id' => $this->request->data['id']])){
+                    echo 'success';
+                }else{
+                    echo 'error';
+                }
+                exit;
+                
+            }
+            
+            /***** REMOVE GALLERY IMAGES (END) ******/
+            
+            /******* AJAX (Get Meeting points from Location ID) ********/
+            
+            if($this->request->data['tab'] == 'get_meeting_points'){
+                
+                $meeting_points = $this->Meetingpoints->find('all', [
+                    'conditions' => ['Meetingpoints.location_id' => $this->request->data['id']]
+                ])->all()->toArray(); 
+                
+                echo json_encode($meeting_points);
+                exit;
+            }    
+            
+            /******* AJAX (Get Meeting points from Location ID) (END) ********/
+            
+            /******* AJAX (Get Meeting points from Location ID) ********/
+            
+            if($this->request->data['tab'] == 'get_meeting_points_types'){
+                
+                $meeting_point_points = $this->Meetingpointtypes->find('all', [
+                    'conditions' => ['Meetingpointtypes.location_id' => $this->request->data['location_id']]
+                ])->all()->toArray(); 
+                
+                echo json_encode($meeting_point_points);
+                exit;
+            }    
+            
+            /******* AJAX (Get Meeting points from Location ID) (END) ********/
+            
+            
+            
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
                 $this->Flash->success(__('The trip has been saved.'));
@@ -202,6 +255,8 @@ class TripsController extends AppController
             }
             $this->Flash->error(__('The trip could not be saved. Please, try again.'));
         }
+        
+        
         $locations = $this->Trips->Locations->find('list', ['limit' => 200]);
         //$transportations = $this->Trips->Transportations->find('list', ['limit' => 200]);
         $meetingpoints = $this->Trips->Meetingpoints->find('list', ['limit' => 200]);
@@ -219,18 +274,34 @@ class TripsController extends AppController
 
         $transportations = $transportations->all()->toArray();
         
-        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities'));
+        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities', 'tripgallery'));
         $this->set('_serialize', ['trip']);
         
-        /***************/
+        /************************/
         
         $this->loadModel('Triplocations');
         
-        $selected_stopped_location = $this->Triplocations->find('all', ['conditions' => ['Triplocations.trip_id' => $id], 'fields' => 'location_id'])->all()->toArray(); 
+        $selected_stopped_location = $this->Triplocations->find('all', [
+            'contain' => ['Locations'],
+            'conditions' => ['Triplocations.trip_id' => $id]
+        ])->all()->toArray(); 
         $this->set('selected_stopped_location', $selected_stopped_location);
         
+        /************************/
+                
         $selected_activities = $this->Tripactivities->find('all', ['conditions' => ['Tripactivities.trip_id' => $id]])->all()->toArray(); 
         $this->set('selected_activities', $selected_activities);
+        
+        /************************/
+        
+        $galleries = $this->Tripgallery->find('all', ['conditions' => ['Tripgallery.trip_id' => $id]])->all()->toArray(); 
+        $this->set('galleries', $galleries);
+        
+        /************************/
+        
+        
+        
+        $this->set('trip_id', $id);
     }
 
     /**
@@ -275,4 +346,8 @@ class TripsController extends AppController
 		return $result;
 
 	}
+        
+        public function addoverview(){
+            echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+        }
 }

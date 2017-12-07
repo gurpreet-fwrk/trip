@@ -40,6 +40,10 @@ class LocationsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+         
+        $this->belongsTo('Triplocations', [ 
+            'foreignKey' => 'location_id'
+        ]);
     }
 
     /**

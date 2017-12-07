@@ -19,6 +19,7 @@
         <div class="col-sm-9">
             
             <?php //echo "<pre>"; print_r($trip); echo "</pre>"; ?>
+            <?php //echo "<pre>"; print_r($galleries); echo "</pre>"; ?>
             
             <div id="London" class="tabcontent">
                <?= $this->Form->create($trip) ?>
@@ -138,25 +139,36 @@
             
             
             <div id="Paris" class="tabcontent">
-                <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data')) ?>
+                
+                <div class="loader_img" style="display:none;"><img src="<?php echo $this->request->webroot ?>images/website/loading.gif"></div>
+                
+                <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'myForm')) ?>
               <h3 class="subheadb"><?php echo $this->Text->lang('text_overview'); ?></h3>
               <div class="overview">
                 <div class="form-group">
                   <label for="exampleInputEmail1"><?php echo $this->Text->lang('text_name_your_trip'); ?></label>
-                  <?php echo $this->Form->control('title_'.$config_language, array('class' => 'form-control', 'label' => false)); ?>
+                  <?php echo $this->Form->control('title_'.$config_language, array('class' => 'form-control', 'label' => false, 'id' => 'trip_title')); ?>
 <!--                  <p class="help-block right">150 Characters left</p>-->
                 </div>
                 <div class="form-group">
                   <label for="exampleInputSummary"><?php echo $this->Text->lang('text_summary_your_trip'); ?></label>
-                  <?php echo $this->Form->control('summary_'.$config_language, array('class' => 'form-control', 'label' => false)); ?>
+                  <?php echo $this->Form->control('summary_'.$config_language, array('class' => 'form-control', 'label' => false, 'id' => 'trip_summary')); ?>
 <!--                  <p class="help-block right">250 Characters left</p>-->
                 </div>
                 <div class="form-group photos">
                   <label for="exampleInputPassword1"><?php echo $this->Text->lang('text_photos'); ?></label>
                   <p class="help-block"><?php echo $this->Text->lang('text_upload_only_photos'); ?></p>
-                  <div class="gallery"></div>
-                  <span class="document">
-                      <input type="file" name="images[]" id="gallery-photo-add" class="form-control" multiple>
+                  <div class="gallery">
+                      
+                      <?php foreach($galleries as $gallery){ ?>
+                      <div style='width:20%'>
+                          <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $gallery['file'] ?>"><span data-file='<?php echo $gallery['file'] ?>' data-id="<?php echo $gallery['id'] ?>" class='remove_img' title='Click to remove'>Remove</span><br clear=\"left\"/>
+                      </div>
+                      <?php } ?>
+                      
+                  </div>
+                  <span id="selectedFiles">
+                      <input type="file" name="images[]" id="files" class="form-control" multiple>
             
                   <a>+ <?php echo $this->Text->lang('text_add_photos'); ?></a> </span> </div>
                   
@@ -176,22 +188,16 @@
                 <h3>Meeting Point</h3>
                 <div class="row">
                   <div class="col-sm-4">
-                    <ul>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
+                      <?php //print_r($selected_stopped_location); ?>
+                      
+                    <ul id="slmp">
+                      <?php foreach($selected_stopped_location as $stopped_location){ ?>
+                      <li data-id="<?php echo $stopped_location['location']['id']; ?>"><a><?php echo $stopped_location['location']['name_'.$config_language]; ?> <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
+                      <?php } ?>
                     </ul>
                   </div>
                   <div class="col-sm-4">
-                    <ul>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                      <li><a>Bangkok <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
-                    </ul>
+                      <ul id="allmp"></ul>
                   </div>
                   <div class="col-sm-4">
                     <ul>
@@ -679,56 +685,51 @@
 </section>
 
 <script>
-                function DropDown(el) {
-                this.dd = el;
-                this.placeholder = this.dd.children('span');
-                this.opts = this.dd.find('.dropdown a');
-                this.val = '';
-                this.index = -1;
-                this.initEvents();
-            }
-            DropDown.prototype = {
-                initEvents : function() {
-                    var obj = this;
+function DropDown(el) {
+    this.dd = el;
+    this.placeholder = this.dd.children('span');
+    this.opts = this.dd.find('.dropdown a');
+    this.val = '';
+    this.index = -1;
+    this.initEvents();
+}
+DropDown.prototype = {
+    initEvents : function() {
+        var obj = this;
 
-                    obj.dd.on('click', function(event){
-                        $(this).toggleClass('active');
-                        return false;
-                    });
+        obj.dd.on('click', function(event){
+            $(this).toggleClass('active');
+            return false;
+        });
 
-                    obj.opts.on('click',function(){
-                        var opt = $(this);
-                        obj.val = opt.text();
-                        obj.index = opt.index();
-                        obj.placeholder.text(obj.val);
-                    });
-                },
-                getValue : function() {
-                    return this.val;
-                },
-                getIndex : function() {
-                    return this.index;
-                }
-            }
+        obj.opts.on('click',function(){
+            var opt = $(this);
+            obj.val = opt.text();
+            obj.index = opt.index();
+            obj.placeholder.text(obj.val);
+        });
+    },
+    getValue : function() {
+        return this.val;
+    },
+    getIndex : function() {
+        return this.index;
+    }
+}
 
-            $(function() {
+$(function() {
+    var dd = new DropDown( $('#dd') );
+});
 
-                var dd = new DropDown( $('#dd') );
+/* Slik Slider Js Include Here */
 
-
-
-            });
-            
-            
-            /* Slik Slider Js Include Here */
-            
-             $('.responsive').slick({
-  dots: false,
-  infinite: false,
-  speed: 300,
-  slidesToShow: 4,
-  slidesToScroll: 4,
-  responsive: [
+ $('.responsive').slick({
+    dots: false,
+    infinite: false,
+    speed: 300,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    responsive: [
     {
       breakpoint: 1024,
       settings: {
@@ -789,14 +790,6 @@ $('#r13').on('click', function(){
   $(this).parent().find('a').trigger('click')
 })
 
-//$('#r14').on('click', function(){
- // $(this).parent().find('a').trigger('click')
-//})
-
-//$('#r15').on('click', function(){
- // $(this).parent().find('a').trigger('click')
-//})
-
 /******   Multiple select   *****/
 
 $(document).ready(function() {
@@ -804,7 +797,7 @@ $(document).ready(function() {
 });
 /******   Multiple select (END)  *****/
 
-
+/****** Basic Tab trnasportation ACCORDIAN *******/
 
 $(document).ready(function(){
  $('.transportv-acc').slideUp();
@@ -822,35 +815,180 @@ $(document).ready(function(){
   });
 });
 
+/****** Basic Tab trnasportation ACCORDIAN (END) *******/
+
 /**** Multiple image Preview ***/
-$(function() {
-    // Multiple images preview in browser
-    var imagesPreview = function(input, placeToInsertImagePreview) {
 
-        if (input.files) {
-            var filesAmount = input.files.length;
+var selDiv = "";
+var storedFiles = [];
 
-            for (i = 0; i < filesAmount; i++) {
-                var reader = new FileReader();
+$(document).ready(function() {
+    $("#files").on("change", handleFileSelect);
 
-                reader.onload = function(event) {
-                    //$($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview).css({"width":"100px","height":"100px"});     
-                    //console.log(input.files);
-                    
-                    $(placeToInsertImagePreview).append('<img src="'+event.target.result+'"><span class="remove_img" data-id="'+input.files[i].name+'"></span>').css({"width":"100px","height":"100px"}); 
-                    
+    selDiv = $(".gallery"); 
+    $("#myForm").on("submit", handleForm);
+
+    $("body").on("click", ".selFile", removeFile);
+});
+
+function handleFileSelect(e) {
+    var files = e.target.files;
+
+    var filesArr = Array.prototype.slice.call(files);
+
+    filesArr.forEach(function(f) {          
+
+        if(!f.type.match("image.*")) {
+            return;
+        }
+        storedFiles.push(f);
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var html = "<div style='width:20%'><img src=\"" + e.target.result + "\"><span data-file='"+f.name+"' class='selFile' title='Click to remove'>Remove</span><br clear=\"left\"/></div>";
+            selDiv.append(html);
+
+        }
+        reader.readAsDataURL(f); 
+    });
+
+}
+
+function handleForm(e) {
+    e.preventDefault();
+    var data = new FormData();
+    var title = $("#trip_title").val();
+    var summary = $("#trip_summary").val();
+
+    if(title == ''){
+        $("#trip_title").after('<label class="error">Please Enter title</label>');
+        return false;
+    }else{
+        $("#trip_title").next('label').hide();
+    }
+
+    if(summary == ''){
+        $("#trip_summary").after('<label class="error">Please Enter Summary</label>');
+        return false;
+    }else{
+        $("#trip_summary").next('label').hide();
+    }
+
+    data.append('title_<?php echo $config_language; ?>', title);
+    data.append('summary_<?php echo $config_language; ?>', summary);
+
+    data.append('trip_id', <?php echo $trip_id ?>);
+
+    data.append('tab', 'overview');
+
+    for(var i=0, len=storedFiles.length; i<len; i++) {
+        data.append('images[]', storedFiles[i]); 
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>', true);
+
+    $(".loader_img").show();
+
+    xhr.onload = function(e) {
+        if(this.status == 200) {
+            $(".loader_img").hide();
+//                console.log(e.currentTarget.responseText);  
+//                alert(e.currentTarget.responseText + ' items uploaded.');
+
+            location.reload();
+        }
+    }
+    xhr.send(data);
+}
+
+function removeFile(e) {
+    var file = $(this).data("file");
+    for(var i=0;i<storedFiles.length;i++) {
+        if(storedFiles[i].name === file) {
+            storedFiles.splice(i,1);
+
+            console.log(storedFiles);
+            //break;
+        }
+    }
+    $(this).parent().remove();
+}
+
+/**** Multiple image Preview (END) ***/
+
+/***** Remove Image ******/
+
+$(".remove_img").click(function(){
+   var id = $(this).attr('data-id');
+   var tab = 'remove_gallery_image';
+   
+   var div = $(this);
+   
+   $.ajax({
+      url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+      data: {id: id, tab: tab},
+      method: 'post',
+      dataType: 'html',
+      success: function(response){
+        if(response == 'success'){
+            div.parent().remove();
+        }else{
+            alert('Error in image deletion');
+        }
+      }
+   });
+   
+});
+
+/***** Remove Image (END) ******/
+
+/***** Tab (DETAIL) Get meeting points from location ****/
+
+$(document).delegate('#slmp li', 'click', function(){
+    var id = $(this).attr('data-id');
+    var tab = 'get_meeting_points';
+    $.ajax({
+        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+        data: {id: id, tab: tab},
+        method: 'post',
+        dataType: 'json',
+        success: function(json){
+            if(json){
+                var html = '';
+                for(var i=0; i<json.length; i++){
+                    html+='<li data-id="'+json[i]['location_id']+'"><a>'+json[i]['title_<?php echo $config_language ?>']+' <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>';
                 }
-
-                reader.readAsDataURL(input.files[i]);
+                $("#allmp").html(html);
             }
         }
-
-    };
-
-    $('#gallery-photo-add').on('change', function() {
-        imagesPreview(this, 'div.gallery');
-        //$(this).find('img').css({"width":"100px","height":"100px"});
     });
 });
-/**** Multiple image Preview (END) ***/
+
+/***** Tab (DETAIL) Get meeting points from location (END) ****/
+
+/***** Tab (DETAIL) Get meeting points types from meeting points ****/
+
+$(document).delegate('#allmp li', 'click', function(){
+    var location_id = $(this).attr('data-id');
+    var tab = 'get_meeting_points_types';
+    $.ajax({
+        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+        data: {location_id: location_id, tab: tab},
+        method: 'post',
+        dataType: 'json',
+        success: function(json){
+//            if(json){
+//                var html = '';
+//                for(var i=0; i<json.length; i++){
+//                    html+='<li><a>'+json[i]['title_<?php echo $config_language ?>']+' <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>';
+//                }
+//                $("#allmp").html(html);
+//            }
+        }
+    });
+});
+
+/***** Tab (DETAIL) Get meeting points types from meeting points  ****/
+
 </script>
