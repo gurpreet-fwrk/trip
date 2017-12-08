@@ -36,7 +36,7 @@ class MeetingpointsTable extends Table
         parent::initialize($config);
 
         $this->setTable('meetingpoints');
-        $this->setDisplayField('title');
+        $this->setDisplayField('title_en');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');

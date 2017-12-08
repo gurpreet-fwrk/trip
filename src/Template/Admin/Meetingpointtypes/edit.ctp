@@ -28,6 +28,7 @@
                         <?php echo $this->Form->control('location_id', ['id' => 'loc', 'options' => $locations, 'empty' => true, 'class' => 'form-control', 'label' => false]); ?>
                     </div>
                 </div>
+                
                 <div class="box-body">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Meeting Point Type (EN)</label>
@@ -60,8 +61,10 @@
             messages: {
                 title_en: "This Field is required",
                 title_ar: "This Field is required",
-                location_id: {required: "Location is Required"},
+                location_id: {required: "Location is Required"}
             }
         });
     });
+    
+    
 </script>

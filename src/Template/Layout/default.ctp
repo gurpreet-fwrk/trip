@@ -42,11 +42,11 @@ $cakeDescription = '';
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
-   
-
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
     <style>
 	.message.success{
@@ -63,6 +63,77 @@ $cakeDescription = '';
 		font-size: 15px;
 		margin: 40px 0px;
 	}
+         @keyframes pulse{
+                from{
+                        transform: scale3d(0.1, 0.1, 0.1);
+                }
+                50%{
+                        transform: scale3d(1.05, 1.05, 1.05);
+                }
+                to{
+                        transform: scale3d(0.1, 0.1, 0.1);
+                }
+         }
+
+         @keyframes pulse-one{
+                from{
+                        transform: scale3d(1.05, 1.05, 1.05);
+                }
+                50%{
+                        transform: scale3d(0.1, 0.1, 0.1);
+                }
+                to{
+                        transform: scale3d(1.05, 1.05, 1.05);
+                }
+         }
+         ._2G9Ry7uLWE8xGyg0Ueyndc {
+            visibility: visible;
+            opacity: 1;
+            position: fixed;
+            width: 100%;
+            height: calc(100vh - 67px);
+            top: 67px;
+            background: #fff;
+            z-index: 3000;
+        }
+
+        ._1FNksn-DOC2GvjPqw1ilJA {
+            width: 60px;
+            height: 60px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .DA2lM5bvfdkZyFAb775Wh {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #e86a1a;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: pulse-one 2s infinite ease-in-out;
+        }
+
+        .r52LMBdnmQ_U7l8cHHUBu {
+            animation-delay: -1s;
+        }
+         .r52LMBdnmQ_U7l8cHHUBu {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #e86a1a;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: pulse 2s infinite ease-in-out;
+        }
 	</style>
 
     <?php if($config_language == 'ar'){ ?>
@@ -424,7 +495,6 @@ $cakeDescription = '';
                 $('.alert-info').show();
             },
             success: function(d){
-alert(d.response.msg);
                 
                 if (d.response.isSucess == 'false') {
                     $('.alert-info').hide();

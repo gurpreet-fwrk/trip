@@ -222,7 +222,7 @@ class TripsController extends AppController
             if($this->request->data['tab'] == 'get_meeting_points'){
                 
                 $meeting_points = $this->Meetingpoints->find('all', [
-                    'conditions' => ['Meetingpoints.location_id' => $this->request->data['id']]
+                    'conditions' => ['Meetingpoints.meetingpointtype_id' => $this->request->data['meetingpointtype_id']]
                 ])->all()->toArray(); 
                 
                 echo json_encode($meeting_points);
@@ -231,7 +231,7 @@ class TripsController extends AppController
             
             /******* AJAX (Get Meeting points from Location ID) (END) ********/
             
-            /******* AJAX (Get Meeting points from Location ID) ********/
+            /******* AJAX (Get Meeting point Types from Location ID) ********/
             
             if($this->request->data['tab'] == 'get_meeting_points_types'){
                 
@@ -243,7 +243,7 @@ class TripsController extends AppController
                 exit;
             }    
             
-            /******* AJAX (Get Meeting points from Location ID) (END) ********/
+            /******* AJAX (Get Meeting points Types from Location ID) (END) ********/
             
             
             

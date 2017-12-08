@@ -81,7 +81,8 @@ class MeetingpointtypesController extends AppController
             $this->Flash->error(__('The meetingpointtype could not be saved. Please, try again.'));
         }
         $locations = $this->Meetingpointtypes->Locations->find('list', ['limit' => 200]);
-        $this->set(compact('meetingpointtype', 'locations'));
+        $meetingpoints = $this->Meetingpointtypes->Meetingpoints->find('list', ['limit' => 200]);
+        $this->set(compact('meetingpointtype', 'meetingpoints', 'locations'));
         $this->set('_serialize', ['meetingpointtype']);
     }
 
@@ -98,6 +99,9 @@ class MeetingpointtypesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            
+            //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+            
             $meetingpointtype = $this->Meetingpointtypes->patchEntity($meetingpointtype, $this->request->getData());
             if ($this->Meetingpointtypes->save($meetingpointtype)) {
                 $this->Flash->success(__('The meetingpointtype has been saved.'));
@@ -108,7 +112,8 @@ class MeetingpointtypesController extends AppController
         }
         $locations = $this->Meetingpointtypes->Locations->find('list', ['limit' => 200]);
         $this->set(compact('meetingpointtype', 'locations'));
-        $this->set('_serialize', ['meetingpointtype']);
+        $this->set('_serialize', ['meetingpointtype']);      
+        
     }
 
     /**
@@ -130,4 +135,25 @@ class MeetingpointtypesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    
+    /****** AJAX Functions *******/
+    
+    public function ajaxGetMeetingpointsByLocationID(){
+        
+        $this->loadModel('Meetingpoints');
+        
+        if($this->request->is('post')){        
+            $meetingpoints = $this->Meetingpoints->find('all', ['conditions' => ['Meetingpoints.location_id' => $this->request->data['location_id']]]);
+            
+            echo json_encode($meetingpoints);
+            
+            exit;
+        }
+        
+        
+        
+    }
+    
+    /****** AJAX Functions *******/
 }

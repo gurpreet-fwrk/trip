@@ -7,8 +7,7 @@
             <file>file:/E:/gitprojects/trip/src/Language/Arabic.php</file>
             <file>file:/E:/gitprojects/trip/src/Controller/TripsController.php</file>
             <file>file:/E:/gitprojects/trip/src/Template/Trips/edit.ctp</file>
-            <file>file:/E:/gitprojects/trip/src/Model/Entity/Trip.php</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Trips/index.ctp</file>
+            <file>file:/E:/gitprojects/trip/src/Template/Layout/default.ctp</file>
         </group>
     </open-files>
 </project-private>

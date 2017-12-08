@@ -819,7 +819,13 @@ div.tab button.active {
 	border-width:1px;}
 	
 .checkbox-btn label::after{border-width:1px;width: 20px;height: 20px;}
-	
+
+ .meeting .checkbox-btn input{
+    float: left;
+    left: 0;
+    width: 100%;
+}
+
 .meeting .checkbox-btn label{
 	line-height:inherit !important;
     width: 100%;

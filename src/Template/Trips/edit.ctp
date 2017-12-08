@@ -1,3 +1,5 @@
+<div class="main-loader-container _2G9Ry7uLWE8xGyg0Ueyndc" data-reactid="203" style="display:none;"><div class="_1FNksn-DOC2GvjPqw1ilJA" data-reactid="204"><div class="DA2lM5bvfdkZyFAb775Wh" data-reactid="205"></div><div class="r52LMBdnmQ_U7l8cHHUBu" data-reactid="206"></div></div></div>
+
 <section class="basic">
   <div class="second">
     <div class="container">
@@ -197,40 +199,21 @@
                     </ul>
                   </div>
                   <div class="col-sm-4">
-                      <ul id="allmp"></ul>
+                      <ul id="allmpt"></ul>
                   </div>
                   <div class="col-sm-4">
-                    <ul>
-                      <li>
-                        <div class="checkbox-btn no-margin">
-                          <input type="checkbox" value="value-1" id="rc3" name="rc3">
-                          <label for="rc3" onclick class="no-margin">Checkbox</label>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="checkbox-btn no-margin">
-                          <input type="checkbox" value="value-1" id="rc4" name="rc4">
-                          <label for="rc4" onclick class="no-margin">Checkbox</label>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="checkbox-btn no-margin">
-                          <input type="checkbox" value="value-1" id="rc5" name="rc5">
-                          <label for="rc5" onclick class="no-margin">Checkbox</label>
-                        </div>
-                      </li>
-                      <li>
-                        <div class="checkbox-btn no-margin">
-                          <input type="checkbox" value="value-1" id="rc6" name="rc6">
-                          <label for="rc6" onclick class="no-margin">Checkbox</label>
-                        </div>
-                      </li>
+                      <ul id="allmp">
+                      
                     </ul>
                   </div>
                 </div>
                 <!--row--> 
                 
               </div>
+              
+              <div class="selected_meeting_points">
+              </div>
+              
               <!--meeting-->
               
               <h3 class="sch">Schedule</h3>
@@ -888,11 +871,11 @@ function handleForm(e) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>', true);
 
-    $(".loader_img").show();
+    $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
 
     xhr.onload = function(e) {
         if(this.status == 200) {
-            $(".loader_img").hide();
+            $("._2G9Ry7uLWE8xGyg0Ueyndc").hide();
 //                console.log(e.currentTarget.responseText);  
 //                alert(e.currentTarget.responseText + ' items uploaded.');
 
@@ -943,52 +926,63 @@ $(".remove_img").click(function(){
 
 /***** Remove Image (END) ******/
 
-/***** Tab (DETAIL) Get meeting points from location ****/
+/***** Tab (DETAIL) Get meeting points types from location ****/
 
 $(document).delegate('#slmp li', 'click', function(){
     var id = $(this).attr('data-id');
-    var tab = 'get_meeting_points';
-    $.ajax({
-        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
-        data: {id: id, tab: tab},
-        method: 'post',
-        dataType: 'json',
-        success: function(json){
-            if(json){
-                var html = '';
-                for(var i=0; i<json.length; i++){
-                    html+='<li data-id="'+json[i]['location_id']+'"><a>'+json[i]['title_<?php echo $config_language ?>']+' <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>';
-                }
-                $("#allmp").html(html);
-            }
-        }
-    });
-});
-
-/***** Tab (DETAIL) Get meeting points from location (END) ****/
-
-/***** Tab (DETAIL) Get meeting points types from meeting points ****/
-
-$(document).delegate('#allmp li', 'click', function(){
-    var location_id = $(this).attr('data-id');
+    
+    Cookies.set('location_name', $(this).find('a').text());
+    
+    alert(Cookies.get('location_name'));
+    
     var tab = 'get_meeting_points_types';
     $.ajax({
         url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
-        data: {location_id: location_id, tab: tab},
+        data: {location_id: id, tab: tab},
         method: 'post',
         dataType: 'json',
         success: function(json){
-//            if(json){
-//                var html = '';
-//                for(var i=0; i<json.length; i++){
-//                    html+='<li><a>'+json[i]['title_<?php echo $config_language ?>']+' <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>';
-//                }
-//                $("#allmp").html(html);
-//            }
+            var html = '';
+            if(json){
+                for(var i=0; i<json.length; i++){
+                    html+='<li data-id="'+json[i]['id']+'"><a>'+json[i]['title_<?php echo $config_language ?>']+' <i class="fa fa-caret-right" aria-hidden="true"></i></a></li>';
+                }
+            }
+            $("#allmpt").html(html);
+            $("#allmp").html('');
         }
     });
 });
 
-/***** Tab (DETAIL) Get meeting points types from meeting points  ****/
+/***** Tab (DETAIL) Get meeting points types from location (END) ****/
+
+/***** Tab (DETAIL) Get meeting points from meeting points type ****/
+
+$(document).delegate('#allmpt li', 'click', function(){
+    var meetingpointtype_id = $(this).attr('data-id');
+    var tab = 'get_meeting_points';
+    $.ajax({
+        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+        data: {meetingpointtype_id: meetingpointtype_id, tab: tab},
+        method: 'post',
+        dataType: 'json',
+        success: function(json){
+            var html = '';
+            if(json){            
+                for(var i=0; i<json.length; i++){
+                    html += '<li>';
+                    html += '<div class="checkbox-btn no-margin">';
+                    html += '<input type="checkbox" value="'+ json[i]['id'] +'" name="meetingpointtypes">';
+                    html += '<label for="rc3" onclick class="no-margin">'+ json[i]['title_<?php echo $config_language ?>'] +'</label>';
+                    html += '</div>';
+                    html += '</li>';
+                }     
+            }
+            $("#allmp").html(html);
+        }
+    });
+});
+
+/***** Tab (DETAIL) Get meeting points from meeting points type  ****/
 
 </script>

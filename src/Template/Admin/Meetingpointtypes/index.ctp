@@ -21,11 +21,14 @@
             </div>-->
             <!-- /.box-header -->
             <div class="box-body">
+                
+                <?php //echo "<pre>"; print_r($meetingpointtypes); echo "</pre>"; ?>
     <table id="example2" class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('location_id') ?></th>
+                
                 <th><?= $this->Paginator->sort('title', 'Meeting Point Type (EN)') ?></th>
                 <th><?= $this->Paginator->sort('title', 'Meeting Point Type (AR)') ?></th>
                 <th><?= $this->Paginator->sort('created') ?></th>
@@ -38,6 +41,8 @@
             <tr>
                 <td><?= $this->Number->format($meetingpointtype->id) ?></td>
                 <td><?= $meetingpointtype->has('location') ? $this->Html->link($meetingpointtype->location->name_en, ['controller' => 'Locations', 'action' => 'view', $meetingpointtype->location->id]) : '' ?></td>
+                
+                
                 <td><?= h($meetingpointtype->title_en) ?></td>
                 <td><?= h($meetingpointtype->title_ar) ?></td>
                 <td><?= h($meetingpointtype->created) ?></td>

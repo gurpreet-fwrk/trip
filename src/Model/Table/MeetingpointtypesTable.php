@@ -35,7 +35,7 @@ class MeetingpointtypesTable extends Table
         parent::initialize($config);
 
         $this->setTable('meetingpointtypes');
-        $this->setDisplayField('title');
+        $this->setDisplayField('title_en');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -43,6 +43,10 @@ class MeetingpointtypesTable extends Table
         $this->belongsTo('Locations', [
             'foreignKey' => 'location_id'
         ]);
+        
+//        $this->belongsTo('Meetingpoints', [
+//            'foreignKey' => 'meetingpoint_id'
+//        ]);
     }
 
     /**
@@ -73,6 +77,7 @@ class MeetingpointtypesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['location_id'], 'Locations'));
+        //$rules->add($rules->existsIn(['meetingpoint_id'], 'Meetingpoints'));
 
         return $rules;
     }
