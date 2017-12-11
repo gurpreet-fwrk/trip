@@ -668,6 +668,12 @@
 </section>
 
 <script>
+
+$(document).ready(function(){
+    $.session.clear();   
+});
+
+    
 function DropDown(el) {
     this.dd = el;
     this.placeholder = this.dd.children('span');
@@ -929,13 +935,15 @@ $(".remove_img").click(function(){
 /***** Tab (DETAIL) Get meeting points types from location ****/
 
 $(document).delegate('#slmp li', 'click', function(){
+
     var id = $(this).attr('data-id');
     
-    Cookies.set('location_name', $(this).find('a').text());
-    
-    alert(Cookies.get('location_name'));
-    
     var tab = 'get_meeting_points_types';
+    
+    $.session.set('location_name', $(this).find('a').text());
+
+    console.log($.session.get('location_name'));
+    
     $.ajax({
         url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
         data: {location_id: id, tab: tab},
@@ -954,6 +962,21 @@ $(document).delegate('#slmp li', 'click', function(){
     });
 });
 
+
+function get_mp_data_count(){
+
+    if(Cookies.get('count')){
+        mp_count = Cookies.get('count');
+        mp_count++;
+        Cookies.set('count', mp_count);
+    }else{
+        Cookies.set('count', 0);
+        mp_count = Cookies.get('count');
+    }
+    
+    return mp_count;
+}
+
 /***** Tab (DETAIL) Get meeting points types from location (END) ****/
 
 /***** Tab (DETAIL) Get meeting points from meeting points type ****/
@@ -961,6 +984,11 @@ $(document).delegate('#slmp li', 'click', function(){
 $(document).delegate('#allmpt li', 'click', function(){
     var meetingpointtype_id = $(this).attr('data-id');
     var tab = 'get_meeting_points';
+    
+    $.session.set('mt_name', $(this).find('a').text());
+    
+    console.log($.session.get('mt_name'));
+    
     $.ajax({
         url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
         data: {meetingpointtype_id: meetingpointtype_id, tab: tab},
@@ -981,8 +1009,44 @@ $(document).delegate('#allmpt li', 'click', function(){
             $("#allmp").html(html);
         }
     });
+    
 });
 
+function get_mp_data_count2(){
+
+    mp_count = Cookies.get('count');
+
+    return mp_count;
+}
+
 /***** Tab (DETAIL) Get meeting points from meeting points type  ****/
+
+$(document).delegate('#allmp li div input', 'click', function(){
+   var value = $(this).next('label').text();
+   alert(value);
+   
+   store_meetingpoint(value);
+   
+});
+
+function store_meetingpoint(value){
+    
+   
+    
+    if($.session.get('mp_array')){
+        var customers = $.session.get('mp_array');
+    }else{
+        var customers = [];
+    }
+
+    customers.push({'location': $.session.get('location_name'), 'mt': $.session.get('mt_name'), 'mp': value});
+    $.session.set('mp_array', customers);
+     //$.session.clear();
+     
+     var new_arr = $.session.get('mp_array');
+     
+    console.log(new_arr[0].location);
+    
+}
 
 </script>

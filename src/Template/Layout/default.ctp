@@ -28,7 +28,7 @@ $cakeDescription = '';
 
     <?= $this->Html->css( array('bootstrap.min', 'slick-theme', 'bootstrap-theme.min', 'slick', 'checkbox', 'style', 'custom/jquery-ui.min.css') ) ?>
     
-    <?= $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery-ui.min.js', 'slick.min')) ?>
+    <?= $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery-ui.min.js', 'slick.min', 'jquery-session')) ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -47,6 +47,7 @@ $cakeDescription = '';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <style>
 	.message.success{
