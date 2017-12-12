@@ -50,6 +50,11 @@ $cakeDescription = '';
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <style>
+        label.error{
+            color: red;
+            font-style: italic;
+            font-size: 13px;
+        }
 	.message.success{
 		background: #00b33c;
 		padding: 20px;

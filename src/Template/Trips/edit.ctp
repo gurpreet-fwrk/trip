@@ -184,6 +184,7 @@
               <?= $this->Form->end() ?>
             </div>
             
+            <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'detail_tab')) ?>
             <div id="Tokyo" class="tabcontent">
               <h3 class="subheadb">Trip Detail</h3>
               <div class="meeting">
@@ -202,17 +203,14 @@
                       <ul id="allmpt"></ul>
                   </div>
                   <div class="col-sm-4">
-                      <ul id="allmp">
-                      
-                    </ul>
+                      <ul id="allmp"></ul>
                   </div>
                 </div>
                 <!--row--> 
                 
               </div>
               
-              <div class="selected_meeting_points">
-              </div>
+              <div class="selected_meeting_points"></div>
               
               <!--meeting-->
               
@@ -222,122 +220,151 @@
                   <div class="col-sm-6">
                     <div class="tme">
                       <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
+                        <select name="schedule[0][hours]" class="form-control" required>
+                            <option value="">Hours</option>
+                            <?php for($i=0; $i<24; $i++){ ?>
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            <?php } ?>                          
                         </select>
                       </div>
                       <div class="colon">:</div>
                       <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
+                        <select name="schedule[0][minutes]" class="form-control" required>
+                            <option value="">Minutes</option>
+                            <?php for($i=0; $i<=45; $i+=15){ ?>
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            <?php } ?>   
                         </select>
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-6 mnt_meetingpoints"> 
                     <h4>Meet up at our meeting point</h4>
+                    <div></div>
+                    <input type="hidden" name="schedule[0][content]">
                   </div>
                 </div>
               </div>
               <!--minutes-->
               
-              <div class="minutes">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="tme">
-                      <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                      <div class="colon">:</div>
-                      <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
+              <div class="schedule_part">
+                <div class="minutes">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="tme">
+                        <div class="hour">
+                          <select name="schedule[1][hours]" class="form-control" required>
+                              <option value="">Hours</option>
+                              <?php for($i=0; $i<24; $i++){ ?>
+                              <?php if(strlen((string)$i) == 1){ ?>
+                              <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                              <?php }else{ ?>
+                              <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                              <?php } ?>
+                              <?php } ?>   
+                          </select>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="hour">
+                          <select name="schedule[1][minutes]" class="form-control" required>
+                              <option value="">Minutes</option>
+                              <?php for($i=0; $i<=45; $i+=15){ ?>
+                              <?php if(strlen((string)$i) == 1){ ?>
+                              <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                              <?php }else{ ?>
+                              <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                              <?php } ?>
+                              <?php } ?>
+                          </select> 
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <textarea class="form-control" rows="3"></textarea>
-                      <p class="help-block right">250 Characters left</p>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                          <textarea class="form-control" rows="3" name="schedule[1][content]" required></textarea>
+<!--                        <p class="help-block right">250 Characters left</p>-->
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <!--minutes-->
-              
-              <div class="minutes">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="tme">
-                      <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
-                      </div>
-                      <div class="colon">:</div>
-                      <div class="hour">
-                        <select class="form-control">
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </select>
+                <!--minutes-->
+
+                <div class="minutes">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="tme">
+                        <div class="hour">
+                          <select name="schedule[2][hours]" class="form-control" required>
+                              <option value="">Hours</option>
+                              <?php for($i=0; $i<24; $i++){ ?>
+                              <?php if(strlen((string)$i) == 1){ ?>
+                              <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                              <?php }else{ ?>
+                              <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                              <?php } ?>
+                              <?php } ?>   
+                          </select>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="hour">
+                          <select name="schedule[2][minutes]" class="form-control" required>
+                              <option value="">Minutes</option>
+                              <?php for($i=0; $i<=45; $i+=15){ ?>
+                              <?php if(strlen((string)$i) == 1){ ?>
+                              <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                              <?php }else{ ?>
+                              <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                              <?php } ?>
+                              <?php } ?>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <textarea class="form-control" rows="3"></textarea>
-                      <p class="help-block right">255 Characters left</p>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                        <textarea class="form-control" rows="3" name="schedule[2][content]" required></textarea>
+<!--                        <p class="help-block right">255 Characters left</p>-->
+                      </div>
                     </div>
                   </div>
                 </div>
+                <!--minutes-->
+                <?php $schedule_row = 3; ?>
               </div>
-              <!--minutes-->
+              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">+ Add more</button>
               
-              <button type="submit" class="btn btn-primary blue right">+ Add more</button>
+              
               <h3 class="sch" style="margin-bottom:15px;">FAQ</h3>
               <div class="form-group">
                 <label for="exampleInputSummary">Why this Trip?</label>
                 <p class="help-block">Briefly explain your travelers why they should book your trip to quickly graps their attentions.</p>
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" name="faq1" rows="3" required></textarea>
                 <p class="help-block right">250 Characters left</p>
               </div>
               <div class="form-group">
                 <label for="exampleInputSummary">Things to prepare fot the Trip?</label>
                 <p class="help-block">Is there anything travelers should prepare for this trip?</p>
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" rows="3" name="faq2" required></textarea>
                 <p class="help-block right">250 Characters left</p>
               </div>
+              
+              <input type="hidden" name="tab" value="detail">
+              
               <div class="right">
                 <button type="submit" class="btn btn-primary blue">Save</button>
                 <button type="submit" class="btn btn-default blue grey">Next</button>
               </div>
             </div>
+            <?= $this->Form->end() ?>
+            
             
             <div id="Usa" class="tabcontent">
               <h3 class="subheadb">Price</h3>
@@ -941,8 +968,6 @@ $(document).delegate('#slmp li', 'click', function(){
     var tab = 'get_meeting_points_types';
     
     $.session.set('location_name', $(this).find('a').text());
-
-    console.log($.session.get('location_name'));
     
     $.ajax({
         url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
@@ -962,21 +987,6 @@ $(document).delegate('#slmp li', 'click', function(){
     });
 });
 
-
-function get_mp_data_count(){
-
-    if(Cookies.get('count')){
-        mp_count = Cookies.get('count');
-        mp_count++;
-        Cookies.set('count', mp_count);
-    }else{
-        Cookies.set('count', 0);
-        mp_count = Cookies.get('count');
-    }
-    
-    return mp_count;
-}
-
 /***** Tab (DETAIL) Get meeting points types from location (END) ****/
 
 /***** Tab (DETAIL) Get meeting points from meeting points type ****/
@@ -987,8 +997,6 @@ $(document).delegate('#allmpt li', 'click', function(){
     
     $.session.set('mt_name', $(this).find('a').text());
     
-    console.log($.session.get('mt_name'));
-    
     $.ajax({
         url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
         data: {meetingpointtype_id: meetingpointtype_id, tab: tab},
@@ -996,15 +1004,38 @@ $(document).delegate('#allmpt li', 'click', function(){
         dataType: 'json',
         success: function(json){
             var html = '';
-            if(json){            
+            if(json){       
+                var mp_ids = [];
+                if($.session.get('mp_array')){
+                    
+                    var new_arr = JSON.parse($.session.get('mp_array'));
+                    
+                    $.each(new_arr, function(key, value) {
+                        if(value != null){
+                            mp_ids.push(value.mp_id);
+                        }
+                    });
+                }
+               
                 for(var i=0; i<json.length; i++){
-                    html += '<li>';
-                    html += '<div class="checkbox-btn no-margin">';
-                    html += '<input type="checkbox" value="'+ json[i]['id'] +'" name="meetingpointtypes">';
-                    html += '<label for="rc3" onclick class="no-margin">'+ json[i]['title_<?php echo $config_language ?>'] +'</label>';
-                    html += '</div>';
-                    html += '</li>';
-                }     
+                    var uid = json[i]['id'].toString();
+
+                    if($.inArray(uid, mp_ids) > -1){
+                        html += '<li>';
+                        html += '<div class="checkbox-btn no-margin">';
+                        html += '<input type="checkbox" data-id="'+ json[i]['id'] +'" value="'+ json[i]['id'] +'" name="meetingpointtypes" checked="checked">';
+                        html += '<label for="rc3" onclick class="no-margin">'+ json[i]['title_<?php echo $config_language ?>'] +'</label>';
+                        html += '</div>';
+                        html += '</li>';                             
+                    }else{
+                        html += '<li>';
+                        html += '<div class="checkbox-btn no-margin">';
+                        html += '<input type="checkbox" data-id="'+ json[i]['id'] +'" value="'+ json[i]['id'] +'" name="meetingpointtypes">';
+                        html += '<label for="rc3" onclick class="no-margin">'+ json[i]['title_<?php echo $config_language ?>'] +'</label>';
+                        html += '</div>';
+                        html += '</li>'; 
+                    }
+                }    
             }
             $("#allmp").html(html);
         }
@@ -1012,41 +1043,145 @@ $(document).delegate('#allmpt li', 'click', function(){
     
 });
 
-function get_mp_data_count2(){
-
-    mp_count = Cookies.get('count');
-
-    return mp_count;
-}
-
 /***** Tab (DETAIL) Get meeting points from meeting points type  ****/
 
+
+/********** Store and remove Meeting Points *************/
 $(document).delegate('#allmp li div input', 'click', function(){
    var value = $(this).next('label').text();
-   alert(value);
+   var id = $(this).val();
    
-   store_meetingpoint(value);
+   if($(this).is(':checked')){
+       $(this).prop('checked', true);
+       store_meetingpoint(value, id);
+   }else{
+       remove_meetingpoint(value, id);
+   }
    
 });
 
-function store_meetingpoint(value){
-    
-   
+function store_meetingpoint(value, id){
     
     if($.session.get('mp_array')){
-        var customers = $.session.get('mp_array');
+        var meetingpoints = JSON.parse($.session.get('mp_array'));
     }else{
-        var customers = [];
+        var meetingpoints = [];
     }
 
-    customers.push({'location': $.session.get('location_name'), 'mt': $.session.get('mt_name'), 'mp': value});
-    $.session.set('mp_array', customers);
-     //$.session.clear();
+    meetingpoints.push({'location': $.session.get('location_name'), 'mt': $.session.get('mt_name'), 'mp': value, 'mp_id': id});
+    $.session.set('mp_array', JSON.stringify(meetingpoints));
      
-     var new_arr = $.session.get('mp_array');
-     
-    console.log(new_arr[0].location);
+    var new_arr = JSON.parse($.session.get('mp_array'));
     
+    var html = '';
+    var html2 = '';
+    
+    $.each(new_arr, function(key, value) {
+        if(value != null){
+            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>";
+            html2 += "<span>- "+ value.mt +" ["+value.mp+"]</span><br>";
+        }
+    });
+    
+    $(".selected_meeting_points").html(html);
+    $(".mnt_meetingpoints div").html(html2);
+    
+    $("input[name='schedule[0][content]']").val(html2);
 }
 
+function remove_meetingpoint(meeting_point, id){
+
+    var new_arr = JSON.parse($.session.get('mp_array'));
+    
+    $.each(new_arr, function(key, value) {
+        if(value != null){
+            if(value.mp_id == id){
+                delete new_arr[key];
+                
+                $( "#allmp label:contains('"+value.mp+"')").parent().find('input').prop('checked', false);
+                
+            }
+        }
+    });
+    $.session.set('mp_array', JSON.stringify(new_arr));
+    new_arr = JSON.parse($.session.get('mp_array'));
+
+    var html = '';
+    var html2 = '';
+
+    $.each(new_arr, function(key, value) {
+        if(value != null){
+            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>";
+            html2 += "<span>- "+ value.mt +" ["+value.mp+"]</span><br>";
+        }
+    });
+    
+    $(".selected_meeting_points").html(html);
+    $(".mnt_meetingpoints div").html(html2);
+    
+    $("input[name='schedule[0][content]']").val(html2);
+}
+
+$(document).delegate('.rtmp i', 'click', function(){
+    var id = $(this).parent().attr('data-id');
+    
+    remove_meetingpoint('', id);
+    
+});
+
+/********** Store and remove Meeting Points (END) *************/
+
+var schedule_row = '<?php echo $schedule_row ?>';
+
+function addOptionValue(){
+   
+    var html = '';
+    html += '<div class="minutes" id="schedule_row-'+schedule_row+'">';
+    html += '<div class="row">';
+    html += '<div class="col-sm-6">';
+    html += '<div class="tme">';
+    html += '<div class="hour">';
+    html += '<select name="schedule['+schedule_row+'][hours]" class="form-control" required>';
+    html += '<option value="">Hours</option>';
+    for(var i=0; i<24; i++){                   
+        if(i.toString().length == 1){
+        html += '<option value="0'+i+'">0'+i+'</option>';
+        }else{
+        html += '<option value="'+i+'">'+i+'</option>';
+        }
+    }
+    html += '</select>';
+    html += '</div>';
+    html += '<div class="colon">:</div>';
+    html += '<div class="hour">';
+    html += '<select name="schedule['+schedule_row+'][minutes]" class="form-control" required>';
+    html += '<option value="">Minutes</option>';
+    for(var i=0; i<=45; i+=15){                   
+        if(i.toString().length == 1){
+        html += '<option value="0'+i+'">0'+i+'</option>';
+        }else{
+        html += '<option value="'+i+'">'+i+'</option>';
+        }
+    }
+    html += '</select>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="col-sm-6">';
+    html += '<div class="form-group">';
+    html += '<textarea class="form-control" rows="3" name="schedule['+schedule_row+'][content]" required></textarea>';
+    //html += '<p class="help-block right">255 Characters left</p>';
+    html += '</div>';
+    html += '<button type="button" onclick="$(\'#schedule_row-' + schedule_row + '\').remove();" data-toggle="tooltip" rel="tooltip" title="Remove" class="btn btn-danger pull-right"><i class="fa fa-minus-circle"></i></button>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    
+    $('.schedule_part').append(html)
+    
+    schedule_row++;
+
+}
+
+$("#detail_tab").validate();
 </script>

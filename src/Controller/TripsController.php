@@ -245,7 +245,13 @@ class TripsController extends AppController
             
             /******* AJAX (Get Meeting points Types from Location ID) (END) ********/
             
+            /***** Tab OVERVIEW ******/
             
+            if($this->request->data['tab'] == 'detail'){
+                echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+            }
+            
+            /***** Tab OVERVIEW (ENd) ******/
             
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
