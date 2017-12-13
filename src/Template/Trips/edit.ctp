@@ -1,3 +1,7 @@
+<style>
+    .error{border: 1px solid red;}
+    label.error{display:none !important;}
+</style>
 <div class="main-loader-container _2G9Ry7uLWE8xGyg0Ueyndc" data-reactid="203" style="display:none;"><div class="_1FNksn-DOC2GvjPqw1ilJA" data-reactid="204"><div class="DA2lM5bvfdkZyFAb775Wh" data-reactid="205"></div><div class="r52LMBdnmQ_U7l8cHHUBu" data-reactid="206"></div></div></div>
 
 <section class="basic">
@@ -210,11 +214,35 @@
                 
               </div>
               
-              <div class="selected_meeting_points"></div>
+              <div class="selected_meeting_points">
+                  <?php foreach($selected_meetingpoints as $selected_meetingpoint){ ?>
+                  <span class='rtmp' data-id='<?php echo $selected_meetingpoint['meetingpoint_id'] ?>'><?php echo $selected_meetingpoint['location'] ?> > <?php echo $selected_meetingpoint['meeting_point_type'] ?> > <?php echo $selected_meetingpoint['meeting_point'] ?> &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>
+                  <?php } ?>
+                  
+              </div>
               
               <!--meeting-->
+              <?php
+                $schedule1 = json_decode($trip->schedule);
+                
+                $schedule = array();
+                
+                foreach ($schedule1 as $row) { 
+                    if (is_object($row)) {
+                        $schedule[] = get_object_vars($row);
+                    }
+                }
+                
+                //echo "<pre>"; print_r($schedule); echo "</pre>";
+                
+                ?>
               
               <h3 class="sch">Schedule</h3>
+              <div class="schedule_part">
+              <?php if(!empty($schedule)){ ?>
+              <?php for($j=0; $j<count($schedule);$j++){ ?>
+              <?php if($j == 0){ ?>
+              
               <div class="minutes mnt">
                 <div class="row">
                   <div class="col-sm-6">
@@ -223,11 +251,24 @@
                         <select name="schedule[0][hours]" class="form-control" required>
                             <option value="">Hours</option>
                             <?php for($i=0; $i<24; $i++){ ?>
+                            
                             <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['hours'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            <?php if($schedule[$j]['hours'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                             <?php }else{ ?>
                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                             <?php } ?>
+                            
+                            <?php } ?>
+                            
                             <?php } ?>                          
                         </select>
                       </div>
@@ -236,11 +277,25 @@
                         <select name="schedule[0][minutes]" class="form-control" required>
                             <option value="">Minutes</option>
                             <?php for($i=0; $i<=45; $i+=15){ ?>
+                            
                             <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                             <?php }else{ ?>
                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                             <?php } ?>
+                            
+                            <?php } ?>
+                            
                             <?php } ?>   
                         </select>
                       </div>
@@ -248,13 +303,163 @@
                   </div>
                   <div class="col-sm-6 mnt_meetingpoints"> 
                     <h4>Meet up at our meeting point</h4>
-                    <div></div>
-                    <input type="hidden" name="schedule[0][content]">
+                    <div><?php echo $schedule[$j]['content']; ?></div>
+                    <input type="hidden" name="schedule[0][content]" value="<?php echo $schedule[$j]['content']; ?>">
                   </div>
                 </div>
               </div>
               <!--minutes-->
               
+              <?php } ?>
+              
+              
+              <?php if($j == 1 || $j == 2){ ?>
+                  <div class="minutes">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="tme">
+                        <div class="hour">
+                          <select name="schedule[<?php echo $j; ?>][hours]" class="form-control" required>
+                              <option value="">Hours</option>
+                              <?php for($i=0; $i<24; $i++){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['hours'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            <?php if($schedule[$j]['hours'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            
+                            <?php } ?>
+                            
+                            <?php } ?>       
+                          </select>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="hour">
+                          <select name="schedule[<?php echo $j; ?>][minutes]" class="form-control" required>
+                              <option value="">Minutes</option>
+                              <?php for($i=0; $i<=45; $i+=15){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            
+                            <?php } ?>
+                            
+                            <?php } ?>   
+                          </select> 
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                          <textarea class="form-control" rows="3" name="schedule[<?php echo $j; ?>][content]" required><?php echo $schedule[$j]['content']; ?></textarea>
+<!--                        <p class="help-block right">250 Characters left</p>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--minutes-->
+              <?php } ?>
+              <?php $schedule_row = 3; ?>
+                
+                <?php if($j >= 3){ ?>
+                  <div class="minutes">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="tme">
+                        <div class="hour">
+                          <select name="schedule[<?php echo $j; ?>][hours]" class="form-control" required>
+                              <option value="">Hours</option>
+                              <?php for($i=0; $i<24; $i++){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['hours'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            <?php if($schedule[$j]['hours'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            
+                            <?php } ?>
+                            
+                            <?php } ?>       
+                          </select>
+                        </div>
+                        <div class="colon">:</div>
+                        <div class="hour">
+                          <select name="schedule[<?php echo $j; ?>][minutes]" class="form-control" required>
+                              <option value="">Minutes</option>
+                              <?php for($i=0; $i<=45; $i+=15){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == '0'.$i){ ?>
+                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php } ?>
+                            
+                            <?php }else{ ?>
+                            
+                            <?php if($schedule[$j]['minutes'] == $i){ ?>
+                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            
+                            <?php } ?>
+                            
+                            <?php } ?>   
+                          </select> 
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group">
+                          <textarea class="form-control" rows="3" name="schedule[<?php echo $j; ?>][content]" required><?php echo $schedule[$j]['content']; ?></textarea>
+<!--                        <p class="help-block right">250 Characters left</p>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--minutes-->
+                <?php $schedule_row++; ?>
+              <?php } ?>
+              
+
+              <?php } ?>
+              </div>
+              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">+ Add more</button>
+              <?php }else{ ?>
               <div class="schedule_part">
                 <div class="minutes">
                   <div class="row">
@@ -340,27 +545,28 @@
                 <?php $schedule_row = 3; ?>
               </div>
               <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">+ Add more</button>
+              <?php } ?>
               
               
               <h3 class="sch" style="margin-bottom:15px;">FAQ</h3>
               <div class="form-group">
                 <label for="exampleInputSummary">Why this Trip?</label>
                 <p class="help-block">Briefly explain your travelers why they should book your trip to quickly graps their attentions.</p>
-                <textarea class="form-control" name="faq1" rows="3" required></textarea>
-                <p class="help-block right">250 Characters left</p>
+                <?php echo $this->Form->control('faq1', array('class' => 'form-control', 'label' => false, 'required')); ?>
+<!--                <p class="help-block right">250 Characters left</p>-->
               </div>
               <div class="form-group">
                 <label for="exampleInputSummary">Things to prepare fot the Trip?</label>
                 <p class="help-block">Is there anything travelers should prepare for this trip?</p>
-                <textarea class="form-control" rows="3" name="faq2" required></textarea>
-                <p class="help-block right">250 Characters left</p>
+                <?php echo $this->Form->control('faq2', array('class' => 'form-control', 'label' => false, 'required')); ?>
+<!--                <p class="help-block right">250 Characters left</p>-->
               </div>
               
               <input type="hidden" name="tab" value="detail">
               
               <div class="right">
-                <button type="submit" class="btn btn-primary blue">Save</button>
-                <button type="submit" class="btn btn-default blue grey">Next</button>
+                  <button type="button" class="btn btn-primary blue detail_submit">Save</button>
+                  <button type="button" class="btn btn-default blue grey detail_submit">Next</button>
               </div>
             </div>
             <?= $this->Form->end() ?>
@@ -698,6 +904,17 @@
 
 $(document).ready(function(){
     $.session.clear();   
+    
+    var selected_mp = $.parseJSON('<?php echo json_encode($selected_meetingpoints); ?>');
+    var meetingpoints = [];
+
+    for(var i=0; i<Object.keys(selected_mp).length; i++){
+            meetingpoints.push({'location': selected_mp[i]['location'], 'mt': selected_mp[i]['meeting_point_type'],'mp': selected_mp[i]['meeting_point'], 'mp_id': selected_mp[i]['meetingpoint_id'].toString()});
+    }
+    
+    console.log(meetingpoints);
+    
+    $.session.set('mp_array', JSON.stringify(meetingpoints));
 });
 
     
@@ -1016,7 +1233,7 @@ $(document).delegate('#allmpt li', 'click', function(){
                         }
                     });
                 }
-               
+ 
                 for(var i=0; i<json.length; i++){
                     var uid = json[i]['id'].toString();
 
@@ -1065,7 +1282,14 @@ function store_meetingpoint(value, id){
     if($.session.get('mp_array')){
         var meetingpoints = JSON.parse($.session.get('mp_array'));
     }else{
+        var selected_mp = $.parseJSON('<?php echo json_encode($selected_meetingpoints); ?>');
         var meetingpoints = [];
+        
+        for(var i=0; i<Object.keys(selected_mp).length; i++){
+                meetingpoints.push({'location': selected_mp[i]['location'], 'mt': selected_mp[i]['meeting_point_type'],'mp': selected_mp[i]['meeting_point'], 'mp_id': selected_mp[i]['meetingpoint_id'].toString()});
+        }
+        
+        $.session.set('mp_array', JSON.stringify(new_arr));
     }
 
     meetingpoints.push({'location': $.session.get('location_name'), 'mt': $.session.get('mt_name'), 'mp': value, 'mp_id': id});
@@ -1091,7 +1315,26 @@ function store_meetingpoint(value, id){
 
 function remove_meetingpoint(meeting_point, id){
 
+    if($.session.get('mp_array')){
+        var new_arr = JSON.parse($.session.get('mp_array'));
+    }else{
+        var selected_mp = $.parseJSON('<?php echo json_encode($selected_meetingpoints); ?>');
+        
+        console.log('selected Mp');
+        console.log(selected_mp);
+        
+        var new_arr = [];
+        
+        for(var i=0; i<Object.keys(selected_mp).length; i++){
+                new_arr.push({'location': selected_mp[i]['location'], 'mt': selected_mp[i]['meeting_point_type'],'mp': selected_mp[i]['meeting_point'], 'mp_id': selected_mp[i]['meetingpoint_id']});
+        }
+        
+        $.session.set('mp_array', JSON.stringify(new_arr));
+    }
+
     var new_arr = JSON.parse($.session.get('mp_array'));
+    
+    console.log(new_arr);
     
     $.each(new_arr, function(key, value) {
         if(value != null){
@@ -1183,5 +1426,29 @@ function addOptionValue(){
 
 }
 
-$("#detail_tab").validate();
+/***** DETAIL TAB (form submit) AJAX  ****/
+
+var detailtabform = $("#detail_tab").validate();
+
+$(".detail_submit").click(function(){
+    if(detailtabform.form()){
+        $.ajax({
+            url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+            data: $('#detail_tab').serialize() + "&tab=detail&meetingpoints="+$.session.get('mp_array'),
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function(){
+                $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+            },
+            success: function(json){
+                location.reload();
+            }
+        });
+    }else{
+        //alert("not submitted");
+    }
+});
+
+/***** DETAIL TAB (form submit) AJAX (end) ****/
+
 </script>

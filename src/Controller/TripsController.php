@@ -121,6 +121,7 @@ class TripsController extends AppController
         $this->loadModel('Tripgallery');
         $this->loadModel('Meetingpoints');
         $this->loadModel('Meetingpointtypes');
+        $this->loadModel('Tripmeetingpoints');
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             
@@ -245,13 +246,50 @@ class TripsController extends AppController
             
             /******* AJAX (Get Meeting points Types from Location ID) (END) ********/
             
-            /***** Tab OVERVIEW ******/
+            /***** Tab DETAIL ******/
             
             if($this->request->data['tab'] == 'detail'){
-                echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+
+                
+                //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+                
+                $this->request->data['schedule'] = json_encode($this->request->data['schedule']);
+                    
+                if($this->request->data['meetingpoints'] != 'undefined'){
+                    
+                    $this->Tripmeetingpoints->deleteAll(['trip_id' => $id]);
+
+                    $meeting_points = json_decode($this->request->data['meetingpoints']);
+
+                    foreach($meeting_points as $meeting_point){    
+                        if($meeting_point != null){
+                            $post = array();
+                            $post['trip_id'] = $id;
+                            $post['location'] = $meeting_point->location;
+                            $post['meeting_point_type'] = $meeting_point->mt;
+                            $post['meeting_point'] = $meeting_point->mp;
+                            $post['meetingpoint_id'] = $meeting_point->mp_id;
+
+                            $location = $meeting_point->location." ".$meeting_point->mt." ".$meeting_point->mp;
+                            $location = str_replace(' ', '+', $location);
+                            $url = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBQrWZPh0mrrL54_UKhBI2_y8cnegeex1o&address=".$location."&sensor=true";
+                            $details=file_get_contents($url);
+                            $result = json_decode($details,true);
+
+                            if(!empty($result['results'])){
+                                $post['latitude'] = $result['results'][0]['geometry']['location']['lat'];
+                                $post['longitude'] = $result['results'][0]['geometry']['location']['lng'];	
+                            }
+
+                            $tripmeetingpoints = $this->Tripmeetingpoints->newEntity();
+                            $tripmeetingpoints = $this->Tripmeetingpoints->patchEntity($tripmeetingpoints, $post);
+                            $this->Tripmeetingpoints->save($tripmeetingpoints);
+                        }    
+                    }
+                }
             }
             
-            /***** Tab OVERVIEW (ENd) ******/
+            /***** Tab DETAIL (ENd) ******/
             
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
@@ -305,7 +343,10 @@ class TripsController extends AppController
         
         /************************/
         
+        $selected_meetingpoints = $this->Tripmeetingpoints->find('all', ['conditions' => ['Tripmeetingpoints.trip_id' => $id]])->all()->toArray();
+        $this->set('selected_meetingpoints', $selected_meetingpoints);
         
+        /************************/
         
         $this->set('trip_id', $id);
     }
