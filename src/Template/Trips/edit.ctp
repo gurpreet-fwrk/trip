@@ -1,6 +1,8 @@
 <style>
     .error{border: 1px solid red;}
     label.error{display:none !important;}
+    .subs .icons li img{width: 50%;}
+    .subs .icons li{padding: 0;}
 </style>
 <div class="main-loader-container _2G9Ry7uLWE8xGyg0Ueyndc" data-reactid="203" style="display:none;"><div class="_1FNksn-DOC2GvjPqw1ilJA" data-reactid="204"><div class="DA2lM5bvfdkZyFAb775Wh" data-reactid="205"></div><div class="r52LMBdnmQ_U7l8cHHUBu" data-reactid="206"></div></div></div>
 
@@ -28,7 +30,7 @@
             <?php //echo "<pre>"; print_r($galleries); echo "</pre>"; ?>
             
             <div id="London" class="tabcontent">
-               <?= $this->Form->create($trip) ?>
+               <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'basic_tab')) ?>
               <h3 class="subhead"><?php echo $this->Text->lang('text_basic'); ?></h3>
               <div class="basetrip">
                 <div class="form-group">
@@ -36,7 +38,7 @@
                     <label class="control-label"> <img src="<?php echo $this->request->webroot  ?>images/website/a.png" /> <?php echo $this->Text->lang('text_destination'); ?></label>
                   </div>
                   <div class="col-sm-9">
-                    <?php echo $this->Form->control('location_id', ['options' => $locations, 'class' => 'form-control', 'label' => false]); ?>
+                    <?php echo $this->Form->control('location_id', ['options' => $locations, 'class' => 'form-control', 'label' => false, 'required']); ?>
                   </div>
                 </div>
                 <div class="form-group">
@@ -52,7 +54,7 @@
                           }
                       }
                       ?>
-                    <?php echo $this->Form->select('stopped_locations', $locations, ['class' => 'form-control js-example-basic-multiple','multiple' => 'multiple', 'value' => $selected_stopped]); ?>
+                    <?php echo $this->Form->select('stopped_locations', $locations, ['class' => 'form-control js-example-basic-multiple','multiple' => 'multiple', 'value' => $selected_stopped, 'required']); ?>
                   </div>
                 </div>
                 <div class="form-group">
@@ -68,7 +70,7 @@
                           }
                       }
                       ?>
-                    <?php echo $this->Form->select('activities', $activities, ['class' => 'form-control js-example-basic-multiple','multiple' => 'multiple', 'value' => $selected_act]); ?>
+                    <?php echo $this->Form->select('activities', $activities, ['class' => 'form-control js-example-basic-multiple','multiple' => 'multiple', 'value' => $selected_act, 'required']); ?>
                   </div>
                 </div>
                 <!-- <a class="suggest" href="#">Add more suggest activities</a> -->
@@ -136,8 +138,8 @@
                   </div>
                 </div>
                 <div class="right">
-                  <button type="submit" class="btn btn-primary blue"><?php echo $this->Text->lang('text_save'); ?></button>
-                  <button type="submit" class="btn btn-default blue grey"><?php echo $this->Text->lang('text_next'); ?></button>
+                  <button type="button" class="btn btn-primary blue basic_submit"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="button" class="btn btn-default blue grey basic_submit"><?php echo $this->Text->lang('text_next'); ?></button>
                 </div>
               </div>
           <?= $this->Form->end() ?>
@@ -385,7 +387,7 @@
               <?php $schedule_row = 3; ?>
                 
                 <?php if($j >= 3){ ?>
-                  <div class="minutes">
+                  <div class="minutes" id="schedule_row-<?php echo $schedule_row; ?>">
                   <div class="row">
                     <div class="col-sm-6">
                       <div class="tme">
@@ -448,6 +450,7 @@
                           <textarea class="form-control" rows="3" name="schedule[<?php echo $j; ?>][content]" required><?php echo $schedule[$j]['content']; ?></textarea>
 <!--                        <p class="help-block right">250 Characters left</p>-->
                       </div>
+                        <button type="button" onclick="$('#schedule_row-<?php echo $schedule_row ?>').remove();" data-toggle="tooltip" rel="tooltip" title="Remove" class="btn btn-danger pull-right"><i class="fa fa-minus-circle"></i></button>
                     </div>
                   </div>
                 </div>
@@ -574,29 +577,34 @@
             
             <div id="Usa" class="tabcontent">
               <h3 class="subheadb">Price</h3>
-              <p style="color: #9b9b9b;"> Please, use these price conditions as guides to calculate your trip fee and always make sure to inform your travelers about any additional expenses before the trip day. </p>
+              <p style="color: #9b9b9b;">
+                  <?php echo ($config_language == 'en') ? 'Please, use these price conditions as guides to calculate your trip fee and always make sure to inform your travelers about any additional expenses before the trip day.' : 'يرجى استخدام شروط الأسعار هذه كدليل لحساب رسوم رحلتك ودائما التأكد من إبلاغ المسافرين عن أي نفقات إضافية قبل يوم الرحلة'; ?>
+              </p>
               <div class="panel-group accord" id="accordion">
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h4 class="panel-title">
                       <label for='r11' style='width: auto;'>
-                        <input type='radio' id='r11' name='occupation' value='Working' required />
-                        All inclusive <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"></a> </label>
+                        <input type='radio' id='r11' name='include_exclude' value='all_inclusive' required />
+                        <?php echo ($config_language == 'en') ? 'All inclusive' : 'الجميع مشمول'; ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"></a> </label>
                     </h4>
                   </div>
                   <div id="collapseOne" class="panel-collapse collapse in">
                     <div class="panel-body sub subs">
                     
                     <ul class="icons">
-                        <li><i class="fa fa-cutlery" aria-hidden="true"></i></li>
-                        <li><i class="fa fa-bus" aria-hidden="true"></i></li>
+<!--                        <li><i class="fa fa-cutlery" aria-hidden="true"></i></li>
+                        <li><i class="fa fa-bus" aria-hidden="true"></i></li>-->
+                        <li><img src="<?php echo $this->request->webroot ?>images/website/all_include_1.png"></li>
+                        <li><img src="<?php echo $this->request->webroot ?>images/website/all_include_2.png"></li>
+                        <li><img src="<?php echo $this->request->webroot ?>images/website/all_include_3.png"></li>
                     </ul>
                     
                       <ul>
-                        <li>Expenses, occur during a trip, are mainly included</li>
-                        <li>- Public or private transportation fares : taxi, bts, mrt, etc.(Please estimate the cost of gasoline or vehicle rental fee, in case of using a private car)</li>
-                        <li>- Foods; Meal(s) during the trip. (Please note that alcohol is always excluded)</li>
-                        <li>- Admission fee: Amusement park, gallery, shows, and etc.</li>
+                        <li><?php echo ($config_language == 'en') ? 'Expenses, occur during a trip, are mainly included' : 'يتم تضمين النفقات، أثناء الرحلة، بشكل رئيسي'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? '- Public or private transportation fares : taxi, bts, mrt, etc.(Please estimate the cost of gasoline or vehicle rental fee, in case of using a private car)' : '- رسوم النقل العامة أو الخاصة: سيارات الأجرة، بتس، مرت، الخ (يرجى تقدير تكلفة البنزين أو رسوم تأجير المركبات، في حالة استخدام سيارة خاصة)'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? '- Foods; Meal(s) during the trip. (Please note that alcohol is always excluded)' : 'يتم تضمين النفقات- الأطعمة؛ وجبة (وجبات) أثناء الرحلة. (يرجى ملاحظة أن الكحول هو دائما مستبعد)'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? '- Admission fee: Amusement park, gallery, shows, and etc.' : '- رسوم الدخول: متنزه، معرض، معارض، وما إلى ذلك.'; ?></li>
                       </ul>
                     </div>
                   </div>
@@ -605,17 +613,24 @@
                   <div class="panel-heading">
                     <h4 class=panel-title>
                       <label for='r12' style='width: auto;'>
-                        <input type='radio' id='r12' name='occupation' value='Not-Working' required />
-                        Food excluded <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"></a> </label>
+                        <input type='radio' id='r12' name='include_exclude' value='food_excluded' required />
+                        <?php echo ($config_language == 'en') ? 'Food Excluded' : 'الغذاء المستثنى'; ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"></a> </label>
                     </h4>
                   </div>
                   <div id="collapseTwo" class="panel-collapse collapse">
                     <div class="panel-body sub subs">
+                        <ul class="icons">
+<!--                        <li><i class="fa fa-cutlery" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-bus" aria-hidden="true"></i></li>-->
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/food_exclude_1.png"></li>
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/all_include_2.png"></li>
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/all_include_3.png"></li>
+                        </ul>
                       <ul>
-                        <li>Expenses, occur during a trip, are mainly included</li>
-                        <li>- Public or private transportation fares : taxi, bts, mrt, etc.(Please estimate the cost of gasoline or vehicle rental fee, in case of using a private car)</li>
-                        <li>- Foods; Meal(s) during the trip. (Please note that alcohol is always excluded)</li>
-                        <li>- Admission fee: Amusement park, gallery, shows, and etc.</li>
+                        <li><?php echo ($config_language == 'en') ? 'Travelers pay for their meal(s) during a trip. Only the following expenses are included.' : 'يدفع المسافرون ثمن وجباتهم خلال الرحلة. يتم تضمين النفقات التالية فقط.'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? 'Reminder; Local Experts should calculate your trip’s price including these two expenses' : 'تذكير؛ يجب على الخبراء المحليين حساب سعر رحلتك بما في ذلك هذين المصاريف'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? '- Public/ private transportation fares: taxi, bts, mrt, etc. (please estimate the cost of gasoline or vehicle rental fee, in case of using a private car)' : '- أسعار النقل العام / الخاص: سيارات الأجرة، بتس، مرت، الخ (يرجى تقدير تكلفة البنزين أو رسوم تأجير المركبات، في حالة استخدام سيارة خاصة))'; ?></li>
+                        <li><?php echo ($config_language == 'en') ? 'Admission fee: Amusement park, gallery, shows, and etc.' : 'رسوم الدخول: متنزه، معرض، معارض، وما إلى ذلك.'; ?></li>
                       </ul>
                     </div>
                   </div>
@@ -624,18 +639,22 @@
                   <div class="panel-heading">
                     <h4 class=panel-title>
                       <label for='r13' style='width: auto;'>
-                        <input type='radio' id='r13' name='occupation' value='progress' required />
-                        Food, Transportation, Admission fee excluded <a data-toggle="collapse" data-parent="#accordion"
+                        <input type='radio' id='r13' name='include_exclude' value='all_excluded' required />
+                        <?php echo ($config_language == 'en') ? 'Food, Transportation, Admission fee excluded' : 'الغذاء، النقل، رسوم القبول مستثناة'; ?> <a data-toggle="collapse" data-parent="#accordion"
                          href="#collapseThree"></a> </label>
                     </h4>
                   </div>
                   <div id="collapseThree" class="panel-collapse collapse">
                     <div class="panel-body sub subs">
+                        <ul class="icons">
+<!--                        <li><i class="fa fa-cutlery" aria-hidden="true"></i></li>
+                            <li><i class="fa fa-bus" aria-hidden="true"></i></li>-->
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/food_exclude_1.png"></li>
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/all_exclude_1.png"></li>
+                            <li><img src="<?php echo $this->request->webroot ?>images/website/all_exclude_2.png"></li>
+                        </ul>
                       <ul>
-                        <li>Expenses, occur during a trip, are mainly included</li>
-                        <li>- Public or private transportation fares : taxi, bts, mrt, etc.(Please estimate the cost of gasoline or vehicle rental fee, in case of using a private car)</li>
-                        <li>- Foods; Meal(s) during the trip. (Please note that alcohol is always excluded)</li>
-                        <li>- Admission fee: Amusement park, gallery, shows, and etc.</li>
+                        <li><?php echo ($config_language == 'en') ? 'The price you set is only for your guiding fee. All other expenses, occur during a trip, will be paid by travelers, themselves. Please roughly approximate travelers\' expenses and always inform them before the trip.' : 'السعر الذي تحدده هو فقط لرسم التوجيه الخاص بك. جميع النفقات الأخرى، تحدث خلال رحلة، وسوف تدفع من قبل المسافرين، أنفسهم. يرجى تقريبا تقريبي نفقات المسافرين ودائما إبلاغهم قبل الرحلة.'; ?></li>
                       </ul>
                     </div>
                   </div>
@@ -644,22 +663,20 @@
               <!--accord end-->
               
               <div class="form-group">
-                <label for="exampleInputSummary">Extra expense travelers should prepare</label>
-                <p class="help-block">Are there any extra expenses that travelers have to pay during the trip? </p>
-                <textarea class="form-control" rows="3" placeholder="e.g. your pocket money"></textarea>
-                <p class="help-block">250 Characters left</p>
+                <label for="exampleInputSummary"><?php echo $this->Text->lang('text_add_expense_title'); ?></label>
+                <p class="help-block"><?php echo $this->Text->lang('text_add_expense_question'); ?> </p>
+                <textarea class="form-control" name="extra_expense" rows="3" placeholder="<?php echo $this->Text->lang('text_add_expense_ph'); ?>" required></textarea>
+<!--                <p class="help-block">250 Characters left</p>-->
               </div>
               <div class="form-group">
                 <div class="col-sm-4 no-padding">
-                  <label for="inputEmail3" class="control-label" style="line-height: 40px;"><i class="fa fa-users" aria-hidden="true"></i> Maximun travelers </label>
+                  <label for="inputEmail3" class="control-label" style="line-height: 40px;"><i class="fa fa-users" aria-hidden="true"></i> <?php echo $this->Text->lang('text_max_travellers'); ?> </label>
                 </div>
                 <div class="col-sm-4 no-padding">
-                  <select class="form-control travel">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <select class="form-control travel" id="max_travelers" name="travellers" required>
+                        <?php for($i=1; $i<9; $i++){ ?>
+                    <option><?php echo $i; ?></option>
+                        <?php } ?>
                   </select>
                 </div>
                 <div class="col-sm-4 no-padding">&nbsp;</div>
@@ -669,65 +686,43 @@
                   <div class="col-sm-6">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                       <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="headingOne">
-                          <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseA" aria-expanded="true" aria-controls="collapseA"><i class="fa fa-check-circle" aria-hidden="true"></i> Basic Pricing </a> </h4>
+                        <div class="panel-heading price_accordian_head" role="tab" id="headingOne">
+                          <h4 class="panel-title"> <a role="button"><i class="fa fa-check-circle" aria-hidden="true"></i> Basic Pricing </a> </h4>
                         </div>
-                        <div id="collapseA" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div id="collapseA" class="panel-collapse price_accordian_body" role="tabpanel" aria-labelledby="headingOne">
                           <div class="panel-body">
                             <div class="col-sm-6">
                                 <div class="pric">
                                     <h4>Price (per person)</h4>
-                                    <input type="text" placeholder="0">
+                                    <input type="number" min="0" placeholder="0" id="price_per_person">
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                              <div class="pric">
-                                <h4 style="text-align:right;">Total (per trip)</h4>
-                                <p style="color:#d0021b;text-align:right;margin:0px;">0.00 - 0.00 <span style="color:#000;">THB</span></p>
+                              <div class="pric pric_rt">
+                                <h4>Total (per trip)</h4>
+                                <p id="total_ppp">0.00 - 0.00 <span>THB</span></p>
+                                <input type="hidden" name="pricing[0][single]">
+                                <input type="hidden" name="pricing[0][total]">
                                </div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="headingTwo">
-                          <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseB" aria-expanded="false" aria-controls="collapseB"><i class="fa fa-check-circle" aria-hidden="true"></i> Advance Pricing </a> </h4>
+                        <div class="panel-heading price_accordian_head" role="tab" id="headingTwo">
+                          <h4 class="panel-title"> <a role="button"><i class="fa fa-check-circle" aria-hidden="true"></i> Advance Pricing </a> </h4>
                         </div>
-                        <div id="collapseB" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                          <div class="panel-body">
+                        <div id="collapseB" class="panel-collapse price_accordian_body" role="tabpanel" aria-labelledby="headingTwo">
+                          <div class="panel-body advance_pricing">
                           
-                          <div class="col-sm-4">
-                            <div class="pric">
-                                    <h4>Travelers</h4>
-                                    <ul>
-                                        <li>1 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></li>
-                                        <li>2 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></li>
-                                        <li>3 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></li>
-                                    </ul>
-                                </div>
+                        <div class="thb">
+                          <div class="row no-margin">
+                              <div class="col-sm-4 text-center"><div class="qt">1 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div></div>
+                              <div class="col-sm-4 text-center"><div class="place"><input type="text" placeholder="0"></div></div>
+                             <div class="col-sm-4 text-center"><div class="amnt"><p>0.00 - 0.00 <span >THB</span></p></div></div>  
                           </div>
-                          
-                            <div class="col-sm-4">
-                                <div class="pric">
-                                    <h4>Price (per person)</h4>
-                                    <ul>
-                                        <li><input type="text" placeholder="0"></li>
-                                        <li><input type="text" placeholder="1"></li>
-                                        <li><input type="text" placeholder="2"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                              <div class="pric">
-                                <h4 style="text-align:right;">Total (per trip)</h4>
-                               
-                                <ul>
-                                        <li> <p style="color:#d0021b;margin:0px;font-size: 13px;">0.00 - 0.00 <span style="color:#000;">THB</span></p></li>
-                                        <li> <p style="color:#d0021b;margin:0px;font-size: 13px;">0.00 - 0.00 <span style="color:#000;">THB</span></p></li>
-                                        <li> <p style="color:#d0021b;margin:0px;font-size: 13px;">0.00 - 0.00 <span style="color:#000;">THB</span></p></li>
-                                    </ul>
-                               </div>
-                            </div>
+                        </div>
+                              
                           </div>
                         </div>
                       </div>
@@ -1426,6 +1421,29 @@ function addOptionValue(){
 
 }
 
+/***** Basic TAB (form submit) AJAX  *****/
+var bastictabform = $("#basic_tab").validate();
+$(".basic_submit").click(function(){
+    if(bastictabform.form()){
+        $.ajax({
+            url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+            data: $('#basic_tab').serialize() + "&tab=basic",
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function(){
+                $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+            },
+            success: function(json){
+                location.reload();
+            }
+        });
+    }else{
+        //alert("not submitted");
+    }
+});
+
+/***** Basic TAB (form submit) AJAX (End)  *****/
+
 /***** DETAIL TAB (form submit) AJAX  ****/
 
 var detailtabform = $("#detail_tab").validate();
@@ -1450,5 +1468,53 @@ $(".detail_submit").click(function(){
 });
 
 /***** DETAIL TAB (form submit) AJAX (end) ****/
+
+
+/******** Price TAB (Accordian) *********/
+
+$(document).ready(function(){
+    $('.price_accordian_body').slideUp();
+    $('.price_accordian_body:first').slideDown();
+    $('.price_accordian_head').click(function(){
+        $('.price_accordian_body').slideUp();
+
+        if($(this).next('.price_accordian_body').is(":visible")){
+            $('.price_accordian_body').slideUp();
+        }else{
+            $(this).next('.price_accordian_body').slideDown();
+        }
+    });
+});
+
+/******** Price TAB (Accordian) (End) *********/
+
+$("#price_per_person").bind('keyup mouseup', function(){
+    change_basic_price();    
+});
+
+$("#max_travelers").change(function(){
+    change_basic_price();   
+    add_advance_price_tabs();
+});
+
+function change_basic_price(){
+    var price = parseFloat($("#price_per_person").val());
+    var persons = $("#max_travelers").val();
+    var total_price =  parseFloat(price * persons);
+    
+    if(total_price.toFixed(2) != 'NaN'){
+        $("#total_ppp").html(price.toFixed(2)+" - "+total_price.toFixed(2)+" <span style='color:#000;'>THB</span>");
+        
+        $("#total_ppp").next("input[name='pricing[0][single]']").val(price.toFixed(2));
+        $("#total_ppp").next().next("input[name='pricing[0][total]']").val(total_price.toFixed(2));
+        
+    }else{
+        $("#total_ppp").html("0.00 - 0.00 <span style='color:#000;'>THB</span>");
+    }
+}
+
+function add_advance_price_tabs(){
+    
+}
 
 </script>

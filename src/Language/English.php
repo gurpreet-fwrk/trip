@@ -183,6 +183,13 @@ class English{
                 $lang['text_photos']                    =	'Photos';
                 $lang['text_upload_only_photos']        =	'Please upload atleast 3 pictures.<br>Click on photo to make cover, Tell more detail about your picture';
                 $lang['text_add_photos']                    =	'Add Photos';
+                
+                $lang['text_add_expense_title']                    =	'Extra expense travelers should prepare';
+                $lang['text_add_expense_question']                    =	'Are there any extra expenses that travelers have to pay during the trip?
+';
+                $lang['text_add_expense_ph']                    =	'e.g. your pocket money';
+                $lang['text_max_travellers']                    =	'Maximun travelers';
+                
 
 		/***** Add Trip Page (End) *****/
 

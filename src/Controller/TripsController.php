@@ -132,6 +132,8 @@ class TripsController extends AppController
             
             if($this->request->data['tab'] == 'basic'){
                 
+                //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+                
                 if($this->request->data['stopped_locations'] != ''){
                     
                     $this->Triplocations->deleteAll(['trip_id' => $id]);

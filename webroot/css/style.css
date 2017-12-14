@@ -969,20 +969,9 @@ div.tab button.active {
     margin-bottom: 15px;
 }
 
-.pric ul {
-    float: left;
-    width: 100%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.pric ul li {
-    margin-bottom: 5px;
-    float: left;
-    width: 100%;
-	line-height: 29px;
-}
+.pric_rt h4{text-align:right;}
+.pric_rt p{color:#d0021b;text-align:right;margin:0px;}
+.pric_rt span{color:#000;}
 
 .per {
     float: left;
@@ -1703,6 +1692,31 @@ list-style:none;}
     border-bottom: 1px solid #ccc;
     padding-bottom: 20px;
 }
+
+.thb {
+    float: left;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.qt, .amnt{line-height: 35px;}
+
+.place input {
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    height: 35px;
+    text-align: center;
+    width: 100%;
+float: left;
+}
+
+.amnt p{
+    color:#d0021b;
+    margin:0px;
+    font-size: 13px;
+}
+
+.amnt p span{color:#000;}
 
 /**/
 .select2-selection {

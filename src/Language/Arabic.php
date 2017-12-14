@@ -181,6 +181,11 @@ class Arabic{
                 $lang['text_upload_only_photos']        =	'يرجى تحميل أتليست 3 صور.<br>انقر على الصورة لجعل غطاء، مزيد من التفاصيل حول صورتك';
                 $lang['text_add_photos']                    =	'إضافة الصور';
                 
+                $lang['text_add_expense_title']                    =	'وينبغي للمسافرين حساب إضافي إعداد';
+                $lang['text_add_expense_question']                    =	'هل هناك أي نفقات إضافية يتعين على المسافرين دفعها أثناء الرحلة؟
+';
+                $lang['text_add_expense_ph']                    =	'مثلا جيبك المال';
+                $lang['text_max_travellers']                    =	'المسافرون ماكسيمون';
 		/***** Add Trip Page (End) *****/
 
 		if(isset($lang[$text])){

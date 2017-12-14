@@ -62,7 +62,7 @@ class Trip extends Entity
         'schedule' => true,
         'faq1' => true,
         'faq2' => true,
-        'tripfeature_id' => true,
+        'include_exclude' => true,
         'extra_expense' => true,
         'travellers' => true,
         'child_price' => true,
