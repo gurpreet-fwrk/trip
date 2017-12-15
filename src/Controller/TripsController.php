@@ -122,6 +122,7 @@ class TripsController extends AppController
         $this->loadModel('Meetingpoints');
         $this->loadModel('Meetingpointtypes');
         $this->loadModel('Tripmeetingpoints');
+        $this->loadModel('Tripprices');
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             
@@ -293,6 +294,63 @@ class TripsController extends AppController
             
             /***** Tab DETAIL (ENd) ******/
             
+            
+            /***** Tab PRICE ******/
+            
+            if($this->request->data['tab'] == 'price'){
+                
+                //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+                
+                $post = array();
+                
+                if($this->request->data['pricing_type'] == 'basic'){
+                    
+                    $this->Tripprices->deleteAll(['trip_id' => $id]);
+                    
+                    $this->request->data['basic_price_per_person'] = $this->request->data['basic_single_price'];
+                    $this->request->data['basic_total_price'] = $this->request->data['basic_total_price1'];
+                    
+                }
+                
+                if($this->request->data['pricing_type'] == 'advance'){
+                    
+                    $this->Tripprices->deleteAll(['trip_id' => $id]);
+                    
+                    $prices = $this->request->data['apricing'];
+                    
+                    foreach($prices as $price){
+                        
+                        $post['trip_id'] = $id;
+                        $post['person'] = $price['persons'];
+                        $post['price_per_person'] = $price['single'];
+                        $post['total_price'] = $price['total_price'];
+                        
+                        $tripprices = $this->Tripprices->newEntity();
+                        $tripprices = $this->Tripprices->patchEntity($tripprices, $post);
+                        $this->Tripprices->save($tripprices);
+                    }
+                }
+                
+                $session = $this->request->session();
+                 
+                $session->read('Config.language');
+                $extra_expense = $this->language($this->request->data['extra_expense_'.$session->read('Config.language')]);
+                
+                $change_language = $session->read('Config.language') == 'en' ? 'ar' : 'en';
+                
+                $this->request->data['extra_expense_'.$change_language] = $extra_expense;
+                
+                if(isset($this->request->data['child_price_enabled'])){
+                    $this->request->data['child_price_enabled'] = 1;
+                }else{
+                    $this->request->data['child_price_enabled'] = 0;
+                    $this->request->data['child_price_enabled'] = '0.00';
+                }
+                
+            }
+            
+            /***** Tab PRICE (ENd) ******/
+            
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
                 $this->Flash->success(__('The trip has been saved.'));
@@ -349,6 +407,11 @@ class TripsController extends AppController
         $this->set('selected_meetingpoints', $selected_meetingpoints);
         
         /************************/
+        
+        $selected_tripprices = $this->Tripprices->find('all', ['conditions' => ['Tripprices.trip_id' => $id]])->all()->toArray();
+        $this->set('selected_tripprices', $selected_tripprices);
+        
+        /***********************/
         
         $this->set('trip_id', $id);
     }

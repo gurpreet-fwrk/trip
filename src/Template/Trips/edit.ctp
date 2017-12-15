@@ -3,6 +3,8 @@
     label.error{display:none !important;}
     .subs .icons li img{width: 50%;}
     .subs .icons li{padding: 0;}
+    .price_accordian_head .panel-title label{float: none; padding: 15px 10px;}
+    .price_accordian_head .panel-heading {padding: 0px;}
 </style>
 <div class="main-loader-container _2G9Ry7uLWE8xGyg0Ueyndc" data-reactid="203" style="display:none;"><div class="_1FNksn-DOC2GvjPqw1ilJA" data-reactid="204"><div class="DA2lM5bvfdkZyFAb775Wh" data-reactid="205"></div><div class="r52LMBdnmQ_U7l8cHHUBu" data-reactid="206"></div></div></div>
 
@@ -576,6 +578,10 @@
             
             
             <div id="Usa" class="tabcontent">
+              <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'price_tab')) ?>
+                
+                <?php //echo "<pre>"; print_r($selected_tripprices); echo "</pre>"; ?>
+                
               <h3 class="subheadb">Price</h3>
               <p style="color: #9b9b9b;">
                   <?php echo ($config_language == 'en') ? 'Please, use these price conditions as guides to calculate your trip fee and always make sure to inform your travelers about any additional expenses before the trip day.' : 'يرجى استخدام شروط الأسعار هذه كدليل لحساب رسوم رحلتك ودائما التأكد من إبلاغ المسافرين عن أي نفقات إضافية قبل يوم الرحلة'; ?>
@@ -585,7 +591,16 @@
                   <div class="panel-heading">
                     <h4 class="panel-title">
                       <label for='r11' style='width: auto;'>
-                        <input type='radio' id='r11' name='include_exclude' value='all_inclusive' required />
+                          <?php if($trip->include_exclude != ''){ ?>
+                          <?php if($trip->include_exclude == 'all_inclusive'){ ?>
+                          <input type='radio' id='r11' name='include_exclude' value='all_inclusive' checked="" required />
+                          <?php }else{ ?>
+                          <input type='radio' id='r11' name='include_exclude' value='all_inclusive' required />
+                          <?php } ?>
+                          <?php }else{ ?>
+                          <input type='radio' id='r11' name='include_exclude' value='all_inclusive' checked="" required />
+                          <?php } ?>
+                          
                         <?php echo ($config_language == 'en') ? 'All inclusive' : 'الجميع مشمول'; ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"></a> </label>
                     </h4>
                   </div>
@@ -613,7 +628,11 @@
                   <div class="panel-heading">
                     <h4 class=panel-title>
                       <label for='r12' style='width: auto;'>
+                        <?php if($trip->include_exclude == 'food_excluded'){ ?>
+                          <input type='radio' id='r12' name='include_exclude' value='food_excluded' checked="" required />
+                        <?php }else{ ?>
                         <input type='radio' id='r12' name='include_exclude' value='food_excluded' required />
+                        <?php } ?>
                         <?php echo ($config_language == 'en') ? 'Food Excluded' : 'الغذاء المستثنى'; ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"></a> </label>
                     </h4>
                   </div>
@@ -639,7 +658,12 @@
                   <div class="panel-heading">
                     <h4 class=panel-title>
                       <label for='r13' style='width: auto;'>
+                          <?php if($trip->include_exclude == 'food_excluded'){ ?>
+                          <input type='radio' id='r13' name='include_exclude' value='all_excluded' checked="" required />
+                          <?php }else{ ?>
                         <input type='radio' id='r13' name='include_exclude' value='all_excluded' required />
+                          <?php } ?>
+                        
                         <?php echo ($config_language == 'en') ? 'Food, Transportation, Admission fee excluded' : 'الغذاء، النقل، رسوم القبول مستثناة'; ?> <a data-toggle="collapse" data-parent="#accordion"
                          href="#collapseThree"></a> </label>
                     </h4>
@@ -665,7 +689,9 @@
               <div class="form-group">
                 <label for="exampleInputSummary"><?php echo $this->Text->lang('text_add_expense_title'); ?></label>
                 <p class="help-block"><?php echo $this->Text->lang('text_add_expense_question'); ?> </p>
-                <textarea class="form-control" name="extra_expense" rows="3" placeholder="<?php echo $this->Text->lang('text_add_expense_ph'); ?>" required></textarea>
+                
+                <?php echo $this->Form->control('extra_expense_'.$config_language, array('class' => 'form-control', 'label' => false, 'placeholder' => $this->Text->lang('text_add_expense_ph'), 'required')); ?>
+                
 <!--                <p class="help-block">250 Characters left</p>-->
               </div>
               <div class="form-group">
@@ -675,7 +701,11 @@
                 <div class="col-sm-4 no-padding">
                     <select class="form-control travel" id="max_travelers" name="travellers" required>
                         <?php for($i=1; $i<9; $i++){ ?>
-                    <option><?php echo $i; ?></option>
+                        <?php if($trip->travellers == $i){ ?>
+                        <option value="<?php echo $i; ?>" selected="selected"><?php echo $i; ?></option>
+                        <?php }else{ ?>
+                        <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                        <?php } ?>
                         <?php } ?>
                   </select>
                 </div>
@@ -687,22 +717,37 @@
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                       <div class="panel panel-default">
                         <div class="panel-heading price_accordian_head" role="tab" id="headingOne">
-                          <h4 class="panel-title"> <a role="button"><i class="fa fa-check-circle" aria-hidden="true"></i> Basic Pricing </a> </h4>
+                            <h4 class="panel-title">
+                            <label for='ab'>
+                            <input type='radio' id='ab' name='pricing_type' value='basic' required />
+                            <i class="fa fa-check-circle"></i>
+                            Basic Pricing <a data-toggle="collapse" data-parent="#accordion" href="#collapseD"></a></label>
+                            </h4>
                         </div>
-                        <div id="collapseA" class="panel-collapse price_accordian_body" role="tabpanel" aria-labelledby="headingOne">
+                        <div id="collapseD" class="panel-collapse collapse price_accordian_body" role="tabpanel" aria-labelledby="headingOne">
                           <div class="panel-body">
                             <div class="col-sm-6">
                                 <div class="pric">
                                     <h4>Price (per person)</h4>
+                                    <?php if($trip->pricing_type == 'basic'){ ?>
+                                    <input type="number" min="0" placeholder="0" id="price_per_person" value="<?php echo $trip->basic_price_per_person; ?>">
+                                    <?php }else{ ?>
                                     <input type="number" min="0" placeholder="0" id="price_per_person">
+                                    <?php } ?>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                               <div class="pric pric_rt">
                                 <h4>Total (per trip)</h4>
+                                <?php if($trip->pricing_type == 'basic'){ ?>
+                                <p id="total_ppp"><?php echo number_format($trip->basic_price_per_person,2) ?> - <?php echo number_format($trip->basic_total_price,2) ?> <span>THB</span></p>
+                                <input type="hidden" name="basic_single_price" value="<?php echo number_format($trip->basic_price_per_person,2) ?>">
+                                <input type="hidden" name="basic_total_price1" value="<?php echo number_format($trip->basic_total_price,2) ?>">
+                                <?php }else{ ?>
                                 <p id="total_ppp">0.00 - 0.00 <span>THB</span></p>
-                                <input type="hidden" name="pricing[0][single]">
-                                <input type="hidden" name="pricing[0][total]">
+                                <input type="hidden" name="basic_single_price" value="0.00">
+                                <input type="hidden" name="basic_total_price1" value="0.00">
+                                <?php } ?>
                                </div>
                             </div>
                           </div>
@@ -710,18 +755,54 @@
                       </div>
                       <div class="panel panel-default">
                         <div class="panel-heading price_accordian_head" role="tab" id="headingTwo">
-                          <h4 class="panel-title"> <a role="button"><i class="fa fa-check-circle" aria-hidden="true"></i> Advance Pricing </a> </h4>
+                            <h4 class="panel-title">
+                            <label for='bc'>
+                            <input type='radio' id='bc' name='pricing_type' value='advance' required />
+                            <i class="fa fa-check-circle"></i>
+                            Advance Pricing <a data-toggle="collapse" data-parent="#accordion" href="#collapseE"></a></label>
+                            </h4>
                         </div>
-                        <div id="collapseB" class="panel-collapse price_accordian_body" role="tabpanel" aria-labelledby="headingTwo">
+                        <div id="collapseE" class="panel-collapse collapse price_accordian_body" role="tabpanel" aria-labelledby="headingTwo">
                           <div class="panel-body advance_pricing">
                           
+                          
+                        <?php if($trip->pricing_type == 'advance' && !empty($selected_tripprices)){ ?>
+ 
+                       
+                        <?php for($i=0;$i<count($selected_tripprices);$i++){ ?>
+                              
                         <div class="thb">
                           <div class="row no-margin">
+                              <div class="col-sm-4 text-center"><div class="qt"><?php echo $i+1; ?> <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div></div>
+                              <div class="col-sm-4 text-center"><div class="place">
+                                      <input type="text" placeholder="0" min="0" value="<?php echo $selected_tripprices[$i]['price_per_person']; ?>" class="advance_pricing_amt" data-qty="<?php echo $i; ?>">
+                                      <input type="hidden" name="apricing[<?php echo $i; ?>][persons]" value="<?php echo $selected_tripprices[$i]['person']; ?>">
+                                      <input type="hidden" name="apricing[<?php echo $i; ?>][single]" value="<?php echo $selected_tripprices[$i]['price_per_person']; ?>">
+                                      <input type="hidden" name="apricing[<?php echo $i; ?>][total_price]" value="<?php echo $selected_tripprices[$i]['total_price']; ?>">
+                                  </div></div>
+                             <div class="col-sm-4 text-center"><div class="amnt"><p><?php echo number_format($selected_tripprices[$i]['price_per_person'], 2); ?> - <?php echo number_format($selected_tripprices[$i]['total_price'], 2); ?> <span >THB</span></p></div></div>  
+                          </div>
+                        </div>
+                        <?php } ?>
+
+                              
+                        <?php }else{ ?>
+                            
+                            <script>$("#max_travelers").trigger('change');</script>
+                            
+                              <div class="thb">
+                          <div class="row no-margin">
                               <div class="col-sm-4 text-center"><div class="qt">1 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div></div>
-                              <div class="col-sm-4 text-center"><div class="place"><input type="text" placeholder="0"></div></div>
+                              <div class="col-sm-4 text-center"><div class="place">
+                                      <input type="number" placeholder="0" min="0" class="advance_pricing_amt" data-qty="1">
+                                      <input type="hidden" name="apricing[0][persons]" value="1">
+                                      <input type="hidden" name="apricing[0][single]" value="0.00">
+                                      <input type="hidden" name="apricing[0][total_price]" value="0.00">
+                                  </div></div>
                              <div class="col-sm-4 text-center"><div class="amnt"><p>0.00 - 0.00 <span >THB</span></p></div></div>  
                           </div>
                         </div>
+                        <?php } ?>
                               
                           </div>
                         </div>
@@ -741,16 +822,29 @@
  
                     <div class="checkbox-btn no-margin addopt">
                      <h3>Additional Options</h3>
-                          <input type="checkbox" value="value-1" id="rc3" name="rc3">
+                          <?php if($trip->child_price_enabled == 1){ ?>
+                            <input type="checkbox" id="rc3" name="child_price_enabled" checked="">
+                          <?php }else{ ?>
+                          <input type="checkbox" id="rc3" name="child_price_enabled">
+                          <?php } ?>
                           <label for="rc3" onclick class="no-margin">Enable Child Price (Age 2-12)</label>
+                          <div class="child_price" style="<?php echo ($trip->child_price_enabled == '1') ? 'display:block;' : 'display:none;'; ?>">
+                              <?php if($trip->child_price_enabled == 1){ ?>
+                              Price Per child <input type="number" name="child_price" min="0" placeholder="0" value="<?php echo number_format($trip->child_price, 2); ?>"> THB
+                              <?php }else{ ?>
+                              Price Per child <input type="number" name="child_price" min="0" placeholder="0"> THB
+                              <?php } ?>
+                        </div>
                      </div>
+                    
                   
                 </div>
               </div>
               <div class="right">
-                  <button type="submit" class="btn btn-primary blue">Save</button>
-                  <button type="submit" class="btn btn-default blue grey">Next</button>
+                  <button type="button" class="btn btn-primary blue price_submit">Save</button>
+                  <button type="button" class="btn btn-default blue grey price_submit">Next</button>
                 </div>
+              <?= $this->Form->end() ?>
             </div>
             
             <div id="Miami" class="tabcontent">
@@ -894,6 +988,13 @@
     </div>
   </div>
 </section>
+
+
+<?php if($trip->pricing_type == 'basic' || $trip->pricing_type == ''){ ?>
+<script>$("#ab").trigger('click')</script>
+<?php }else{ ?>
+<script>$("#bc").trigger('click')</script>
+<?php } ?>
 
 <script>
 
@@ -1472,19 +1573,22 @@ $(".detail_submit").click(function(){
 
 /******** Price TAB (Accordian) *********/
 
-$(document).ready(function(){
-    $('.price_accordian_body').slideUp();
-    $('.price_accordian_body:first').slideDown();
-    $('.price_accordian_head').click(function(){
-        $('.price_accordian_body').slideUp();
-
-        if($(this).next('.price_accordian_body').is(":visible")){
-            $('.price_accordian_body').slideUp();
-        }else{
-            $(this).next('.price_accordian_body').slideDown();
-        }
-    });
-});
+//$(document).ready(function(){
+//    $('.price_accordian_body').slideUp();
+//    $('.price_accordian_body:first').slideDown();
+//    
+//    $('.price_accordian_head:first input').prop('checked', true);
+//    
+//    $('.price_accordian_head').click(function(){
+//        $('.price_accordian_body').slideUp();
+//
+//        if($(this).next('.price_accordian_body').is(":visible")){
+//            $('.price_accordian_body').slideUp();
+//        }else{
+//            $(this).next('.price_accordian_body').slideDown();
+//        }
+//    });
+//});
 
 /******** Price TAB (Accordian) (End) *********/
 
@@ -1497,24 +1601,124 @@ $("#max_travelers").change(function(){
     add_advance_price_tabs();
 });
 
+//$("#max_travelers").trigger('change');
+
 function change_basic_price(){
     var price = parseFloat($("#price_per_person").val());
     var persons = $("#max_travelers").val();
     var total_price =  parseFloat(price * persons);
     
-    if(total_price.toFixed(2) != 'NaN'){
+    if(total_price.toFixed(2) != 'NaN'){ 
         $("#total_ppp").html(price.toFixed(2)+" - "+total_price.toFixed(2)+" <span style='color:#000;'>THB</span>");
         
-        $("#total_ppp").next("input[name='pricing[0][single]']").val(price.toFixed(2));
-        $("#total_ppp").next().next("input[name='pricing[0][total]']").val(total_price.toFixed(2));
+        $("#total_ppp").next("input[name='basic_single_price']").val(price.toFixed(2));
+        $("#total_ppp").next().next("input[name='basic_total_price1']").val(total_price.toFixed(2));
         
     }else{
         $("#total_ppp").html("0.00 - 0.00 <span style='color:#000;'>THB</span>");
+        $("#total_ppp").next("input[name='basic_single_price']").val('0.00');
+        $("#total_ppp").next().next("input[name='basic_total_price1']").val('0.00');
     }
 }
 
 function add_advance_price_tabs(){
+
+    var persons = $("#max_travelers").val();
+
+    var html = '';
+
+    for(var i=1; i<=persons; i++){
+        html += '<div class="thb">';
+        html += '<div class="row no-margin">';
+        html += '<div class="col-sm-4 text-center"><div class="qt">'+i+' <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div></div>';
+        html += '<div class="col-sm-4 text-center"><div class="place">';
+        html += '<input type="number" placeholder="0" min="0" class="advance_pricing_amt" data-qty="'+i+'">';
+        html += '<input type="hidden" name="apricing['+i+'][persons]" value="'+i+'">';
+        html += '<input type="hidden" name="apricing['+i+'][single]" value="0.00">';
+        html += '<input type="hidden" name="apricing['+i+'][total_price]" value="0.00">';
+        html += '</div></div>';
+        html += '<div class="col-sm-4 text-center"><div class="amnt"><p>0.00 - 0.00 <span >THB</span></p></div></div>';
+        html += '</div>';
+        html += '</div>';
+    }
     
+    $(".advance_pricing").html(html);
 }
 
+/********* Advance Pricing Tab (price change) *********/
+
+$(document).delegate(".advance_pricing_amt","keyup mouseup", function(){
+
+    var persons = $(this).attr('data-qty');
+
+    var price = parseFloat($(this).val());
+    
+    var total_price = parseFloat(price * persons);
+    
+    console.log(price.toFixed(2) +' - '+ total_price.toFixed(2));
+    
+    if(total_price.toFixed(2) != 'NaN'){
+        $(this).parent().parent().next('div').find('p').html(price.toFixed(2) + ' - ' + total_price.toFixed(2)+' <span >THB</span>');
+        $(this).next().next('input').val(price.toFixed(2));
+        $(this).next().next().next('input').val(total_price.toFixed(2));
+    }else{
+        $(this).parent().parent().next('div').find('p').html('0.00 - 0.00 <span >THB</span>');
+        $(this).next().next('input').val('0.00');
+        $(this).next().next().next('input').val('0.00');
+    }
+    
+});
+
+/********* Advance Pricing Tab (price change) (End) *********/
+
+/******** Price TAB (Accordian) *********/
+
+$('#ab').on('click', function(){
+  $(this).parent().find('a').trigger('click');
+  $("#collapseE").removeClass('in');
+})
+
+$('#bc').on('click', function(){
+  $(this).parent().find('a').trigger('click');
+  $("#collapseD").removeClass('in');
+})
+
+/******** Price TAB (Accordian) (End) *********/
+
+/****** Enable Child price (checkbox) ********/
+
+$("input[name='child_price_enabled']").change(function(){
+   if(this.checked) {
+       $(".child_price").show();
+   }else{
+       $(".child_price").hide();
+   }
+});
+
+/****** Enable Child price (checkbox) (End) ********/
+
+/***** PRICE TAB (form submit) AJAX  ****/
+
+var pricetabform = $("#price_tab").validate();
+
+$(".price_submit").click(function(){
+    if(pricetabform.form()){
+        $.ajax({
+            url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+            data: $('#price_tab').serialize() + "&tab=price",
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function(){
+                $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+            },
+            success: function(json){
+                location.reload();
+            }
+        });
+    }else{
+        //alert("not submitted");
+    }
+});
+
+/***** PRICE TAB (form submit) AJAX (end) ****/
 </script>
