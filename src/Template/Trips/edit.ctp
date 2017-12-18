@@ -16,13 +16,45 @@
           <div class="base">
             <div class="tab">
               <h2><?php echo $this->Text->lang('list_trip'); ?></h2>
+              
+              <?php if($_GET['step'] == '1'){ ?>
               <button class="tablinks active" onclick="openCity(event, 'London')" id="defaultOpen"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
+              <?php }else{ ?>
+              <button class="tablinks active" onclick="openCity(event, 'London')"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
+              <?php } ?>
+              
+              <?php if($_GET['step'] == '2'){ ?>
+              <button class="tablinks" onclick="openCity(event, 'Paris')" id="defaultOpen"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
+              <?php }else{ ?>
               <button class="tablinks" onclick="openCity(event, 'Paris')"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
+              <?php } ?>
+              
+              <?php if($_GET['step'] == '3'){ ?>
+              <button class="tablinks" onclick="openCity(event, 'Tokyo')" id="defaultOpen"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
+              <?php }else{ ?>
               <button class="tablinks" onclick="openCity(event, 'Tokyo')"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
+              <?php } ?>
+              
+              <?php if($_GET['step'] == '4'){ ?>
+              <button class="tablinks" onclick="openCity(event, 'Usa')" id="defaultOpen"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
+              <?php }else{ ?>
               <button class="tablinks" onclick="openCity(event, 'Usa')"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
+              <?php } ?>
+              
+              <?php if($_GET['step'] == '5'){ ?>
+              <button class="tablinks" onclick="openCity(event, 'Miami')" id="defaultOpen"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
+              <?php }else{ ?>
               <button class="tablinks" onclick="openCity(event, 'Miami')"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
+              <?php } ?>
+              
+              <?php if($_GET['step'] == '6'){ ?>
+              <button class="tablinks" onclick="openCity(event, 'Newyork')" id="defaultOpen"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
+              <?php }else{ ?>
               <button class="tablinks" onclick="openCity(event, 'Newyork')"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
+              <?php } ?>
+
               <button class="tablinks" onclick="openCity(event, 'Delete')">Delete this trip</button>
+              
             </div>
           </div>
         </div>
@@ -171,7 +203,7 @@
                   <div class="gallery">
                       
                       <?php foreach($galleries as $gallery){ ?>
-                      <div style='width:20%'>
+                      <div class="gal_child">
                           <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $gallery['file'] ?>"><span data-file='<?php echo $gallery['file'] ?>' data-id="<?php echo $gallery['id'] ?>" class='remove_img' title='Click to remove'>Remove</span><br clear=\"left\"/>
                       </div>
                       <?php } ?>
@@ -220,7 +252,7 @@
               
               <div class="selected_meeting_points">
                   <?php foreach($selected_meetingpoints as $selected_meetingpoint){ ?>
-                  <span class='rtmp' data-id='<?php echo $selected_meetingpoint['meetingpoint_id'] ?>'><?php echo $selected_meetingpoint['location'] ?> > <?php echo $selected_meetingpoint['meeting_point_type'] ?> > <?php echo $selected_meetingpoint['meeting_point'] ?> &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>
+                  <span class='rtmp' data-id='<?php echo $selected_meetingpoint['meetingpoint_id'] ?>'><?php echo $selected_meetingpoint['location'] ?> > <?php echo $selected_meetingpoint['meeting_point_type'] ?> > <?php echo $selected_meetingpoint['meeting_point'] ?> &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true'></i></span><br>
                   <?php } ?>
                   
               </div>
@@ -582,7 +614,7 @@
                 
                 <?php //echo "<pre>"; print_r($selected_tripprices); echo "</pre>"; ?>
                 
-              <h3 class="subheadb">Price</h3>
+              <h3 class="subheadb"><?php echo $this->Text->lang('text_price'); ?></h3>
               <p style="color: #9b9b9b;">
                   <?php echo ($config_language == 'en') ? 'Please, use these price conditions as guides to calculate your trip fee and always make sure to inform your travelers about any additional expenses before the trip day.' : 'يرجى استخدام شروط الأسعار هذه كدليل لحساب رسوم رحلتك ودائما التأكد من إبلاغ المسافرين عن أي نفقات إضافية قبل يوم الرحلة'; ?>
               </p>
@@ -721,7 +753,7 @@
                             <label for='ab'>
                             <input type='radio' id='ab' name='pricing_type' value='basic' required />
                             <i class="fa fa-check-circle"></i>
-                            Basic Pricing <a data-toggle="collapse" data-parent="#accordion" href="#collapseD"></a></label>
+                            <?php echo $this->Text->lang('text_basic_pricing'); ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseD"></a></label>
                             </h4>
                         </div>
                         <div id="collapseD" class="panel-collapse collapse price_accordian_body" role="tabpanel" aria-labelledby="headingOne">
@@ -759,7 +791,7 @@
                             <label for='bc'>
                             <input type='radio' id='bc' name='pricing_type' value='advance' required />
                             <i class="fa fa-check-circle"></i>
-                            Advance Pricing <a data-toggle="collapse" data-parent="#accordion" href="#collapseE"></a></label>
+                            <?php echo $this->Text->lang('text_advance_pricing'); ?> <a data-toggle="collapse" data-parent="#accordion" href="#collapseE"></a></label>
                             </h4>
                         </div>
                         <div id="collapseE" class="panel-collapse collapse price_accordian_body" role="tabpanel" aria-labelledby="headingTwo">
@@ -820,14 +852,19 @@
                     </div>
                   </div>
  
-                    <div class="checkbox-btn no-margin addopt">
-                     <h3>Additional Options</h3>
+                   
+                  
+                </div>
+              </div>
+              
+               <div class="checkbox-btn no-margin addopt">
+                     <h3><?php echo $this->Text->lang('text_additional_options'); ?></h3>
                           <?php if($trip->child_price_enabled == 1){ ?>
                             <input type="checkbox" id="rc3" name="child_price_enabled" checked="">
                           <?php }else{ ?>
                           <input type="checkbox" id="rc3" name="child_price_enabled">
                           <?php } ?>
-                          <label for="rc3" onclick class="no-margin">Enable Child Price (Age 2-12)</label>
+                          <label for="rc3" onclick class="no-margin"><?php echo $this->Text->lang('text_enable_child_price'); ?></label>
                           <div class="child_price" style="<?php echo ($trip->child_price_enabled == '1') ? 'display:block;' : 'display:none;'; ?>">
                               <?php if($trip->child_price_enabled == 1){ ?>
                               Price Per child <input type="number" name="child_price" min="0" placeholder="0" value="<?php echo number_format($trip->child_price, 2); ?>"> THB
@@ -837,64 +874,52 @@
                         </div>
                      </div>
                     
-                  
-                </div>
-              </div>
               <div class="right">
-                  <button type="button" class="btn btn-primary blue price_submit">Save</button>
-                  <button type="button" class="btn btn-default blue grey price_submit">Next</button>
+                  <button type="button" class="btn btn-primary blue price_submit"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="button" class="btn btn-default blue grey price_submit"><?php echo $this->Text->lang('text_next'); ?></button>
                 </div>
               <?= $this->Form->end() ?>
             </div>
             
             <div id="Miami" class="tabcontent">
-              <h3 class="subheadb">Extra conditions <span>(Optional)</span></h3>
+              <h3 class="subheadb"><?php echo $this->Text->lang('text_extra_conditions'); ?> <span><?php echo $this->Text->lang('text_optional'); ?></span></h3>
+              
+              <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'condition_tab')) ?>
               <div class="conditions-top">
+                  
+                <?php
+                $selected_conditions = array();
+                if($trip->extracondition_id != ''){
+                    $selected_conditions = explode(",",$trip->extracondition_id);
+                }
+                ?>
+                
+                <?php foreach($extraconditions as $extracondition){ ?>
+                  
                 <div class="col-md-4 padding-left-n">
                   <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/shirt.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/shirtb.png" alt=""></label>
-                    <p>Smart Casual</p>
+                      
+                    <?php if(in_array($extracondition['id'], $selected_conditions)){ ?>
+                      <input type="checkbox" name="extracondition_id[]" value="<?php echo $extracondition['id']; ?>" checked="">
+                    <?php }else{ ?>
+                      <input type="checkbox" name="extracondition_id[]" value="<?php echo $extracondition['id']; ?>">
+                    <?php } ?>
+                    
+                    <label>
+                        <img class="image-one" src="<?php echo $this->request->webroot  ?>images/uploads/<?php echo $extracondition['icon']; ?>" alt="">
+                        <img class="image-two" src="<?php echo $this->request->webroot  ?>images/uploads/<?php echo $extracondition['selected_icon']; ?>" alt="">
+                    </label>
+                    <p><?php echo $extracondition['title_'.$config_language]; ?></p>
                   </div>
                 </div>
-                <div class="col-md-4 padding-left-n">
-                  <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/heart.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/heartb.png" alt=""></label>
-                    <p>Physical Strength Required</p>
-                  </div>
-                </div>
-                <div class="col-md-4 padding-left-n">
-                  <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/carrot.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/carrotb.png" alt=""></label>
-                    <p>Vegetarian Food Available</p>
-                  </div>
-                </div>
-                <div class="col-md-4 padding-left-n">
-                  <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/face.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/faceb.png" alt=""></label>
-                    <p>Children Friendly</p>
-                  </div>
-                </div>
-                <div class="col-md-4 padding-left-n">
-                  <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/clock.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/clockb.png" alt=""></label>
-                    <p>Flexible Plan</p>
-                  </div>
-                </div>
-                <div class="col-md-4 padding-left-n">
-                  <div class="form-group">
-                    <input type="checkbox" name="" value="Smart Casual">
-                    <label><img class="image-one" src="<?php echo $this->request->webroot  ?>images/website/cloud.png" alt=""> <img class="image-two" src="<?php echo $this->request->webroot  ?>images/website/cloudb.png" alt=""></label>
-                    <p>Seasonal Activities</p>
-                  </div>
-                </div>
+                  
+                <?php } ?>
+                  
+                  
+                
               </div>
               <!--condition-top-->
-              <div class="conditions">
+<!--              <div class="conditions">
                 <h3 class="subheadb">Operating Day</h3>
                 <p>Please select days</p>
                 <ul>
@@ -955,12 +980,13 @@
                     </div>
                   </li>
                 </ul>
-              </div>
+              </div>-->
               <!--conditions-->
               <div class="right">
-                  <button type="submit" class="btn btn-primary blue">Save</button>
-                  <button type="submit" class="btn btn-default blue grey">Next</button>
+                  <button type="button" class="btn btn-primary blue"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="button" class="btn btn-default blue grey"><?php echo $this->Text->lang('text_next'); ?></button>
                 </div> 
+            </form>
             </div>
             
             <div id="Newyork" class="tabcontent">
@@ -973,10 +999,19 @@
                   <li>- The photography service is FREE!</li>
                   <li>- You will not receive a payment for taking the photographer out on the tour. The photographer will take care of his own expenses (transport, meals, admission fee, etc.).</li>
                 </ul>
-                <button type="submit" class="btn btn-primary blue">Request for photographer</button>
+                <?php if($trip->request_photographer == 0){ ?>
+                <button type="button" class="btn btn-primary blue" id="request-photo">Request for photographer</button>
+                <p style="display:none;">
+                    You have requested photographer for your trip. We will contact you once your trip has been confirmed.
+                </p>
+                <?php }else{ ?>
+                <p>
+                    You have requested photographer for your trip. We will contact you once your trip has been confirmed.
+                </p>
+                <?php } ?>
               </div>
               <div class="right">
-                <button type="submit" class="btn btn-primary blue">Save</button>
+<!--                <button type="submit" class="btn btn-primary blue">Save</button>-->
                 <button type="submit" class="btn btn-default blue grey">Submit for approval</button>
               </div>
             </div>
@@ -1225,7 +1260,7 @@ function handleForm(e) {
 //                console.log(e.currentTarget.responseText);  
 //                alert(e.currentTarget.responseText + ' items uploaded.');
 
-            location.reload();
+            window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step=3';
         }
     }
     xhr.send(data);
@@ -1398,7 +1433,7 @@ function store_meetingpoint(value, id){
     
     $.each(new_arr, function(key, value) {
         if(value != null){
-            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>";
+            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true'></i></span><br>";
             html2 += "<span>- "+ value.mt +" ["+value.mp+"]</span><br>";
         }
     });
@@ -1450,7 +1485,7 @@ function remove_meetingpoint(meeting_point, id){
 
     $.each(new_arr, function(key, value) {
         if(value != null){
-            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true' style='color:red; font-weight: bold;'></i></span><br>";
+            html += "<span class='rtmp' data-id='"+ value.mp_id +"'>"+value.location+" > "+ value.mt +" > "+ value.mp +" &nbsp;&nbsp;<i class='fa fa-times' aria-hidden='true'></i></span><br>";
             html2 += "<span>- "+ value.mt +" ["+value.mp+"]</span><br>";
         }
     });
@@ -1535,7 +1570,7 @@ $(".basic_submit").click(function(){
                 $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
             },
             success: function(json){
-                location.reload();
+                window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step=2';
             }
         });
     }else{
@@ -1560,7 +1595,7 @@ $(".detail_submit").click(function(){
                 $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
             },
             success: function(json){
-                location.reload();
+                window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step=4';
             }
         });
     }else{
@@ -1712,7 +1747,7 @@ $(".price_submit").click(function(){
                 $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
             },
             success: function(json){
-                location.reload();
+                window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step=5';
             }
         });
     }else{
@@ -1721,4 +1756,48 @@ $(".price_submit").click(function(){
 });
 
 /***** PRICE TAB (form submit) AJAX (end) ****/
+
+/***** CONDITION TAB (form submit) AJAX  ****/
+
+$(document).delegate("#condition_tab button", "click", function(){
+    $.ajax({
+        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+        data: $('#condition_tab').serialize() + "&tab=condition",
+        method: 'post',
+        dataType: 'json',
+        beforeSend: function(){
+            $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+        },
+        success: function(json){
+            window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step=6';
+        }
+    });
+});
+
+/***** CONDITION TAB (form submit) AJAX (end) ****/
+
+$(document).delegate("#request-photo", "click", function(){
+
+    var current = $(this);
+
+    $.ajax({
+        url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+        data: {value: '1', tab: 'submit'},
+        method: 'post',
+        dataType: 'html',
+        beforeSend: function(){
+            //$("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+        },
+        success: function(response){
+            if(response == 'success'){
+                current.next('p').fadeIn();
+                current.hide();
+            }else{
+                alert('Sorry, please try again later');
+            }
+        }
+    });
+});
+
+
 </script>

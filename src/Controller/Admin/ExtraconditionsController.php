@@ -84,7 +84,20 @@ class ExtraconditionsController extends AppController
                 $post['icon'] = $name;
             }else{
                 $post['icon'] = '';
-            }    
+            }  
+            
+            if($this->request->data['selected_icon']['name'] != ''){
+
+                $image = $this->request->data['selected_icon'];
+                $name = time().$image['name'];
+                $tmp_name = $image['tmp_name'];
+                $upload_path = WWW_ROOT.'images/uploads/'.$name;
+                move_uploaded_file($tmp_name, $upload_path);
+                
+                $post['selected_icon'] = $name;
+            }else{
+                $post['selected_icon'] = '';
+            }  
 
             $extracondition = $this->Extraconditions->patchEntity($extracondition, $post);
             if ($this->Extraconditions->save($extracondition)) {
@@ -134,8 +147,32 @@ class ExtraconditionsController extends AppController
                 $post['icon'] = $name;
             
             }else{
-                unset($this->request->data['icon']);
-                $post = $this->request->data;
+                unset($post['icon']);
+                //$post = $this->request->data;
+            }
+            
+            if($this->request->data['selected_icon']['name'] != ''){
+                    
+                if($extracondition->selected_icon != ''){
+
+                    $file_path = WWW_ROOT.'images/uploads/'.$extracondition->selected_icon;
+
+                    if(file_exists($file_path)){
+                        unlink($file_path);
+                    }
+                }   
+            
+                $image = $this->request->data['selected_icon'];
+                $name = time().$image['name'];
+                $tmp_name = $image['tmp_name'];
+                $upload_path = WWW_ROOT.'images/uploads/'.$name;
+                move_uploaded_file($tmp_name, $upload_path);
+                
+                $post['selected_icon'] = $name;
+            
+            }else{
+                unset($post['selected_icon']);
+                //$post = $this->request->data;
             }
 
             $extracondition = $this->Extraconditions->patchEntity($extracondition, $post);

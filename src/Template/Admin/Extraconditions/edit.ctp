@@ -45,6 +45,19 @@
                         <?php } ?>
                     </div>
                 </div> 
+                
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Selected Icon</label>
+                        <?php echo $this->Form->control('selected_icon', ['id' => 'selected_icon', 'class' => 'form-control', 'type' => 'file', 'label' => false]); ?>
+                       
+                        <?php if($extracondition->selected_icon != ''){ ?>
+                        <img src="<?php echo $this->request->webroot.'images/uploads/'.$extracondition->selected_icon ?>" style="width: 140px; margin-top: 20px;" class="previewHolder">
+                        <?php }else{ ?>
+                        <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>" style="width: 140px; margin-top: 20px;" class="previewHolder">
+                        <?php } ?>
+                    </div>
+                </div> 
                 <div class="box-body">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Content (EN)</label>
@@ -91,7 +104,7 @@
       if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function(e) {
-          $('.previewHolder').attr('src', e.target.result);
+          $("#profilePic").parent().next('.previewHolder').attr('src', e.target.result);
         }
 
         reader.readAsDataURL(input.files[0]);
@@ -100,5 +113,20 @@
 
     $("#profilePic").change(function() {
       readURL(this);
+    });
+    
+    function readURL2(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $("#selected_icon").parent().next('.previewHolder').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    $("#selected_icon").change(function() {
+      readURL2(this);
     });
 </script>

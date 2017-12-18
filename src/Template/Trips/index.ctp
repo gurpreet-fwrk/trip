@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-9">
           <div class="row">
-            <a href="<?php echo $this->request->webroot ?>trips/add">Create New Trip</a>
+            <a href="<?php echo $this->request->webroot ?>trips/add" class="btn btn-primary blue create_trip right">Create New Trip</a>
           </div>
           <form>
            <div class="row">
@@ -42,7 +42,7 @@
                <?php //echo "<pre>"; print_r($trips); echo "</pre>"; ?>
                
                <?php foreach ($trips as $trip){ ?>
-               <a href="<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip['id']); ?>">
+               <a href="<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip['id']); ?>?step=1">
                <div class="yourlist">
                     <div class="col-sm-6 no-padding">
                         <div class="trippic">
@@ -53,13 +53,15 @@
                             ?>
                             <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $images[0] ?>" />
                             <?php } ?>
+                             <div class="location_trip">
+                                <?php if($trip['location'] != ''){ ?>
+                                <span><i class="fa fa-map-marker" aria-hidden="true"></i>
+ <?php echo $trip['location']['name_'.$config_language]; ?></span>
+                                <?php } ?>
+                            </div>
                         </div>
                         
-                        <div class="">
-                            <?php if($trip['location'] != ''){ ?>
-                            <span><?php echo $trip['location']['name_'.$config_language]; ?></span>
-                            <?php } ?>
-                        </div>
+                       
                         
                     </div>
                     <div class="col-sm-6">
@@ -79,14 +81,7 @@
             
             
           </form>
-        </div>
-        <!--col-sm-9--> 
-        
-      </div>
-    </div>
-  </div>
-</section>
-<div>
+            <div>
     <div class="paginator">
         <ul class="pagination">
             <?= $this->Paginator->first('<< ' . __('first')) ?>
@@ -98,3 +93,11 @@
         <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
     </div>
 </div>
+        </div>
+        <!--col-sm-9--> 
+        
+      </div>
+    </div>
+  </div>
+</section>
+

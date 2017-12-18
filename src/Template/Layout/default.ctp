@@ -513,12 +513,12 @@ $cakeDescription = '';
                     $('.alert-success').html(d.response.msg);
                     $('.alert-success').show();
                     
-                    console.log(d.response.data);
-                    if(d.response.data.latitude == '' && d.response.data.role == 'trainer'){
-                        window.location.href = "<?php echo $this->request->webroot ?>users/edit/"+d.response.data.id;
-                    }else{
-                        location.reload();
-                    }
+//                    console.log(d.response.data);
+//                    if(d.response.data.latitude == '' && d.response.data.role == 'trainer'){
+//                        window.location.href = "<?php echo $this->request->webroot ?>users/edit/"+d.response.data.id;
+//                    }else{
+//                        location.reload();
+//                    }
                 }
             }
         });

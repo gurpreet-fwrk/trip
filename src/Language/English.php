@@ -190,6 +190,17 @@ class English{
                 $lang['text_add_expense_ph']                    =	'e.g. your pocket money';
                 $lang['text_max_travellers']                    =	'Maximun travelers';
                 
+                $lang['text_basic_pricing']                    =	'Basic Pricing';
+                $lang['text_advance_pricing']                    =	'Advance Pricing';
+                $lang['text_additional_options']                    =	'Additional Options';
+                $lang['text_enable_child_price']                    =	'Enable Child Price (Age 2-12)';
+                
+                $lang['text_extra_conditions']                    =	'Extra Conditions';
+                $lang['text_optional']                    =	'(Optional)';
+                
+                                 
+
+                
 
 		/***** Add Trip Page (End) *****/
 

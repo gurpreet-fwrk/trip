@@ -123,6 +123,7 @@ class TripsController extends AppController
         $this->loadModel('Meetingpointtypes');
         $this->loadModel('Tripmeetingpoints');
         $this->loadModel('Tripprices');
+        $this->loadModel('Extraconditions');
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             
@@ -351,6 +352,38 @@ class TripsController extends AppController
             
             /***** Tab PRICE (ENd) ******/
             
+            /***** Tab CONDITION ******/
+            
+            if($this->request->data['tab'] == 'condition'){
+                
+                if(isset($this->request->data['extracondition_id'])){
+                    $extraconditions = array();
+                    foreach($this->request->data['extracondition_id'] as $condition){
+                        $extraconditions[] = $condition;
+                    }
+                    $extraconditions = implode(',',$extraconditions);
+                    $this->request->data['extracondition_id'] = $extraconditions;   
+                }                
+            }
+            
+            /***** Tab CONDITION (END) ******/
+            
+            /***** Tab SUBMIT ******/
+            
+            if($this->request->data['tab'] == 'submit'){
+                $update = $this->Trips->updateAll(['request_photographer' => $this->request->data['value']], ['id' => $id]);
+                
+                if($update){
+                    echo 'success';
+                }else{
+                    echo 'error';
+                }
+                
+                exit;                
+            }
+            
+            /***** Tab SUBMIT (END) ******/
+            
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
                 $this->Flash->success(__('The trip has been saved.'));
@@ -370,6 +403,8 @@ class TripsController extends AppController
         
         $activities = $this->Trips->Activities->find('list', ['limit' => 200]);
         
+        /**************************/
+        
         $this->loadModel('Transportations');
 
         $transportations = $this->Transportations->find('all', [
@@ -378,7 +413,15 @@ class TripsController extends AppController
 
         $transportations = $transportations->all()->toArray();
         
-        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities', 'tripgallery'));
+        /**********************/
+        
+        $extraconditions = $this->Extraconditions->find('all', [
+            'contain' => []
+        ]);
+
+        $extraconditions = $extraconditions->all()->toArray();
+        
+        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities', 'tripgallery', 'extraconditions'));
         $this->set('_serialize', ['trip']);
         
         /************************/
@@ -412,6 +455,9 @@ class TripsController extends AppController
         $this->set('selected_tripprices', $selected_tripprices);
         
         /***********************/
+        
+        
+        
         
         $this->set('trip_id', $id);
     }

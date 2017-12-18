@@ -186,6 +186,15 @@ class Arabic{
 ';
                 $lang['text_add_expense_ph']                    =	'مثلا جيبك المال';
                 $lang['text_max_travellers']                    =	'المسافرون ماكسيمون';
+                
+                $lang['text_basic_pricing']                    =	'التسعير الأساسي';
+                $lang['text_advance_pricing']                    =	'التسعير المسبق';
+                $lang['text_additional_options']                    =	'خيارات اضافية';
+                $lang['text_enable_child_price']                    =	'تمكين سعر الطفل (من عمر 2 إلى 12 عاما)';
+                
+                $lang['text_extra_conditions']                    =	'شروط إضافية';
+                $lang['text_optional']                    =	'(اختياري)';
+                
 		/***** Add Trip Page (End) *****/
 
 		if(isset($lang[$text])){

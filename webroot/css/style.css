@@ -585,7 +585,7 @@ ul.header {
 .second {
     float: left;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 70px;
 }
 
 .basic{
@@ -776,6 +776,7 @@ div.tab button.active {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 4px;
+    margin-bottom: 10px;
 }
 
 .meeting h3{
@@ -1006,15 +1007,11 @@ div.tab button.active {
     float: left;
     width: 100%;
     margin: 0;
-    padding-left: 15px;
+    padding-left: 0px;
 }
 
 .addopt h3 {
     margin: 0 0 10px 0;
-}
-
-.addopt input{
-    width: 30%;
 }
 
 .addopt label {
@@ -1723,6 +1720,100 @@ float: left;
     border-radius: 0px !important;
     height: 40px;
     border-color: #ccc !important;
+}
+
+/*12/18/2017*/
+.gallery{
+    width: 100%;
+    float:left;
+}
+
+.gallery .gal_child{
+    width: 32%;
+    float: left;
+    position: relative;
+
+}
+
+.gallery .gal_child:nth-child(2){
+margin:0px 11px;
+
+}
+
+.gallery .gal_child span{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 4px;
+}
+
+#selectedFiles {
+    border: 1px dashed #ccc;
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+#selectedFiles input[type="file"] {
+opacity: 0;
+padding: 0;
+height: 0;
+}
+
+.selected_meeting_points {
+    width: 100%;
+    float: left;
+}
+
+.selected_meeting_points .rtmp {
+    margin-bottom: 10px;
+    float: left;
+    width: 100%;
+    font-size: 16px;
+    color: #9b9b9b;
+}
+
+.selected_meeting_points .rtmp i{
+color: #d0021b;
+border: 1px solid;
+border-radius: 50%;
+padding: 3px 5px 5px;
+}
+
+.child_price {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.child_price input {
+    border: 1px solid #ccc;
+    padding: 6px 0px;
+    border-radius: 4px;
+    width: 10%;
+    text-align: center;
+    margin: 0 3px 0 10px;
+}
+
+.alert{
+    float: left;
+    width: 100%;
+}
+
+.create_trip{
+    margin: 20px 0px;
+}
+.location_trip {
+    position: absolute;
+    bottom: 0px;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    width: 100%;
+    padding: 10px 30px 30px 15px;
 }
 /*responsive*/
 
