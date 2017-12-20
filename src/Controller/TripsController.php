@@ -23,7 +23,9 @@ class TripsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Locations']
+            'contain' => ['Locations', 'Tripgallery'],
+            'order'     =>  ['id' => 'DESC'],
+            'conditions' => ['user_id' => $this->Auth->user('id')]
         ];
         $trips = $this->paginate($this->Trips)->toArray();
 
@@ -73,7 +75,7 @@ class TripsController extends AppController
             if ($add_trip) {
                 //$this->Flash->success(__('The trip has been saved.'));
 
-                return $this->redirect(['action' => 'edit', base64_encode($add_trip->id)]);
+                return $this->redirect(['action' => 'edit', base64_encode($add_trip->id), '?' => array('step' => '1')]);
             }
             //$this->Flash->error(__('The trip could not be saved. Please, try again.'));
         //}
@@ -124,6 +126,7 @@ class TripsController extends AppController
         $this->loadModel('Tripmeetingpoints');
         $this->loadModel('Tripprices');
         $this->loadModel('Extraconditions');
+        $this->loadModel('Tripextraconditions');
         
         if ($this->request->is(['patch', 'post', 'put'])) {
             
@@ -317,6 +320,9 @@ class TripsController extends AppController
                     
                     $this->Tripprices->deleteAll(['trip_id' => $id]);
                     
+                    $this->request->data['basic_price_per_person'] = '';
+                    $this->request->data['basic_total_price'] = '';
+                    
                     $prices = $this->request->data['apricing'];
                     
                     foreach($prices as $price){
@@ -357,12 +363,29 @@ class TripsController extends AppController
             if($this->request->data['tab'] == 'condition'){
                 
                 if(isset($this->request->data['extracondition_id'])){
-                    $extraconditions = array();
-                    foreach($this->request->data['extracondition_id'] as $condition){
-                        $extraconditions[] = $condition;
+                    
+                    $this->Tripextraconditions->deleteAll(['trip_id' => $id]);
+                    
+                    $extraconditions = $this->request->data['extracondition_id'];
+                    
+                    $post = array();
+                    
+                    foreach($extraconditions as $extracondition){
+                        
+                        $post['trip_id'] = $id;
+                        $post['extracondition_id'] = $extracondition;
+                        
+                        $tripextraconditions = $this->Tripextraconditions->newEntity();
+                        $tripextraconditions = $this->Tripextraconditions->patchEntity($tripextraconditions, $post);
+                        $this->Tripextraconditions->save($tripextraconditions);
                     }
-                    $extraconditions = implode(',',$extraconditions);
-                    $this->request->data['extracondition_id'] = $extraconditions;   
+                    
+//                    $extraconditions = array();
+//                    foreach($this->request->data['extracondition_id'] as $condition){
+//                        $extraconditions[] = $condition;
+//                    }
+//                    $extraconditions = implode(',',$extraconditions);
+//                    $this->request->data['extracondition_id'] = $extraconditions;   
                 }                
             }
             
@@ -384,13 +407,37 @@ class TripsController extends AppController
             
             /***** Tab SUBMIT (END) ******/
             
+            /***** Tab SUBMIT ******/
+            
+            if($this->request->data['tab'] == 'submit_for_approval'){
+                $update = $this->Trips->updateAll(['status' => 3], ['id' => $id]); // Setting status to pending
+                
+                $json = array();
+                
+                if($update){
+                    $json['msg'] = $this->getLanguage('text_approval_msg');
+                    $json['isSuccess'] = 'true';
+                }else{
+                    $json['msg'] = $this->getLanguage('text_approval_msg_er');
+                    $json['isSuccess'] = 'false';
+                }
+                
+                echo json_encode($json);
+                
+                exit;                
+            }
+            
+            /***** Tab SUBMIT (END) ******/
+            
+            $this->request->data['status'] = 2;
+            
             $trip = $this->Trips->patchEntity($trip, $this->request->data);
             if ($this->Trips->save($trip)) {
-                $this->Flash->success(__('The trip has been saved.'));
+                //$this->Flash->success(__('The trip has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The trip could not be saved. Please, try again.'));
+            //$this->Flash->error(__('The trip could not be saved. Please, try again.'));
         }
         
         
@@ -421,8 +468,7 @@ class TripsController extends AppController
 
         $extraconditions = $extraconditions->all()->toArray();
         
-        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities', 'tripgallery', 'extraconditions'));
-        $this->set('_serialize', ['trip']);
+        
         
         /************************/
         
@@ -433,6 +479,16 @@ class TripsController extends AppController
             'conditions' => ['Triplocations.trip_id' => $id]
         ])->all()->toArray(); 
         $this->set('selected_stopped_location', $selected_stopped_location);
+        
+        
+        /************************/
+        
+        
+        $selected_extraconditions = $this->Tripextraconditions->find('all', [
+            'contain' => [],
+            'conditions' => ['Tripextraconditions.trip_id' => $id]
+        ])->all()->toArray(); 
+        $this->set('selected_extraconditions', $selected_extraconditions);
         
         /************************/
                 
@@ -456,8 +512,23 @@ class TripsController extends AppController
         
         /***********************/
         
+//        $error = 0;
+//        
+//        if(empty($selected_stopped_location) || empty($selected_activities) || empty($galleries) || empty($selected_meetingpoints) || empty($selected_tripprices)){
+//            $error = 1;
+//        }
+//        
+//        foreach($trip as $trp){
+//            echo $trp;
+////            if($key == '' || $key == null){
+////               $error = 1;
+////            }
+//        }
         
+        /**********************/
         
+        $this->set(compact('trip', 'locations', 'transportations', 'meetingpoints', 'meetingpointtypes', 'tripfeatures', 'extraconditions', 'activities', 'tripgallery', 'extraconditions'));
+        $this->set('_serialize', ['trip']);
         
         $this->set('trip_id', $id);
     }

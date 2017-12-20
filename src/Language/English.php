@@ -198,8 +198,21 @@ class English{
                 $lang['text_extra_conditions']                    =	'Extra Conditions';
                 $lang['text_optional']                    =	'(Optional)';
                 
-                                 
+                $lang['text_approval_msg']                    =	'Your Trip details has been sent to admin for approval. You will be notified soon.';   
+                $lang['text_approval_msg_er']                    =	'There is an error in sending trip details. Please fill all the required fields or try agin later.'; 
+                
+                $lang['text_add_more']                    =	'+ Add more';
+                $lang['text_faq_title']                    =	'FAQ';
+                $lang['text_faq1_detail_tab']                    =	'Why this Trip?';
+                $lang['text_faq11_detail_tab']                    =	'Briefly explain your travelers why they should book your trip to quickly graps their attentions.';
+                
+                $lang['text_faq2_detail_tab']                    =	'Things to prepare fot the Trip?';
+                $lang['text_faq22_detail_tab']                    =	'Is there anything travelers should prepare for this trip?';
 
+                $lang['text_trip_detail']                    =	'Trip detail';
+                $lang['text_meeting_point']                    =	'Meeting Point';
+                $lang['text_schedule']                    =	'Schedule';
+                $lang['text_delete_trip']                    =	'Delete this trip';
                 
 
 		/***** Add Trip Page (End) *****/

@@ -269,7 +269,7 @@ class UsersController extends AppController
 
 
 	
-
+return $this->redirect(['action' => 'home']);
 
 
 		if($this->Auth->user()){

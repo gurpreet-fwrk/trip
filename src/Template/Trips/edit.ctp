@@ -3,7 +3,8 @@
     label.error{display:none !important;}
     .subs .icons li img{width: 50%;}
     .subs .icons li{padding: 0;}
-    .price_accordian_head .panel-title label{float: none; padding: 15px 10px;}
+    .price_accordian_head .panel-title label{float: none; padding: 0px 10px;}
+    .price_accordian_head .panel-title label input{opacity: 0;}
     .price_accordian_head .panel-heading {padding: 0px;}
 </style>
 <div class="main-loader-container _2G9Ry7uLWE8xGyg0Ueyndc" data-reactid="203" style="display:none;"><div class="_1FNksn-DOC2GvjPqw1ilJA" data-reactid="204"><div class="DA2lM5bvfdkZyFAb775Wh" data-reactid="205"></div><div class="r52LMBdnmQ_U7l8cHHUBu" data-reactid="206"></div></div></div>
@@ -18,49 +19,81 @@
               <h2><?php echo $this->Text->lang('list_trip'); ?></h2>
               
               <?php if($_GET['step'] == '1'){ ?>
-              <button class="tablinks active" onclick="openCity(event, 'London')" id="defaultOpen"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
+              <button class="tablinks active" onclick="openCity(event, 'London', '1')" id="defaultOpen"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks active" onclick="openCity(event, 'London')"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
+              <button class="tablinks active" onclick="openCity(event, 'London', '1')"><span>1</span><?php echo $this->Text->lang('text_basic'); ?></button>
               <?php } ?>
               
               <?php if($_GET['step'] == '2'){ ?>
-              <button class="tablinks" onclick="openCity(event, 'Paris')" id="defaultOpen"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Paris', '2')" id="defaultOpen"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks" onclick="openCity(event, 'Paris')"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Paris', '2')"><span>2</span><?php echo $this->Text->lang('text_overview'); ?></button>
               <?php } ?>
               
               <?php if($_GET['step'] == '3'){ ?>
-              <button class="tablinks" onclick="openCity(event, 'Tokyo')" id="defaultOpen"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Tokyo', '3')" id="defaultOpen"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks" onclick="openCity(event, 'Tokyo')"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Tokyo', '3')"><span>3</span><?php echo $this->Text->lang('text_detail'); ?></button>
               <?php } ?>
               
               <?php if($_GET['step'] == '4'){ ?>
-              <button class="tablinks" onclick="openCity(event, 'Usa')" id="defaultOpen"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Usa', '4')" id="defaultOpen"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks" onclick="openCity(event, 'Usa')"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Usa', '4')"><span>4</span><?php echo $this->Text->lang('text_price'); ?></button>
               <?php } ?>
               
               <?php if($_GET['step'] == '5'){ ?>
-              <button class="tablinks" onclick="openCity(event, 'Miami')" id="defaultOpen"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Miami', '5')" id="defaultOpen"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks" onclick="openCity(event, 'Miami')"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Miami', '5')"><span>5</span><?php echo $this->Text->lang('text_condition'); ?></button>
               <?php } ?>
               
               <?php if($_GET['step'] == '6'){ ?>
-              <button class="tablinks" onclick="openCity(event, 'Newyork')" id="defaultOpen"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Newyork', '6')" id="defaultOpen"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
               <?php }else{ ?>
-              <button class="tablinks" onclick="openCity(event, 'Newyork')"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
+              <button class="tablinks" onclick="openCity(event, 'Newyork', '6')"><span>6</span><?php echo $this->Text->lang('text_submit'); ?></button>
               <?php } ?>
 
-              <button class="tablinks" onclick="openCity(event, 'Delete')">Delete this trip</button>
+              <button class="tablinks" onclick="openCity(event, 'Delete')"><?php echo $this->Text->lang('text_delete_trip'); ?></button>
               
             </div>
           </div>
         </div>
         <div class="col-sm-9">
             
-            <?php //echo "<pre>"; print_r($trip); echo "</pre>"; ?>
+            <?php //echo "<pre>"; print_r($trip2); echo "</pre>"; ?>
+            <?php
+            
+            $trip2 = $trip->toArray();
+            //echo "<pre>"; print_r($trip2); echo "</pre>";
+            $error = 0;
+            
+            if($trip2['pricing_type'] === 'advance'){
+                if(empty($selected_stopped_location) || empty($selected_activities) || empty($galleries) || empty($selected_tripprices)){
+                    
+                    $error = 1;
+                }
+            }elseif(empty($selected_stopped_location) || empty($selected_activities) || empty($galleries)){
+                $error = 1;
+            }
+
+            foreach($trip2 as $key => $value){
+
+                if($key != 'operating_days'){
+                    if($key != 'child_price'){
+                        if($key != 'extracondition_id'){
+                            //if($trip2['pricing_type'] === 'advance' && ($key !== 'basic_price_per_person' || $key !== 'basic_total_price')){
+                                if(($value === '') || ($value === NULL)){
+                                    //echo $key.' : '.$value.'<br>';
+                                    $error = 1;
+                                }
+                            //}
+                        }    
+                    }
+                }
+            }
+            ?>
+            
             <?php //echo "<pre>"; print_r($galleries); echo "</pre>"; ?>
             
             <div id="London" class="tabcontent">
@@ -204,7 +237,8 @@
                       
                       <?php foreach($galleries as $gallery){ ?>
                       <div class="gal_child">
-                          <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $gallery['file'] ?>"><span data-file='<?php echo $gallery['file'] ?>' data-id="<?php echo $gallery['id'] ?>" class='remove_img' title='Click to remove'>Remove</span><br clear=\"left\"/>
+                          <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $gallery['file'] ?>"><span data-file='<?php echo $gallery['file'] ?>' data-id="<?php echo $gallery['id'] ?>" class='remove_img' title='Click to remove' style='cursor:pointer;'><i class="fa fa-trash-o" aria-hidden="true"></i>
+</span><br clear=\"left\"/>
                       </div>
                       <?php } ?>
                       
@@ -226,9 +260,9 @@
             
             <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'detail_tab')) ?>
             <div id="Tokyo" class="tabcontent">
-              <h3 class="subheadb">Trip Detail</h3>
+              <h3 class="subheadb"><?php echo $this->Text->lang('text_trip_detail'); ?></h3>
               <div class="meeting">
-                <h3>Meeting Point</h3>
+                <h3><?php echo $this->Text->lang('text_meeting_point'); ?></h3>
                 <div class="row">
                   <div class="col-sm-4">
                       <?php //print_r($selected_stopped_location); ?>
@@ -259,23 +293,27 @@
               
               <!--meeting-->
               <?php
-                $schedule1 = json_decode($trip->schedule);
-                
+              
                 $schedule = array();
                 
-                foreach ($schedule1 as $row) { 
-                    if (is_object($row)) {
-                        $schedule[] = get_object_vars($row);
+                if($trip->schedule != ''){
+              
+                    $schedule1 = json_decode($trip->schedule);
+
+                    foreach ($schedule1 as $row) { 
+                        if (is_object($row)) {
+                            $schedule[] = get_object_vars($row);
+                        }
                     }
                 }
-                
                 //echo "<pre>"; print_r($schedule); echo "</pre>";
                 
                 ?>
               
-              <h3 class="sch">Schedule</h3>
-              <div class="schedule_part">
+              <h3 class="sch"><?php echo $this->Text->lang('text_schedule'); ?></h3>
+              
               <?php if(!empty($schedule)){ ?>
+              <div class="schedule_part">
               <?php for($j=0; $j<count($schedule);$j++){ ?>
               <?php if($j == 0){ ?>
               
@@ -495,9 +533,59 @@
 
               <?php } ?>
               </div>
-              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">+ Add more</button>
+              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right"><?php echo $this->Text->lang('text_add_more'); ?></button>
               <?php }else{ ?>
+              
+              
+              
+              
               <div class="schedule_part">
+                  <div class="minutes mnt">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="tme">
+                      <div class="hour">
+                        <select name="schedule[0][hours]" class="form-control" required>
+                            <option value="">Hours</option>
+                            <?php for($i=0; $i<24; $i++){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+                            
+                            <?php } ?>                          
+                        </select>
+                      </div>
+                      <div class="colon">:</div>
+                      <div class="hour">
+                        <select name="schedule[0][minutes]" class="form-control" required>
+                            <option value="">Minutes</option>
+                            <?php for($i=0; $i<=45; $i+=15){ ?>
+                            
+                            <?php if(strlen((string)$i) == 1){ ?>
+                            
+                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <?php } ?>
+
+                            
+                            <?php } ?>   
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 mnt_meetingpoints"> 
+                    <h4>Meet up at our meeting point</h4>
+                    <div></div>
+                    <input type="hidden" name="schedule[0][content]" value="">
+                  </div>
+                </div>
+              </div>
+              <!--minutes-->
                 <div class="minutes">
                   <div class="row">
                     <div class="col-sm-6">
@@ -581,20 +669,20 @@
                 <!--minutes-->
                 <?php $schedule_row = 3; ?>
               </div>
-              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">+ Add more</button>
+              <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right"><?php echo $this->Text->lang('text_add_more'); ?></button>
               <?php } ?>
               
               
-              <h3 class="sch" style="margin-bottom:15px;">FAQ</h3>
+              <h3 class="sch" style="margin-bottom:15px;"><?php echo $this->Text->lang('text_faq_title'); ?></h3>
               <div class="form-group">
-                <label for="exampleInputSummary">Why this Trip?</label>
-                <p class="help-block">Briefly explain your travelers why they should book your trip to quickly graps their attentions.</p>
+                <label for="exampleInputSummary"><?php echo $this->Text->lang('text_faq1_detail_tab'); ?></label>
+                <p class="help-block"><?php echo $this->Text->lang('text_faq11_detail_tab'); ?></p>
                 <?php echo $this->Form->control('faq1', array('class' => 'form-control', 'label' => false, 'required')); ?>
 <!--                <p class="help-block right">250 Characters left</p>-->
               </div>
               <div class="form-group">
-                <label for="exampleInputSummary">Things to prepare fot the Trip?</label>
-                <p class="help-block">Is there anything travelers should prepare for this trip?</p>
+                <label for="exampleInputSummary"><?php echo $this->Text->lang('text_faq2_detail_tab'); ?></label>
+                <p class="help-block"><?php echo $this->Text->lang('text_faq22_detail_tab'); ?></p>
                 <?php echo $this->Form->control('faq2', array('class' => 'form-control', 'label' => false, 'required')); ?>
 <!--                <p class="help-block right">250 Characters left</p>-->
               </div>
@@ -602,8 +690,8 @@
               <input type="hidden" name="tab" value="detail">
               
               <div class="right">
-                  <button type="button" class="btn btn-primary blue detail_submit">Save</button>
-                  <button type="button" class="btn btn-default blue grey detail_submit">Next</button>
+                  <button type="button" class="btn btn-primary blue detail_submit"><?php echo $this->Text->lang('text_save'); ?></button>
+                  <button type="button" class="btn btn-default blue grey detail_submit"><?php echo $this->Text->lang('text_next'); ?></button>
               </div>
             </div>
             <?= $this->Form->end() ?>
@@ -690,7 +778,7 @@
                   <div class="panel-heading">
                     <h4 class=panel-title>
                       <label for='r13' style='width: auto;'>
-                          <?php if($trip->include_exclude == 'food_excluded'){ ?>
+                          <?php if($trip->include_exclude == 'all_excluded'){ ?>
                           <input type='radio' id='r13' name='include_exclude' value='all_excluded' checked="" required />
                           <?php }else{ ?>
                         <input type='radio' id='r13' name='include_exclude' value='all_excluded' required />
@@ -883,14 +971,18 @@
             
             <div id="Miami" class="tabcontent">
               <h3 class="subheadb"><?php echo $this->Text->lang('text_extra_conditions'); ?> <span><?php echo $this->Text->lang('text_optional'); ?></span></h3>
+              <?php //echo "<pre>"; print_r($trip); echo "</pre>"; ?>
+              <?php //echo "<pre>"; print_r($selected_extraconditions); echo "</pre>"; ?>
               
               <?= $this->Form->create($trip, array('enctype' => 'multipart/form-data', 'id' => 'condition_tab')) ?>
               <div class="conditions-top">
                   
                 <?php
                 $selected_conditions = array();
-                if($trip->extracondition_id != ''){
-                    $selected_conditions = explode(",",$trip->extracondition_id);
+                if(!empty($selected_extraconditions)){
+                    foreach($selected_extraconditions as $sel){
+                        $selected_conditions[] = $sel->extracondition_id;
+                    }
                 }
                 ?>
                 
@@ -1012,7 +1104,11 @@
               </div>
               <div class="right">
 <!--                <button type="submit" class="btn btn-primary blue">Save</button>-->
-                <button type="submit" class="btn btn-default blue grey">Submit for approval</button>
+                    <?php if($trip->status == '3'){ ?>
+                    <div class="alert alert-warning"><?php echo $this->Text->lang('text_approval_msg'); ?></div>
+                    <?php }else{ ?>
+                    <button type="submit" class="btn btn-default blue grey" id="subfa">Submit for approval</button>
+                    <?php } ?>
               </div>
             </div>
           </form>
@@ -1032,6 +1128,44 @@
 <?php } ?>
 
 <script>
+
+/******   For (Submit for Approval) button   *****/
+
+var validation_error = '<?php echo $error ?>';
+
+if(validation_error == '1'){
+    $("#subfa").prop('disabled', true);
+}else{
+    
+    $("#subfa").click(function(){
+        
+        var current = $(this);
+        
+        $.ajax({
+            url: '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>',
+            data: {tab: 'submit_for_approval'},
+            method: 'post',
+            dataType: 'json',
+            beforeSend: function(){
+                $("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+            },
+            success: function(json){
+                $("._2G9Ry7uLWE8xGyg0Ueyndc").hide();
+                
+                if(json.isSuccess == 'true'){
+                    $("#Newyork").prepend("<div class='alert alert-success'>"+json.msg+"</div>");
+                    current.remove();
+                }else{
+                    alert(json.msg);
+                }
+            }
+        });
+    });
+    
+}
+
+/******   For (Submit for Approval) button (END)   *****/
+    
 
 $(document).ready(function(){
     $.session.clear();   
@@ -1124,7 +1258,7 @@ $(function() {
 });
 
 /*tab script*/
-function openCity(evt, cityName) {
+function openCity(evt, cityName, step = null) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -1136,6 +1270,9 @@ function openCity(evt, cityName) {
     }
     document.getElementById(cityName).style.display = "block";
     evt.currentTarget.className += " active";
+//$("._2G9Ry7uLWE8xGyg0Ueyndc").show();
+//window.location.href = '<?php echo $this->request->webroot ?>trips/edit/<?php echo base64_encode($trip_id) ?>?step='+step;
+    
 }
 
 // Get the element with id="defaultOpen" and click on it
@@ -1209,7 +1346,7 @@ function handleFileSelect(e) {
 
         var reader = new FileReader();
         reader.onload = function (e) {
-            var html = "<div style='width:20%'><img src=\"" + e.target.result + "\"><span data-file='"+f.name+"' class='selFile' title='Click to remove'>Remove</span><br clear=\"left\"/></div>";
+            var html = "<div class='gal_child'><img src=\"" + e.target.result + "\"><span data-file='"+f.name+"' class='selFile' title='Click to remove'  style='cursor:pointer;'><i class='fa fa-trash-o' aria-hidden='true'></i></span><br clear=\"left\"/></div>";
             selDiv.append(html);
 
         }

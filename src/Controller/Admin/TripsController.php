@@ -37,8 +37,14 @@ class TripsController extends AppController
     
     public function index()
     {
-        $trips = $this->paginate($this->Trips);
-
+        $this->paginate = [
+            'contain' => ['Locations', 'Tripgallery', 'Users'],
+            'order'     =>  ['id' => 'DESC'],
+            'conditions' => ['Trips.status !=' => 2]
+        ];
+        
+        $trips = $this->paginate($this->Trips)->toArray();
+        
         $this->set(compact('trips'));
         $this->set('_serialize', ['trips']);
     }
@@ -53,7 +59,24 @@ class TripsController extends AppController
     public function view($id = null)
     {
         $trip = $this->Trips->get($id, [
-            'contain' => []
+            'contain' => [
+                'Locations',
+                'Tripgallery',
+                'Users',
+                'Transportations',
+                'Transportationvehicles',
+                'Triplocations' => [
+                    'Locations'
+                    ],
+                'Tripactivities' => [
+                    'Activities'
+                    ],
+                'Tripmeetingpoints',
+                'Tripprices',
+                'Tripextraconditions' => [
+                    'Extraconditions'
+                    ]
+                ]
         ]);
 
         $this->set('trip', $trip);

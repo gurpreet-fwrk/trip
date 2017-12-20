@@ -316,7 +316,7 @@ $cakeDescription = '';
                         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="<?php echo $this->Text->lang('text_password'); ?>" name="password">
                     </div>
                     <button type="button" class="btn btn-primary btn-block start"><?php echo $this->Text->lang('text_getstarted'); ?></button>
-                    <span class="now"><?php echo $this->Text->lang('text_dont_have_account'); ?><a style="color:#000;"><?php echo $this->Text->lang('text_signup'); ?></a></span>
+                    <span class="now"><?php echo $this->Text->lang('text_dont_have_account'); ?><a href="#" data-toggle="modal" data-target=".signupmodal" data-dismiss="modal" style="color:#000;"><?php echo $this->Text->lang('text_signup'); ?></a></span>
                 </div>
             </form>
         </div>
@@ -378,7 +378,7 @@ $cakeDescription = '';
                         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="<?php echo $this->Text->lang('text_repassword'); ?>" name="password" id="password">
                     </div>
                     <button type="button" class="btn btn-primary btn-block start"><?php echo $this->Text->lang('text_create_account'); ?></button>
-                    <span class="now"><?php echo $this->Text->lang('text_already_account'); ?> <a style="color:#000;"><?php echo $this->Text->lang('text_login_now'); ?></a></span>
+                    <span class="now"><?php echo $this->Text->lang('text_already_account'); ?> <a href="#" data-toggle="modal" data-target=".loginmodal" data-dismiss="modal" style="color:#000;"><?php echo $this->Text->lang('text_login_now'); ?></a></span>
                 </div>
             </form>
         </div>
@@ -514,11 +514,11 @@ $cakeDescription = '';
                     $('.alert-success').show();
                     
 //                    console.log(d.response.data);
-//                    if(d.response.data.latitude == '' && d.response.data.role == 'trainer'){
-//                        window.location.href = "<?php echo $this->request->webroot ?>users/edit/"+d.response.data.id;
-//                    }else{
-//                        location.reload();
-//                    }
+                    if(d.response.data.latitude == '' && d.response.data.role == 'trainer'){
+                        window.location.href = "<?php echo $this->request->webroot ?>users/edit/"+d.response.data.id;
+                    }else{
+                        location.reload();
+                    }
                 }
             }
         });

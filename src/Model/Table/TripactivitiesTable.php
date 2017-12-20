@@ -29,7 +29,7 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class TripsTable extends Table
+class TripActivitiesTable extends Table
 {
 
     /**
@@ -42,66 +42,16 @@ class TripsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('trips');
-        $this->setDisplayField('title_en');
+        $this->setTable('tripactivities');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Locations', [
-            'foreignKey' => 'location_id'
-        ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->belongsTo('Transportations', [
-            'foreignKey' => 'transportation_id'
-        ]);
-        
-        $this->belongsTo('Transportationvehicles', [
-            'foreignKey' => 'transportationvehicle_id'
-        ]);
-        
-        $this->belongsTo('Meetingpoints', [
-            'foreignKey' => 'meetingpoint_id'
-        ]);
-        $this->belongsTo('Meetingpointtypes', [
-            'foreignKey' => 'meetingpointtype_id'
-        ]);
-        $this->belongsTo('Tripfeatures', [
-            'foreignKey' => 'tripfeature_id',
+        $this->belongsTo('Activities', [
+            'foreignKey' => 'activity_id',  
             'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('Extraconditions', [
-            'foreignKey' => 'extracondition_id'
-        ]);
-        $this->hasMany('Tripactivities', [
-            'foreignKey' => 'trip_id'
-        ]);
+        ]); 
         
-        $this->hasMany('Tripmeetingpoints', [
-            'foreignKey' => 'trip_id'
-        ]);
-        
-        $this->hasMany('Tripextraconditions', [
-            'foreignKey' => 'trip_id'
-        ]);
-        
-        $this->hasMany('Triplocations', [
-            'foreignKey' => 'trip_id'
-        ]);
-        $this->hasMany('Tripprices', [
-            'foreignKey' => 'trip_id'
-        ]);
-        
-        $this->hasMany('Tripgallery', [
-            'foreignKey' => 'trip_id'
-        ]);
-
-        $this->hasMany('Activities', [
-            'foreignKey' => 'activity_id'
-        ]);
-
     }
 
     /**
@@ -130,13 +80,8 @@ class TripsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['location_id'], 'Locations'));
-        $rules->add($rules->existsIn(['transportation_id'], 'Transportations'));
-        $rules->add($rules->existsIn(['meetingpoint_id'], 'Meetingpoints'));
-        $rules->add($rules->existsIn(['meetingpointtype_id'], 'Meetingpointtypes'));
-        $rules->add($rules->existsIn(['tripfeature_id'], 'Tripfeatures'));
-        $rules->add($rules->existsIn(['extracondition_id'], 'Extraconditions'));
 
         return $rules;
     }
 }
+?>

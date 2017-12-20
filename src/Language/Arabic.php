@@ -195,6 +195,24 @@ class Arabic{
                 $lang['text_extra_conditions']                    =	'شروط إضافية';
                 $lang['text_optional']                    =	'(اختياري)';
                 
+                $lang['text_approval_msg']                    =	'تم إرسال تفاصيل رحلتك إلى المشرف للموافقة عليها. سيتم إعلامك قريبا.';
+                
+                $lang['text_approval_msg_er']                    =	'هناك خطأ في إرسال تفاصيل الرحلة. يرجى ملء جميع الحقول المطلوبة أو محاولة أجين في وقت لاحق.'; 
+                
+                $lang['text_add_more']                    =	'+ إضافة المزيد+';
+                $lang['text_faq_title']                    =	'التعليمات';
+                $lang['text_faq1_detail_tab']                    =	'لماذا هذه الرحلة؟';
+                $lang['text_faq11_detail_tab']                    =	'شرح لفترة وجيزة مسافرين لماذا يجب أن حجز رحلتك بسرعة يلقي انتباههم.';
+                
+                $lang['text_faq2_detail_tab']                    =	'أشياء لإعداد فوت الرحلة؟';
+                $lang['text_faq22_detail_tab']                    =	'هل هناك أي مسافر يجب أن يعد لهذه الرحلة؟';
+                
+                $lang['text_trip_detail']                    =	'تفاصيل الرحلة';
+                $lang['text_meeting_point']                    =	'نقطة إلتقاء';
+                $lang['text_schedule']                    =	'جدول';
+                
+                $lang['text_delete_trip']                    =	'حذف هذه الرحلة';
+                
 		/***** Add Trip Page (End) *****/
 
 		if(isset($lang[$text])){
