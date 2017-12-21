@@ -90,18 +90,53 @@ class TripsController extends AppController
      */
     public function add()
     {
+//        $trip = $this->Trips->newEntity();
+//        if ($this->request->is('post')) {
+//            $trip = $this->Trips->patchEntity($trip, $this->request->getData());
+//            if ($this->Trips->save($trip)) {
+//                $this->Flash->success(__('The trip has been saved.'));
+//
+//                return $this->redirect(['action' => 'index']);
+//            }
+//            $this->Flash->error(__('The trip could not be saved. Please, try again.'));
+//        }
+//        $this->set(compact('trip'));
+//        $this->set('_serialize', ['trip']);
+        
+        $this->loadModel('Triplocations');
+        $this->loadModel('Tripactivities');
+        $this->loadModel('Tripgallery');
+        $this->loadModel('Meetingpoints');
+        $this->loadModel('Meetingpointtypes');
+        $this->loadModel('Tripmeetingpoints');
+        $this->loadModel('Tripprices');
+        $this->loadModel('Extraconditions');
+        $this->loadModel('Tripextraconditions');
+        
         $trip = $this->Trips->newEntity();
-        if ($this->request->is('post')) {
-            $trip = $this->Trips->patchEntity($trip, $this->request->getData());
-            if ($this->Trips->save($trip)) {
-                $this->Flash->success(__('The trip has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The trip could not be saved. Please, try again.'));
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            echo "<pre>"; print_r($this->request->data); echo "</pre>";
+            exit;
         }
-        $this->set(compact('trip'));
+        
+        $locations = $this->Trips->Locations->find('list', ['limit' => 200]);
+        $activities = $this->Trips->Activities->find('list', ['limit' => 200]);
+        
+        /**************************/
+        
+        $this->loadModel('Transportations');
+
+        $transportations = $this->Transportations->find('all', [
+            'contain' => ['Transportationvehicles']
+        ]);
+
+        $transportations = $transportations->all()->toArray();
+        
+        /**********************/
+        
+        $this->set(compact('trip', 'locations', 'activities', 'transportations'));
         $this->set('_serialize', ['trip']);
+        
     }
 
     /**

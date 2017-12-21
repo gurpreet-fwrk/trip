@@ -2,17 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/gitprojects/trip/src/Language/English.php</file>
-            <file>file:/E:/gitprojects/trip/src/Controller/UsersController.php</file>
-            <file>file:/E:/gitprojects/trip/src/Controller/AppController.php</file>
-            <file>file:/E:/gitprojects/trip/src/Language/Arabic.php</file>
-            <file>file:/E:/gitprojects/trip/src/Controller/TripsController.php</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Layout/default.ctp</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Trips/edit.ctp</file>
-            <file>file:/E:/gitprojects/trip/config/routes.php</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Trips/index.ctp</file>
-            <file>file:/E:/gitprojects/trip/webroot/css/style.css</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

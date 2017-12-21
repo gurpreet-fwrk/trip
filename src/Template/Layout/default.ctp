@@ -186,7 +186,7 @@ $cakeDescription = '';
                             //window.location.href = resdata.link;
 
                             if (data.isSuccess != 'true') {
-                                alert(data.msg);
+                                //alert(data.msg);
                             } else {
                                 location.reload();
                             }
@@ -198,7 +198,7 @@ $cakeDescription = '';
                 }
             },
             function(error) {
-                alert(JSON.stringify(error, undefined, 2));
+                //alert(JSON.stringify(error, undefined, 2));
             });
     }
 
