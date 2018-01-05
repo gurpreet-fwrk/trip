@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     
     
-     <?= $this->Html->script(array('jquery.min.js', 'jquery-ui.min.js', 'bootstrap.min.js', 'raphael.min.js', 'morris.min.js', 'jquery.sparkline.min.js', 'jquery-jvectormap-1.2.2.min.js', 'jquery-jvectormap-world-mill-en.js', 'jquery.knob.min.js', 'moment.min.js', 'daterangepicker.js', 'bootstrap-datepicker.min.js', 'jquery.slimscroll.min.js', 'fastclick.js', 'adminlte.min.js', 'dashboard.js', 'demo.js', 'jquery.dataTables.min', 'dataTables.bootstrap.min.js')) ?>
+     <?= $this->Html->script(array('jquery.min.js', 'jquery-ui.min.js', 'bootstrap.min.js', 'raphael.min.js', 'morris.min.js', 'jquery.sparkline.min.js', 'jquery-jvectormap-1.2.2.min.js', 'jquery-jvectormap-world-mill-en.js', 'jquery.knob.min.js', 'moment.min.js', 'daterangepicker.js', 'bootstrap-datepicker.min.js', 'jquery.slimscroll.min.js', 'fastclick.js', 'adminlte.min.js', 'dashboard.js', 'demo.js', 'jquery.dataTables.min', 'dataTables.bootstrap.min.js', 'jquery-session')) ?>
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/additional-methods.min.js"></script>
