@@ -30,6 +30,7 @@ class Activity extends Entity
         'activitycategory_id' => true,
         'title_en' => true,
         'title_ar' => true,
+        'icon' => true,
         'created' => true,
         'modified' => true,
         'activitycategory' => true

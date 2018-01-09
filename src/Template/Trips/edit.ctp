@@ -960,6 +960,16 @@
                               Price Per child <input type="number" name="child_price" min="0" placeholder="0"> THB
                               <?php } ?>
                         </div>
+               </div>
+              <div class="checkbox-btn no-margin addopt">
+                          <?php if($trip->hotel_pickup == 1){ ?>
+                          <input type="checkbox" id="rc3" name="hotel_pickup" value="1" checked="">
+                          <?php }else{ ?>
+                          <input type="checkbox" id="rc3" value="1" name="hotel_pickup">
+                          <?php } ?>
+                          
+                          <label for="rc3" onclick class="no-margin">Free Hotel Pickup</label>
+                          
                      </div>
                     
               <div class="right">

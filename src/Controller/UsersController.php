@@ -1,51 +1,23 @@
 <?php
 
-
-
 namespace App\Controller;
-
-
 
 //require_once(ROOT . 'vendor' . DS  . 'autoload.php');
 
 
 
 use App\Controller\AppController;
-
-
-
 use Cake\Event\Event;
-
-
-
 use Cake\Routing\Router;
-
-
-
 use Cake\Mailer\Email;
-
-
-
 use Cake\Auth\DefaultPasswordHasher;
-
-
-
 use \Statickidz\GoogleTranslate;
-
-
-
 use Twilio\Rest\Client;
-
-
-
 //require_once('C:\xampp\htdocs\cakephp\trip2\vendor' . DS  . 'paypal' . DS  . 'adaptivepayments-sdk-php' . DS  . 'samples' . DS  . 'PPBootStrap.php');
-
 use \PayPal\Types\AP\PayRequest;
 use \PayPal\Types\AP\Receiver;
 use \PayPal\Types\AP\ReceiverList;
-
 use \PayPal\Types\Common\RequestEnvelope;
-
 use \PayPal\Service\AdaptivePaymentsService;
 
 //use \PayPal\inc\Configuration;
@@ -75,22 +47,9 @@ use \PayPal\Service\AdaptivePaymentsService;
 
 
  */
+class UsersController extends AppController {
 
-
-
-class UsersController extends AppController
-
-
-
-{
-
-
-
-	
-
-
-
-	public function beforeFilter(Event $event) {
+    public function beforeFilter(Event $event) {
 
 
 
@@ -107,16 +66,7 @@ class UsersController extends AppController
 
 
         $this->authcontent();
-
-
-
     }
-
-
-
-	
-
-
 
     /**
 
@@ -135,18 +85,11 @@ class UsersController extends AppController
 
 
      */
+    public function index() {
 
 
 
-    public function index()
 
-
-
-    {
-
-		
-
-	
 
         $users = $this->paginate($this->Users);
 
@@ -161,16 +104,7 @@ class UsersController extends AppController
 
 
         $this->set('_serialize', ['users']);
-
-
-
     }
-
-
-
-
-
-
 
     /**
 
@@ -197,25 +131,12 @@ class UsersController extends AppController
 
 
      */
-
-
-
-    public function view($id = null)
-
-
-
-    {
+    public function view($id = null) {
 
 
 
         $user = $this->Users->get($id, [
-
-
-
             'contain' => []
-
-
-
         ]);
 
 
@@ -229,16 +150,7 @@ class UsersController extends AppController
 
 
         $this->set('_serialize', ['user']);
-
-
-
     }
-
-
-
-
-
-
 
     /**
 
@@ -257,34 +169,24 @@ class UsersController extends AppController
 
 
      */
+    public function add() {
 
 
 
-    public function add()
+
+        return $this->redirect(['action' => 'home']);
+
+
+        if ($this->Auth->user()) {
 
 
 
-    {
+            return $this->redirect(['action' => 'home']);
+        }
 
 
 
-	
-return $this->redirect(['action' => 'home']);
 
-
-		if($this->Auth->user()){
-
-
-
-			return $this->redirect(['action' => 'home']);
-
-
-
-		}
-
-
-
-	
 
 
 
@@ -292,7 +194,7 @@ return $this->redirect(['action' => 'home']);
 
 
 
-	
+
 
 
 
@@ -300,23 +202,23 @@ return $this->redirect(['action' => 'home']);
 
 
 
-		
 
 
 
-			$post = $this->request->getData();
+
+            $post = $this->request->getData();
 
 
 
-			//echo "<pre>"; print_r($post); echo "</pre>"; exit;
+            //echo "<pre>"; print_r($post); echo "</pre>"; exit;
 
 
 
-			$post['status'] = '1';
+            $post['status'] = '1';
 
-			
 
-			$post['name'] = $post['first_name'].' '.$post['last_name'];
+
+            $post['name'] = $post['first_name'] . ' ' . $post['last_name'];
 
 
 
@@ -324,151 +226,123 @@ return $this->redirect(['action' => 'home']);
 
             $user = $this->Users->patchEntity($user, $post);
 
-			
 
-			$new_user = $this->Users->save($user);
 
-			
+            $new_user = $this->Users->save($user);
+
+
 
             if ($new_user) {
 
-				
 
-				if(isset($post['supplement'])){
 
-					if($post['supplement'] == 'yes' || $post['supplement'] == 'Contact me with more info'){
+                if (isset($post['supplement'])) {
 
-					
+                    if ($post['supplement'] == 'yes' || $post['supplement'] == 'Contact me with more info') {
 
-						$ms = 'A new User has been registered recently with email ID <strong>'.$post['email'].'</strong>';
 
-						
 
-						$ms .= '<br>';
+                        $ms = 'A new User has been registered recently with email ID <strong>' . $post['email'] . '</strong>';
 
-						
 
-						$ms .= '<table border="0"><tr><th scope="row" align="left">Name</th><td>'.$post['name'].'</td></tr><tr><th scope="row" align="left">Email</th><td>'.$post['email'].'</td></tr></table>';
 
-					 
+                        $ms .= '<br>';
 
-						$email = new Email('default');
 
-						$email->from(['gurpreet@avainfotech.com' => 'Trip'])
 
-								->emailFormat('html')
+                        $ms .= '<table border="0"><tr><th scope="row" align="left">Name</th><td>' . $post['name'] . '</td></tr><tr><th scope="row" align="left">Email</th><td>' . $post['email'] . '</td></tr></table>';
 
-								->template('default', 'default')
 
-								->to('gurpreet@avainfotech.com')
 
-								->subject('New User Registration')
+                        $email = new Email('default');
 
-								->send($ms);
+                        $email->from(['gurpreet@avainfotech.com' => 'Trip'])
+                                ->emailFormat('html')
+                                ->template('default', 'default')
+                                ->to('gurpreet@avainfotech.com')
+                                ->subject('New User Registration')
+                                ->send($ms);
+                    }
+                }
 
-					}	
 
-				}		
-
-			
 
 
 
                 $this->Flash->success(__('Registered Successfully.'));
 
-			
-
-			
-
-				/************************************/
-
-				/*				 Login				*/
-
-				/************************************/
-
-				
-
-				if(!filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL)===false){
-
-
-
-					$this->Auth->config('authenticate', [
 
 
 
 
+                /*                 * ********************************* */
 
-						'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
+                /* 				 Login				 */
 
-
-
-					]);
-
-
-
-					$this->Auth->constructAuthenticate();
+                /*                 * ********************************* */
 
 
 
-					$this->request->data['email'] = $this->request->data['email'];
+                if (!filter_var($this->request->data['email'], FILTER_VALIDATE_EMAIL) === false) {
 
 
 
-					//unset($this->request->data['username']);
+                    $this->Auth->config('authenticate', [
+                        'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                    ]);
 
 
 
-				}
+                    $this->Auth->constructAuthenticate();
 
-				
 
-				$user = $this->Auth->identify();
 
-				
+                    $this->request->data['email'] = $this->request->data['email'];
 
-				if ($user) {
 
-					$this->Auth->setUser($user);
 
-					
+                    //unset($this->request->data['username']);
+                }
 
-					return $this->redirect(['action' => 'edit', $new_user->id]);
 
-					
 
-				}
+                $user = $this->Auth->identify();
 
-				
 
-				/************************************/
 
-				/*			Login (END)				*/
+                if ($user) {
 
-				/************************************/
+                    $this->Auth->setUser($user);
+
+
+
+                    return $this->redirect(['action' => 'edit', $new_user->id]);
+                }
+
+
+
+                /*                 * ********************************* */
+
+                /* 			Login (END)				 */
+
+                /*                 * ********************************* */
 
 
 
 
 
                 //return $this->redirect(['action' => 'add']);
+            } else {
 
 
 
-            }else{
-
-
-
-            	$this->Flash->error(__('The user could not be saved. Please, try again.'));
-
-			}	
-
-
-
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            }
         }
 
 
 
-		
+
 
 
 
@@ -478,31 +352,22 @@ return $this->redirect(['action' => 'home']);
 
         $this->set('_serialize', ['user']);
 
-		
 
-		$this->loadModel('Countries');
 
-		
+        $this->loadModel('Countries');
 
-		$countries = $this->Countries->find()->toArray();
 
-		
 
-		$this->set(compact('countries'));
+        $countries = $this->Countries->find()->toArray();
+
+
+
+        $this->set(compact('countries'));
 
 
 
         $this->set('_serialize', ['countries']);
-
-
-
     }
-
-
-
-
-
-
 
     /**
 
@@ -529,99 +394,79 @@ return $this->redirect(['action' => 'home']);
 
 
      */
+    public function edit($id = null) {
 
 
-
-    public function edit($id = null)
-
-
-
-    {
-
-
-    	//print_r($this->request->session()->read('Auth.User'));
-
-    	// $current_user = $this->Users->find('all', ['conditions' => ['Users.id' => $this->Auth->user('id')]]);
-     //    $current_user = $current_user->first()->toArray();
-
-     //    print_r($current_user);
+        //print_r($this->request->session()->read('Auth.User'));
+        // $current_user = $this->Users->find('all', ['conditions' => ['Users.id' => $this->Auth->user('id')]]);
+        //    $current_user = $current_user->first()->toArray();
+        //    print_r($current_user);
 
 
         $user = $this->Users->get($id, [
-
-
-
             'contain' => []
-
-
-
         ]);
 
-		
 
-		
+
+
 
 
 
         if ($this->request->is(['patch', 'post', 'put'])) {
 
-			
 
-			//echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
 
-			
+            //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
 
-			$post = $this->request->data;
 
-			
 
-			if($this->request->data['image']['name'] != ''){
+            $post = $this->request->data;
 
-				
 
-				if($user->image != ''){
 
-					unlink(WWW_ROOT.'images/users/'.$user->image);
+            if ($this->request->data['image']['name'] != '') {
 
-				}	
 
-			
 
-				$image = $this->request->data['image'];
+                if ($user->image != '') {
 
-				$name = time().$image['name'];
+                    unlink(WWW_ROOT . 'images/users/' . $user->image);
+                }
 
-				$tmp_name = $image['tmp_name'];
 
-				$upload_path = WWW_ROOT.'images/users/'.$name;
 
-				move_uploaded_file($tmp_name, $upload_path);
+                $image = $this->request->data['image'];
 
-				
+                $name = time() . $image['name'];
 
-				$post['image'] = $name;
+                $tmp_name = $image['tmp_name'];
 
-			
+                $upload_path = WWW_ROOT . 'images/users/' . $name;
 
-			}else{
+                move_uploaded_file($tmp_name, $upload_path);
 
-				unset($this->request->data['image']);
 
-				$post = $this->request->data;
 
-			}
+                $post['image'] = $name;
+            } else {
 
-		
+                unset($this->request->data['image']);
 
-					
+                $post = $this->request->data;
+            }
 
-			$post['name'] = $post['first_name'].' '.$post['last_name'];
 
-			if(!empty($post['languages'])){
-				$post['languages'] = implode(',', $post['languages']);
-			}else{
-				$post['languages'] = '';
-			}
+
+
+
+            $post['name'] = $post['first_name'] . ' ' . $post['last_name'];
+
+            if (!empty($post['languages'])) {
+                $post['languages'] = implode(',', $post['languages']);
+            } else {
+                $post['languages'] = '';
+            }
 
 
             $user = $this->Users->patchEntity($user, $post);
@@ -630,52 +475,32 @@ return $this->redirect(['action' => 'home']);
 
             if ($this->Users->save($user)) {
 
-            	$current_user = $this->Users->get($id, [
+                $current_user = $this->Users->get($id, [
+                    'contain' => []
+                ]);
 
+                $session = $this->request->session();
 
-
-		            'contain' => []
-
-
-
-		        ]);
-
-		        $session = $this->request->session();
-
-            	$session->write('Auth.User.image', $current_user->image);
+                $session->write('Auth.User.image', $current_user->image);
 
 
                 $this->Flash->success(__('The user has been saved.'));
+            } else {
 
 
 
-            }else{
-
-
-
-            	$this->Flash->error(__('The user could not be saved. Please, try again.'));
-
-			
-
-			}
-
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            }
         }
 
-		
 
-		
 
-		// $this->loadModel('Countries');
 
-		
 
-		// $countries = $this->Countries->find('all');
-
-		// $countries = $countries->all();
-
-		
-
-		// $this->set(compact('countries'));
+        // $this->loadModel('Countries');
+        // $countries = $this->Countries->find('all');
+        // $countries = $countries->all();
+        // $this->set(compact('countries'));
 
 
 
@@ -687,27 +512,18 @@ return $this->redirect(['action' => 'home']);
 
         $this->loadModel('Countries');
 
-		
 
-		$countries = $this->Countries->find()->toArray();
 
-		
+        $countries = $this->Countries->find()->toArray();
 
-		$this->set(compact('countries'));
+
+
+        $this->set(compact('countries'));
 
 
 
         $this->set('_serialize', ['countries']);
-
-
-
     }
-
-
-
-
-
-
 
     /**
 
@@ -734,14 +550,7 @@ return $this->redirect(['action' => 'home']);
 
 
      */
-
-
-
-    public function delete($id = null)
-
-
-
-    {
+    public function delete($id = null) {
 
 
 
@@ -758,17 +567,11 @@ return $this->redirect(['action' => 'home']);
 
 
             $this->Flash->success(__('The user has been deleted.'));
-
-
-
         } else {
 
 
 
             $this->Flash->error(__('The user could not be deleted. Please, try again.'));
-
-
-
         }
 
 
@@ -778,243 +581,183 @@ return $this->redirect(['action' => 'home']);
 
 
         return $this->redirect(['action' => 'index']);
-
-
-
     }
 
+    public function login() {
 
 
-	
 
+        if ($this->request->is('post')) {
 
 
-	public function login(){
 
 
+            if ($this->request->data['username'] == '') {
 
-		if ($this->request->is('post')) {
 
 
+                $response['isSucess'] = "false";
 
 
-			if ($this->request->data['username'] == '') {
 
+                $response['msg'] = "error_username";
+            } else if ($this->request->data['password'] == '') {
 
 
-				$response['isSucess'] = "false";
 
+                $response['isSucess'] = "false";
 
 
-				$response['msg'] = "error_username";
 
+                $response['msg'] = "error_password!";
+            } else {
 
 
-			} else if ($this->request->data['password'] == '') {
 
 
 
-				$response['isSucess'] = "false";
 
 
 
-				$response['msg'] = "error_password!";
 
 
 
-			} else {
+                if (!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL) === false) {
 
 
 
-			
+                    $this->Auth->config('authenticate', [
+                        'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                    ]);
 
 
 
-			
+                    $this->Auth->constructAuthenticate();
 
 
 
-				if(!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL)===false){
+                    $this->request->data['email'] = $this->request->data['username'];
 
 
 
-					$this->Auth->config('authenticate', [
+                    unset($this->request->data['username']);
+                }
 
 
 
-						'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
 
 
 
-					]);
 
+                $user = $this->Auth->identify();
 
 
-					$this->Auth->constructAuthenticate();
 
+                if ($user) {
 
 
-					$this->request->data['email'] = $this->request->data['username'];
 
+                    if ($user['status'] == 0) {
 
 
-					unset($this->request->data['username']);
 
+                        $this->Auth->logout();
 
 
-				}
 
+                        $response['data'] = "no data";
 
 
-			
 
+                        // $response['user'] = $user['email_status'];
 
 
-				$user = $this->Auth->identify();
 
+                        $response['isSucess'] = "false";
 
 
-				if ($user) {
 
+                        $response['msg'] = "You are not active yet";
+                    } else {
 
 
-					if ($user['status'] == 0) {
 
+                        $this->Auth->setUser($user);
 
 
-						$this->Auth->logout();
 
 
 
-						$response['data'] = "no data";
 
 
+                        if ($this->Auth->user('role') == 'admin') {
 
-						// $response['user'] = $user['email_status'];
 
 
+                            $this->Auth->logout();
 
-						$response['isSucess'] = "false";
 
 
+                            $response['data'] = "no data";
 
-						$response['msg'] = "You are not active yet";
 
 
+                            $response['isSucess'] = "false";
 
-					} else {
 
 
+                            $response['msg'] = "error_login_credentials";
+                        } else {
 
-						$this->Auth->setUser($user);
 
 
+                            $response['data'] = $this->Auth->user();
 
-						
 
 
+                            $response['isSucess'] = "true";
 
-						if($this->Auth->user('role') == 'admin'){
 
 
+                            $response['msg'] = "success_login";
+                        }
+                    }
+                } else {
 
-							$this->Auth->logout();
 
 
+                    $response['data'] = "no data";
 
-							$response['data'] = "no data";
 
 
+                    $response['isSucess'] = "false";
 
-							$response['isSucess'] = "false";
 
 
+                    $response['msg'] = "error_login_credentials";
+                }
+            }
+        } else {
 
-							$response['msg'] = "error_login_credentials";
 
 
+            return $this->redirect(['controller' => 'users', 'action' => 'add']);
+        }
 
-						}else{				
 
 
+        $response['msg'] = $this->getLanguage($response['msg']);
 
-							$response['data'] = $this->Auth->user();
 
 
+        $this->set(compact('response'));
 
-							$response['isSucess'] = "true";
 
 
+        $this->set('_serialize', ['response']);
+    }
 
-							$response['msg'] = "success_login";
-
-
-
-						}
-
-
-
-					}
-
-
-
-				} else {
-
-
-
-					$response['data'] = "no data";
-
-
-
-					$response['isSucess'] = "false";
-
-
-
-					$response['msg'] = "error_login_credentials";
-
-
-
-				}
-
-
-
-			}
-
-
-
-		} else {
-
-
-
-			return $this->redirect(['controller' => 'users', 'action' => 'add']);
-
-
-
-		}
-
-
-
-		$response['msg'] = $this->getLanguage($response['msg']);
-
-
-
-		$this->set(compact('response'));
-
-
-
-		$this->set('_serialize', ['response']);
-
-
-
-	}
-
-
-
-	
-
-
-
-	public function logout() {
+    public function logout() {
 
 
 
@@ -1023,144 +766,74 @@ return $this->redirect(['action' => 'home']);
 
 
             return $this->redirect(['action' => 'home']);
+        }
+    }
+
+    public function home() {
+        
+        $this->loadModel('Trips');
+        
+        $trips = $this->Trips->find('all', [
+            'contain'       => ['Tripprices', 'Tripgallery', 'Transportations', 'Locations'],      
+            'conditions'    => ['Trips.status' => 1] 
+        ])->all()->toArray();
+        
+        $this->set(compact('trips'));
+        $this->set('_serialize', ['trips']);
+        
+    }
+
+    public function forgot() {
 
 
 
+        if ($this->Auth->user()) {
+
+            $this->redirect('/');
         }
 
 
 
-    }
 
 
+        if ($this->request->is('post')) {
 
-	
 
 
+            $email = $this->request->data['email'];
 
-	public function home(){
 
-		
 
-		//exit;
 
 
 
-		$this->loadModel('Homesections');
 
-		$this->loadModel('Countries');
+            $user = $this->Users->find('all', ['conditions' => ['Users.email' => $email]]);
 
-		$this->loadModel('Cities');
 
-		
 
-		$homesections = $this->Homesections->find()->toArray();
+            $user = $user->first();
 
 
 
-        $this->set(compact('homesections'));
+            $burl = Router::fullbaseUrl();
 
-        $this->set('_serialize', ['homesections']);
 
-		
 
-		//$countries = $this->Countries->find()->toArray();
+            if (empty($user)) {
 
-		$cities = $this->Cities->find()->toArray();
 
 
+                $this->Flash->error(__('Please Enter valid Email Address'));
+            } else {
 
-        $this->set(compact('cities'));
 
-        $this->set('_serialize', ['cities']);
 
-		
+                if ($user->email) {
 
-		$trainers = $this->Users->find('all',[
 
-			'conditions' => ['Users.role' => 'trainer', 'Users.status' => 1],
 
-			'order'		=> ['Users.id' => 'desc'],
-
-			'limit'		=>	5
-
-		]);
-
-		
-
-		$trainers = $trainers->all()->toArray();
-
-
-
-        $this->set(compact('trainers'));
-
-        $this->set('_serialize', ['trainers']);
-
-
-
-	}
-
-
-
-	
-
-
-
-	public function forgot(){
-
-
-
-		if($this->Auth->user()){
-
-			$this->redirect('/');
-
-		}
-
-	
-
-
-
-		if($this->request->is('post')){
-
-
-
-			$email = $this->request->data['email'];
-
-
-
-			
-
-
-
-			$user = $this->Users->find('all', ['conditions' => ['Users.email' => $email]]);
-
-
-
-			$user = $user->first();
-
-
-
-			$burl = Router::fullbaseUrl();
-
-
-
-			if(empty($user)){
-
-
-
-				$this->Flash->error(__('Please Enter valid Email Address'));
-
-
-
-			}else{
-
-
-
-				if($user->email){
-
-
-
-					$hash = md5(time() . rand(111999999999999999999999999, 99999999999999999999999999999999999999999));
+                    $hash = md5(time() . rand(111999999999999999999999999, 99999999999999999999999999999999999999999));
 
 
 
@@ -1168,1800 +841,1548 @@ return $this->redirect(['action' => 'home']);
 
 
 
-					
 
 
 
-					$this->Users->updateAll(array('tokenhash' => $hash), array('id' => $user->id));
 
+                    $this->Users->updateAll(array('tokenhash' => $hash), array('id' => $user->id));
 
 
-					$ms = "Trainer<br/>";
 
+                    $ms = "Trainer<br/>";
 
 
-					$ms.='<a href=' . $burl . $url . '>Click here to reset your password</a><br/>';
 
+                    $ms .= '<a href=' . $burl . $url . '>Click here to reset your password</a><br/>';
 
 
-					$email = new Email('default');
 
+                    $email = new Email('default');
 
 
-					$email->from(['ayache10@hotmail.com' => 'Patrainer'])
 
+                    $email->from(['ayache10@hotmail.com' => 'Patrainer'])
+                            ->emailFormat('html')
+                            ->template('default', 'default')
+                            ->to($user->email)
+                            ->subject('Reset Your Password')
+                            ->send($ms);
 
 
-							->emailFormat('html')
 
 
 
-							->template('default', 'default')
 
 
+                    $this->Flash->success(__('Check your email to reset your password'));
+                } else {
 
-							->to($user->email)
 
 
+                    $this->Flash->error(__('Email is Invalid'));
+                }
+            }
+        }
+    }
 
-							->subject('Reset Your Password')
+    public function reset($token) {
 
 
 
-							->send($ms);
+        if ($this->Auth->user()) {
 
+            $this->redirect('/');
+        }
 
 
-					
 
+        $query = $this->Users->find('all', ['conditions' => ['Users.tokenhash' => $token]]);
 
+        $data = $query->first();
 
-					$this->Flash->success(__('Check your email to reset your password'));		
+        if ($data) {
 
+            if ($this->request->is(['patch', 'post', 'put'])) {
 
+                if ($this->request->data['password1'] != $this->request->data['password']) {
 
-				}else{
+                    $this->Flash->success(__('New password & confirm password does not match!'));
 
+                    return;
 
+                    //$this->redirect(['action' => 'reset/' . $token]);
+                }
 
-					$this->Flash->error(__('Email is Invalid'));	
+                $this->request->data['tokenhash'] = md5(time() . rand(111999999999999999999999999999, 999999999999999999999999999999999));
 
+                $user = $this->Users->get($data->id, [
+                    'contain' => []
+                ]);
 
+                $user = $this->Users->patchEntity($user, $this->request->getData());
 
-				}
 
 
+                if ($this->Users->save($user)) {
 
-			}
+                    $this->Flash->success(__('Your password has been changed'));
 
+                    return;
 
+                    //$this->redirect(['action' => 'reset/' . $token]);
+                } else {
 
-		}
+                    $this->Flash->success(__('Invalid Password, try again'));
 
+                    return;
 
+                    //$this->redirect(['action' => 'reset/' . $token]);
+                }
+            }
+        } else {
 
-	}
+            $this->Flash->success(__('Invalid Token, try again'));
 
-	
+            return;
+        }
 
-	public function reset($token){
+        $this->set(compact('response'));
 
-	
+        $this->set('_serialize', ['response']);
+    }
 
-		if($this->Auth->user()){
+    public function ajaxedit() {
 
-			$this->redirect('/');
+        $id = $this->Auth->user('id');
+        $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
 
-		}
+        if ($this->request->is(['patch', 'post', 'put'])) {
 
-	
+            switch ($_GET['action']) {
+                case "email":
 
-		$query = $this->Users->find('all', ['conditions' => ['Users.tokenhash' => $token]]);
+                    $post = array();
 
-		$data = $query->first();
+                    if ($user->email == $this->request->data['email']) {
+                        $post['email'] = $this->request->data['email'];
+                    } else {
+                        $post['email'] = $this->request->data['email'];
+                        $post['email_verified'] = 0;
+                    }
 
-		if ($data) {
+                    $user = $this->Users->patchEntity($user, $post);
 
-			if ($this->request->is(['patch', 'post', 'put'])) {
+                    if ($this->Users->save($user)) {
+                        $json['isSuccess'] = 'true';
+                        $json['msg'] = 'text_email_updated';
+                    } else {
+                        $json['isSuccess'] = 'false';
+                        $json['msg'] = 'text_email_exists';
+                    }
 
-				if ($this->request->data['password1'] != $this->request->data['password']) {
+                    break;
 
-					$this->Flash->success(__('New password & confirm password does not match!'));
 
-					return;
+                case "change_password":
 
-					//$this->redirect(['action' => 'reset/' . $token]);
+                    if ((new DefaultPasswordHasher)->check($this->request->data['opassword'], $user['password'])) {
+                        $user = $this->Users->patchEntity($user, $this->request->data);
+                        if ($this->Users->save($user)) {
+                            $json['isSuccess'] = 'true';
+                            $json['msg'] = 'text_password_changed';
+                        } else {
+                            $json['isSuccess'] = 'false';
+                            $json['msg'] = 'text_invalid_password';
+                        }
+                    } else {
+                        $json['isSuccess'] = 'false';
+                        $json['msg'] = 'error_old_password';
+                    }
 
-				}
+                    break;
 
-				$this->request->data['tokenhash'] = md5(time() . rand(111999999999999999999999999999, 999999999999999999999999999999999));
+                case "email_notification":
 
-				$user = $this->Users->get($data->id, [
 
-					'contain' => []
 
-				]);
+                    $user = $this->Users->patchEntity($user, $this->request->data);
 
-				$user = $this->Users->patchEntity($user, $this->request->getData());
+                    if ($this->Users->save($user)) {
+                        $json['isSuccess'] = 'true';
+                        $json['msg'] = 'text_email_updated';
+                    } else {
+                        $json['isSuccess'] = 'false';
+                        $json['msg'] = 'text_email_exists';
+                    }
+                    break;
 
-				
+                case "set_password":
 
-				if ($this->Users->save($user)) {
+                    $user = $this->Users->patchEntity($user, $this->request->data);
+                    if ($this->Users->save($user)) {
+                        $json['isSuccess'] = 'true';
+                        $json['msg'] = 'text_password_changed';
+                    } else {
+                        $json['isSuccess'] = 'false';
+                        $json['msg'] = 'text_invalid_password';
+                    }
 
-					$this->Flash->success(__('Your password has been changed'));
+                    break;
+            }
 
-					return;
+            $json['msg'] = $this->getLanguage($json['msg']);
 
-					//$this->redirect(['action' => 'reset/' . $token]);
+            echo json_encode($json);
+            exit;
+        }
+    }
 
-				} else {
+    public function changepassword() {
 
-					$this->Flash->success(__('Invalid Password, try again'));
+        $id = $this->Auth->user('id');
 
-					return;
 
-					//$this->redirect(['action' => 'reset/' . $token]);
 
-				}
+        $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
 
-			}
 
-		} else {
 
-			$this->Flash->success(__('Invalid Token, try again'));
+        if ($this->request->is(['patch', 'post', 'put'])) {
 
-			return;
+            if (isset($this->request->data['password1'])) {
 
-		}
+                if ($this->request->data['password'] != $this->request->data['password1']) {
 
-		$this->set(compact('response'));
+                    $this->Flash->error(__('New And Confirm Password Does Not Match'));
 
-		$this->set('_serialize', ['response']);		
+                    return;
+                }
+            }
 
-	}
+            if ((new DefaultPasswordHasher)->check($this->request->data['opassword'], $user['password'])) {
 
+                $user = $this->Users->patchEntity($user, $this->request->data);
 
-	public function ajaxedit(){
+                if ($this->Users->save($user)) {
 
-		$id = $this->Auth->user('id');
-		$user = $this->Users->get($id, [
-			'contain' => []
-		]);
+                    $this->Flash->error(__('Password Changed Successfully'));
 
-		if ($this->request->is(['patch', 'post', 'put'])) {
-			
-			switch($_GET['action']){
-				case "email":
 
-					$post = array();
 
-					if($user->email == $this->request->data['email']){
-						$post['email'] = $this->request->data['email'];
-					}else{
-						$post['email'] = $this->request->data['email'];
-						$post['email_verified'] = 0;
-					}
+                    if (isset($_GET['route'])) {
 
-					$user = $this->Users->patchEntity($user, $post);
+                        return $this->redirect(['action' => 'edit', $id]);
+                    } else {
 
-            		if ($this->Users->save($user)) {
-            			$json['isSuccess'] 	= 	'true';
-            			$json['msg']		=	'text_email_updated';
-            		}else{
-            			$json['isSuccess'] 	= 	'false';
-            			$json['msg']		=	'text_email_exists';
-            		}
+                        return $this->redirect(['action' => 'changepassword']);
+                    }
+                } else {
 
-				break;
+                    $this->Flash->success(__('Invalid Password, try again'));
 
+                    if (isset($_GET['route'])) {
 
-				case "change_password":
+                        return $this->redirect(['action' => 'edit', $id]);
+                    } else {
 
-					if((new DefaultPasswordHasher)->check($this->request->data['opassword'], $user['password'])){				
-						$user = $this->Users->patchEntity($user, $this->request->data);
-						if($this->Users->save($user)){
-							$json['isSuccess'] 	= 	'true';
-     		      			$json['msg']		=	'text_password_changed';
-						} else {
-							$json['isSuccess'] 	= 	'false';
-     		      			$json['msg']		=	'text_invalid_password';
-						}
-					}else {
-						$json['isSuccess'] 	= 	'false';
- 		      			$json['msg']		=	'error_old_password';
-					}
+                        return $this->redirect(['action' => 'changepassword']);
+                    }
+                }
+            } else {
 
-				break;
+                $this->Flash->success(__('Old password did not match'));
 
-				case "email_notification":
+                if (isset($_GET['route'])) {
 
+                    return $this->redirect(['action' => 'edit', $id]);
+                } else {
 
+                    return $this->redirect(['action' => 'changepassword']);
+                }
+            }
+        }
+    }
 
-					$user = $this->Users->patchEntity($user, $this->request->data);
+    public function trainer() {
 
-            		if ($this->Users->save($user)) {
-            			$json['isSuccess'] 	= 	'true';
-            			$json['msg']		=	'text_email_updated';
-            		}else{
-            			$json['isSuccess'] 	= 	'false';
-            			$json['msg']		=	'text_email_exists';
-            		}
-				break;
 
-				case "set_password":
 
-					$user = $this->Users->patchEntity($user, $this->request->data);
-					if($this->Users->save($user)){
-						$json['isSuccess'] 	= 	'true';
- 		      			$json['msg']		=	'text_password_changed';
-					} else {
-						$json['isSuccess'] 	= 	'false';
- 		      			$json['msg']		=	'text_invalid_password';
-					}
+        if ($this->Auth->user('role') != 'trainer') {
 
-				break;
-			}
+            $this->redirect('/');
+        }
 
-			$json['msg']	=	$this->getLanguage($json['msg']);
 
-			echo json_encode($json);
-			exit;
-		}
-	}
-	
 
-	public function changepassword(){
+        $id = $this->Auth->user('id');
 
-		$id = $this->Auth->user('id');
 
-		
 
-		$user = $this->Users->get($id, [
+        $user = $this->Users->get($id, [
+            'contains' => []
+        ]);
 
-			'contain' => []
 
-		]);
 
-		
+        $this->set('user', $user);
 
-		if($this->request->is(['patch', 'post', 'put'])){
+        $this->set('_serialize', ['user']);
 
-			if(isset($this->request->data['password1'])){		
 
-				if($this->request->data['password'] != $this->request->data['password1']){
 
-					$this->Flash->error(__('New And Confirm Password Does Not Match'));
+        $this->loadModel('Galleries');
 
-					return;
 
-				}
 
-			}
+        $gallery = $this->Galleries->find('all', [
+            'conditions' => ['user_id' => $this->Auth->user('id')]
+        ]);
 
-			if((new DefaultPasswordHasher)->check($this->request->data['opassword'], $user['password']))
 
-			{				
 
-				$user = $this->Users->patchEntity($user, $this->request->data);
+        $gallery = $gallery->all();
 
-				if($this->Users->save($user)){
 
-					$this->Flash->error(__('Password Changed Successfully'));
 
-					
+        $this->set('galleries', $gallery);
 
-					if(isset($_GET['route'])){
+        $this->set('_serialize', ['galleries']);
+    }
 
-						return $this->redirect(['action' => 'edit', $id]);
+    public function traineredit() {
 
-					}else{
 
-						return $this->redirect(['action' => 'changepassword']);
 
-					}
+        if ($this->Auth->user('role') != 'trainer') {
 
-				} else {
+            $this->redirect('/');
+        }
 
-					$this->Flash->success(__('Invalid Password, try again'));
 
-					if(isset($_GET['route'])){
 
-						return $this->redirect(['action' => 'edit', $id]);
+        $id = $this->Auth->user('id');
 
-					}else{
 
-						return $this->redirect(['action' => 'changepassword']);
 
-					}	
+        $user = $this->Users->get($id, [
+            'contains' => []
+        ]);
 
-				}
 
-			}else {
 
-				$this->Flash->success(__('Old password did not match'));
+        $column = $this->request->query('view');
 
-				if(isset($_GET['route'])){
 
-					return $this->redirect(['action' => 'edit', $id]);
 
-				}else{
+        if ($this->request->is(['patch', 'put', 'post'])) {
 
-					return $this->redirect(['action' => 'changepassword']);
 
-				}	
 
-			}
+            $post[$column] = json_encode($this->request->data['content']);
 
-		}
 
-	}
 
-	
+            $user = $this->Users->patchEntity($user, $post);
 
-	public function trainer(){
 
-	
 
-		if($this->Auth->user('role') != 'trainer'){
+            if ($this->Users->save($user)) {
 
-			$this->redirect('/');
+                $this->Flash->success(__('Your Info has been Updated Successfully'));
 
-		}
+                return $this->redirect(['action' => 'trainer']);
+            } else {
 
-	
+                $this->Flash->error(__('Error in info Updation'));
 
-		$id = $this->Auth->user('id');
+                return $this->redirect(['action' => 'trainer']);
+            }
+        }
 
-		
 
-		$user = $this->Users->get($id, [
 
-			'contains' => []
 
-		]);
 
-		
+        $this->loadModel('Galleries');
 
-		$this->set('user', $user);
 
-		$this->set('_serialize', ['user']);	
 
-		
+        $gallery = $this->Galleries->find('all', [
+            'conditions' => ['user_id' => $this->Auth->user('id')]
+        ]);
 
-		$this->loadModel('Galleries');
 
-		
 
-		$gallery = $this->Galleries->find('all',[
+        $gallery = $gallery->all();
 
-			'conditions' => ['user_id' => $this->Auth->user('id')]
 
-		]);
 
-		
+        $this->set('galleries', $gallery);
 
-		$gallery = $gallery->all();
+        $this->set('_serialize', ['galleries']);
 
-		
 
-		$this->set('galleries', $gallery);
 
-		$this->set('_serialize', ['galleries']);	
+        $this->set('content', $user[$column]);
 
-	}
+        $this->set('_serialize', ['content']);
+    }
 
-	
+    public function addGallery() {
 
-	public function traineredit(){
 
-		
 
-		if($this->Auth->user('role') != 'trainer'){
+        $this->loadModel('Galleries');
 
-			$this->redirect('/');
 
-		}
 
-		
+        $gallery = $this->Galleries->newEntity();
 
-		$id = $this->Auth->user('id');
 
-		
 
-		$user = $this->Users->get($id, [
+        if ($this->request->is(['patch', 'put', 'post'])) {
 
-			'contains' => []
 
-		]);
 
-		
+            $file = $this->request->data['file'];
 
-		$column = $this->request->query('view');
+            $name = time() . $file['name'];
 
-		
+            $tmp_name = $file['tmp_name'];
 
-		if($this->request->is(['patch', 'put', 'post'])){
+            $upload_path = WWW_ROOT . 'images/gallery/' . $name;
 
-		
+            move_uploaded_file($tmp_name, $upload_path);
 
-			$post[$column] =  json_encode($this->request->data['content']);
 
-		
 
-			$user = $this->Users->patchEntity($user, $post);
+            $this->request->data['file'] = $name;
 
-			
+            $this->request->data['format'] = $file['type'];
 
-			if($this->Users->save($user)){
+            $this->request->data['user_id'] = $this->Auth->user('id');
 
-				$this->Flash->success(__('Your Info has been Updated Successfully'));
 
-				return $this->redirect(['action' => 'trainer']);
 
-			}else{
+            $gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
 
-				$this->Flash->error(__('Error in info Updation'));
 
-				return $this->redirect(['action' => 'trainer']);
 
-			}
+            if ($this->Galleries->save($gallery)) {
 
-		}
+                $this->Flash->success(__('You file has been uploaded successfully'));
 
-		
+                return $this->redirect(["controller" => "users", "action" => "trainer"]);
+            } else {
 
-		
+                $this->Flash->success(__('Error in file upload. Please try again later'));
 
-		$this->loadModel('Galleries');
+                return $this->redirect(["controller" => "users", "action" => "trainer"]);
+            }
+        }
+    }
 
-		
+    public function removeGallery($id) {
 
-		$gallery = $this->Galleries->find('all',[
 
-			'conditions' => ['user_id' => $this->Auth->user('id')]
 
-		]);
+        $id = base64_decode($id);
 
-		
 
-		$gallery = $gallery->all();
 
-		
+        $this->loadModel('Galleries');
 
-		$this->set('galleries', $gallery);
 
-		$this->set('_serialize', ['galleries']);	
 
-		
+        $gallery = $this->Galleries->get($id, [
+            'contains' => []
+        ]);
 
-		$this->set('content', $user[$column]);
 
-		$this->set('_serialize', ['content']);	
 
-	}
+        unlink(WWW_ROOT . 'images/gallery/' . $gallery->file);
 
-	
 
-	public function addGallery(){
 
-	
+        $result = $this->Galleries->delete($gallery);
 
-		$this->loadModel('Galleries');
 
-		
 
-		$gallery = $this->Galleries->newEntity();
+        if ($result) {
 
-	
+            $this->Flash->success(__('You file has been deleted successfully'));
 
-		if($this->request->is(['patch', 'put', 'post'])){
+            return $this->redirect(["controller" => "users", "action" => "trainer"]);
+        } else {
 
-			
+            $this->Flash->success(__('Error in file deletion. Please try again later'));
 
-			$file = $this->request->data['file'];
+            return $this->redirect(["controller" => "users", "action" => "trainer"]);
+        }
+    }
 
-			$name = time().$file['name'];
+    public function contact() {
 
-			$tmp_name = $file['tmp_name'];
 
-			$upload_path = WWW_ROOT.'images/gallery/'.$name;
 
-			move_uploaded_file($tmp_name, $upload_path);
 
-			
 
-			$this->request->data['file'] = $name;
+        $this->loadModel('Contacts');
 
-			$this->request->data['format'] = $file['type'];
 
-			$this->request->data['user_id'] = $this->Auth->user('id');
 
-			
-
-			$gallery = $this->Galleries->patchEntity($gallery, $this->request->data);
-
-			
-
-			if($this->Galleries->save($gallery)){
-
-				$this->Flash->success(__('You file has been uploaded successfully'));
-
-				return $this->redirect(["controller" => "users", "action" => "trainer"]);
-
-			}else{
-
-				$this->Flash->success(__('Error in file upload. Please try again later'));
-
-				return $this->redirect(["controller" => "users", "action" => "trainer"]);
-
-			}
-
-		}
-
-	}
-
-	
-
-	public function removeGallery($id){
-
-	
-
-		$id = base64_decode($id);
-
-		
-
-		$this->loadModel('Galleries');
-
-		
-
-		$gallery = $this->Galleries->get($id, [
-
-			'contains' => []
-
-		]);
-
-		
-
-		unlink(WWW_ROOT.'images/gallery/'.$gallery->file);
-
-		
-
-		$result = $this->Galleries->delete($gallery);
-
-		
-
-		if($result){
-
-			$this->Flash->success(__('You file has been deleted successfully'));
-
-			return $this->redirect(["controller" => "users", "action" => "trainer"]);
-
-		}else{
-
-			$this->Flash->success(__('Error in file deletion. Please try again later'));
-
-			return $this->redirect(["controller" => "users", "action" => "trainer"]);
-
-		}
-
-		
-
-	}
-
-	
-
-	public function contact(){
-
-	
-
-	
-
-		$this->loadModel('Contacts');
-
-	
-
-		$contact = $this->Contacts->newEntity();
+        $contact = $this->Contacts->newEntity();
 
         if ($this->request->is('post')) {
 
-        
 
-        
+
+
 
             $contact = $this->Contacts->patchEntity($contact, $this->request->data);
 
             if ($this->Contacts->save($contact)) {
 
-			
-
-				$ms = '<table width="200" border="1"><tr><th scope="row">Name</th><td>'.$this->request->data['name'].'</td></tr><tr><th scope="row">Email</th><td>'.$this->request->data['email'].'</td></tr><tr><th scope="row">Subject</th><td>'.$this->request->data['subject'].'</td></tr><th scope="row">Message</th><td>'.$this->request->data['message'].'</td></tr></table>';
 
 
-
-			
-
-				$email = new Email('default');
+                $ms = '<table width="200" border="1"><tr><th scope="row">Name</th><td>' . $this->request->data['name'] . '</td></tr><tr><th scope="row">Email</th><td>' . $this->request->data['email'] . '</td></tr><tr><th scope="row">Subject</th><td>' . $this->request->data['subject'] . '</td></tr><th scope="row">Message</th><td>' . $this->request->data['message'] . '</td></tr></table>';
 
 
 
-					$email->from(['contact@patrainer.com' => 'Trainer'])
+
+
+                $email = new Email('default');
 
 
 
-							->emailFormat('html')
+                $email->from(['contact@patrainer.com' => 'Trainer'])
+                        ->emailFormat('html')
+                        ->template('default', 'default')
+                        ->to('contact@patrainer.com')
+                        ->subject('Contact Us Enquiry')
+                        ->send($ms);
 
 
 
-							->template('default', 'default')
 
-
-
-							->to('contact@patrainer.com')
-
-
-
-							->subject('Contact Us Enquiry')
-
-
-
-							->send($ms);
-
-			
-
-			
 
                 $this->Flash->success(__('Your Enquiry has been sent successfully.'));
+            } else {
 
-            }else{
-
-            	$this->Flash->error(__('The contact could not be saved. Please, try again.'));
-
-			}	
-
+                $this->Flash->error(__('The contact could not be saved. Please, try again.'));
+            }
         }
 
         $this->set(compact('contact'));
 
         $this->set('_serialize', ['contact']);
+    }
 
-	}
+    /*     * ********* Trip Functions ************* */
 
+    public function language() {
 
+        $source = 'en';
 
-	/*********** Trip Functions **************/
+        $target = 'ar';
 
+        $text = 'Simple PHP library for talking to Googles Translate API for free.';
 
 
-	public function language(){
 
-		$source = 'en';
+        $trans = new GoogleTranslate();
 
-		$target = 'ar';
+        $result = $trans->translate($source, $target, $text);
 
-		$text = 'Simple PHP library for talking to Googles Translate API for free.';
 
-		
 
-		$trans = new GoogleTranslate();
+        echo $result;
+    }
 
-		$result = $trans->translate($source, $target, $text);
+    public function ajaxSignup() {
 
-		
 
-		echo $result;
 
-	}
+        $response = array();
 
 
 
-	public function ajaxSignup(){
+        $user = $this->Users->newEntity();
 
 
 
-		$response = array();
+        if ($this->request->is('post')) {
 
 
 
-		$user = $this->Users->newEntity();
+            if ($this->request->data['first_name'] == '' || $this->request->data['last_name'] == '' || $this->request->data['email'] == '' || $this->request->data['password1'] == '' || $this->request->data['password'] == '') {
 
+                $response['isSucess'] = "false";
 
+                $response['msg'] = "<div class='alert alert-danger'><strong>Please fill all the fields</strong></div>";
+            } else if ($this->request->data['password1'] != $this->request->data['password']) {
 
-		if ($this->request->is('post')) {
+                $response['isSucess'] = "false";
 
-			
+                $response['msg'] = "<div class='alert alert-danger'><strong>Password and Confirm Password does not match.</strong></div>";
+            } else {
 
-			if ($this->request->data['first_name'] == '' || $this->request->data['last_name'] == '' || $this->request->data['email'] == '' || $this->request->data['password1'] == '' || $this->request->data['password'] == '') {
 
-				$response['isSucess'] = "false";
 
-				$response['msg'] = "<div class='alert alert-danger'><strong>Please fill all the fields</strong></div>";
+                $user_check = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['email']]]);
 
-			} else if ($this->request->data['password1'] != $this->request->data['password']) {
+                $user_check = $user_check->first();
 
-				$response['isSucess'] = "false";
+                if (!empty($user_check)) {
 
-				$response['msg'] = "<div class='alert alert-danger'><strong>Password and Confirm Password does not match.</strong></div>";
+                    $response['isSucess'] = "false";
 
-			}else{
+                    $response['msg'] = "<div class='alert alert-danger'><strong>Email Address already exists. Please try with another email ID..</strong></div>";
+                } else {
 
 
 
-				$user_check = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['email']]]);
+                    $post = $this->request->data;
 
-				$user_check = $user_check->first();
 
-				if(!empty($user_check)){
 
-					$response['isSucess'] = "false";
+                    $post['status'] = '1';
 
-					$response['msg'] = "<div class='alert alert-danger'><strong>Email Address already exists. Please try with another email ID..</strong></div>";
+                    $post['role'] = 'user';
 
-				}else{
+                    $post['name'] = $post['first_name'] . ' ' . $post['last_name'];
 
 
 
-					$post = $this->request->data;
+                    $user = $this->Users->patchEntity($user, $post);
 
+                    $new_user = $this->Users->save($user);
 
 
-					$post['status'] = 	'1';
 
-					$post['role']	=	'user';
+                    if ($new_user) {
 
-					$post['name'] = $post['first_name'].' '.$post['last_name'];
+                        $ms = 'A new User has been registered recently with email ID <strong>' . $post['email'] . '</strong>';
 
 
 
-					$user = $this->Users->patchEntity($user, $post);
+                        $ms .= '<br>';
 
-					$new_user = $this->Users->save($user);
 
 
+                        $ms .= '<table border="0"><tr><th scope="row" align="left">Name</th><td>' . $post['name'] . '</td></tr><tr><th scope="row" align="left">Email</th><td>' . $post['email'] . '</td></tr></table>';
 
-					if ($new_user) {
 
-						$ms = 'A new User has been registered recently with email ID <strong>'.$post['email'].'</strong>';
 
+                        // $email = new Email('default');
+                        // $email->from(['gurpreet@avainfotech.com' => 'Trip'])
+                        // 	->emailFormat('html')
+                        // 	->template('default', 'default')
+                        // 	->to('gurpreet@avainfotech.com')
+                        // 	->subject('New User Registration')
+                        // 	->send($ms);
 
+                        $this->request->data['username'] = $post['email'];
 
-						$ms .= '<br>';
+                        $this->request->data['password'] = $this->request->data['password'];
 
 
 
-						$ms .= '<table border="0"><tr><th scope="row" align="left">Name</th><td>'.$post['name'].'</td></tr><tr><th scope="row" align="left">Email</th><td>'.$post['email'].'</td></tr></table>';
+                        if (!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL) === false) {
 
+                            $this->Auth->config('authenticate', [
+                                'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                            ]);
 
 
-						// $email = new Email('default');
 
-						// $email->from(['gurpreet@avainfotech.com' => 'Trip'])
+                            $this->Auth->constructAuthenticate();
 
-						// 	->emailFormat('html')
 
-						// 	->template('default', 'default')
 
-						// 	->to('gurpreet@avainfotech.com')
+                            $this->request->data['email'] = $this->request->data['username'];
 
-						// 	->subject('New User Registration')
 
-						// 	->send($ms);
 
-						$this->request->data['username']	=	$post['email'];
+                            unset($this->request->data['username']);
+                        }
 
-						$this->request->data['password'] 	= 	$this->request->data['password'];
 
 
+                        $user1 = $this->Auth->identify();
 
-						if(!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL)===false){
 
-							$this->Auth->config('authenticate', [
 
-								'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
+                        if ($user1) {
 
-							]);
 
 
+                            $this->Auth->setUser($user1);
 
-							$this->Auth->constructAuthenticate();
 
+                            $response['isSucess'] = "true";
 
+                            $response['msg'] = "<div class='alert alert-success'><strong>Registered Successfully.</strong></div>";
+                        } else {
+                            $response['isSucess'] = "false";
 
-							$this->request->data['email'] = $this->request->data['username'];
+                            $response['msg'] = "<div class='alert alert-success'><strong>Registered Successfully. But unable to login</strong></div>";
+                        }
+                    }
+                }
+            }
+        }
 
 
 
-							unset($this->request->data['username']);
+        echo json_encode($response);
 
-						}
+        exit;
+    }
 
+    public function fbconnect() {
 
+        $response = array();
 
-						$user1 = $this->Auth->identify();
+        if (isset($this->request->data['action']) && $this->request->data['action'] == "fblogin") {
 
 
 
-						if ($user1) {
+            $user = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['myid']['email']]]);
 
+            $user = $user->first();
 
 
-							$this->Auth->setUser($user1);
+            if (!empty($user)) {
 
+                $post = array();
 
-							$response['isSucess'] = "true";
+                $post['fb_id'] = $this->request->data['myid']['id'];
 
-							$response['msg'] = "<div class='alert alert-success'><strong>Registered Successfully.</strong></div>";
-						}else{
-							$response['isSucess'] = "false";
+                $post['email_verified'] = '1';
 
-							$response['msg'] = "<div class='alert alert-success'><strong>Registered Successfully. But unable to login</strong></div>";
-						}	
 
-					}    
+                $user = $this->Users->patchEntity($user, $post);
 
-				}	
+                $new_user = $this->Users->save($user);
 
-			}
 
-		}
 
+                if ($new_user) {
 
+                    $response['isSuccess'] = 'true';
 
-		echo json_encode($response);
+                    $response['msg'] = 'Connected Successfully';
+                } else {
 
-		exit;
+                    $response['isSuccess'] = 'false';
 
-	}
+                    $response['msg'] = 'Error in Connecting. Please Try Again.';
+                }
+            } else {
 
+                $response['isSuccess'] = 'false';
 
-	public function fbconnect(){
+                $response['msg'] = 'Error in Connecting. Please Try Again.';
+            }
+        }
 
-		$response = array();
 
-		if(isset($this->request->data['action']) && $this->request->data['action']=="fblogin"){			
 
+        $response['msg'] = $this->getLanguage($response['msg']);
 
 
-			$user = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['myid']['email']]]);
 
-			$user = $user->first();
+        echo json_encode($response);
 
+        exit;
+    }
 
-			if(!empty($user)){
+    public function fblogin() {
 
-				$post = array();
+        $response = array();
 
-				$post['fb_id']		=	$this->request->data['myid']['id'];
 
-				$post['email_verified'] 		= 	'1';
 
+        //print_r($this->request->data); exit;
 
-				$user = $this->Users->patchEntity($user, $post);
 
-				$new_user = $this->Users->save($user);
 
+        if (isset($this->request->data['action']) && $this->request->data['action'] == "fblogin") {
 
 
-				if($new_user){
 
-						$response['isSuccess']	=	'true';
+            $results = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['myid']['email']]]);
 
-						$response['msg'] 		= 	'Connected Successfully';
+            $results = $results->first();
 
-				}else{
 
-					$response['isSuccess'] 	= 	'false';
+            if (!empty($results)) {
 
-					$response['msg']		=	'Error in Connecting. Please Try Again.';
+                if ($results->fb_id != '') {
+                    $this->Auth->setUser($results);
 
-				}
+                    $response['isSuccess'] = 'true';
 
-					
+                    $response['msg'] = 'Logged in successfully';
+                } else {
+                    $response['isSuccess'] = 'false';
 
+                    $response['msg'] = 'Please Logged in using your credentials.';
+                }
+            } else {
 
-			}else{
+                $post = array();
 
-					$response['isSuccess'] 	= 	'false';
+                $post['fb_id'] = $this->request->data['myid']['id'];
 
-					$response['msg']		=	'Error in Connecting. Please Try Again.';
+                $post['first_name'] = $this->request->data['myid']['first_name'];
 
+                $post['last_name'] = $this->request->data['myid']['last_name'];
 
+                $post['email'] = $this->request->data['myid']['email'];
 
-			}	
+                $post['email_verified'] = '1';
 
-		}	
+                $post['name'] = $this->request->data['myid']['name'];
 
+                $post['password'] = 'zxswedcxswz';
 
+                $post['status'] = '1';
 
-		$response['msg']	=	$this->getLanguage($response['msg']);
+                $post['role'] = 'user';
 
 
 
-		echo json_encode($response);
 
-		exit;
-	}
 
+                $user = $this->Users->newEntity();
 
 
-	public function fblogin(){
 
-		$response = array();
+                $user = $this->Users->patchEntity($user, $post);
 
+                $new_user = $this->Users->save($user);
 
 
-		//print_r($this->request->data); exit;
 
+                if ($new_user) {
 
+                    $this->request->data['username'] = $this->request->data['myid']['email'];
 
-		if(isset($this->request->data['action']) && $this->request->data['action']=="fblogin"){			
+                    $this->request->data['password'] = 'zxswedcxswz';
 
 
 
-			$results = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['myid']['email']]]);
+                    if (!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL) === false) {
 
-			$results = $results->first();
+                        $this->Auth->config('authenticate', [
+                            'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                        ]);
 
 
-			if(!empty($results)){
 
-					if($results->fb_id != ''){
-						$this->Auth->setUser($results);
+                        $this->Auth->constructAuthenticate();
 
-						$response['isSuccess']	=	'true';
 
-						$response['msg'] 		= 	'Logged in successfully';
-					}else{
-						$response['isSuccess']	=	'false';
 
-						$response['msg'] 		= 	'Please Logged in using your credentials.';
-					}
+                        $this->request->data['email'] = $this->request->data['username'];
 
-					
 
 
-			}else{
+                        unset($this->request->data['username']);
+                    }
 
-				$post = array();
 
-				$post['fb_id']		=	$this->request->data['myid']['id'];
 
-				$post['first_name'] = 	$this->request->data['myid']['first_name'];
+                    $user2 = $this->Auth->identify();
 
-				$post['last_name'] 	= 	$this->request->data['myid']['last_name'];
 
-				$post['email'] 		= 	$this->request->data['myid']['email'];
 
-				$post['email_verified'] 		= 	'1';
+                    if ($user2) {
 
-				$post['name'] 		= 	$this->request->data['myid']['name'];
 
-				$post['password'] 	= 	'zxswedcxswz';
 
-				$post['status'] 	= 	'1';
+                        $this->Auth->setUser($user2);
 
-				$post['role'] 		= 	'user';
 
 
+                        $response['isSuccess'] = 'true';
 
+                        $response['msg'] = 'success_login';
+                    } else {
 
+                        $response['isSuccess'] = 'false';
 
-				$user = $this->Users->newEntity();
+                        $response['msg'] = 'Error in Signing in. Please Try Again.';
+                    }
+                }
+            }
+        }
 
 
 
-				$user = $this->Users->patchEntity($user, $post);
+        $response['msg'] = $this->getLanguage($response['msg']);
 
-				$new_user = $this->Users->save($user);
 
 
+        echo json_encode($response);
 
-				if($new_user){
+        exit;
+    }
 
-					$this->request->data['username']	=	$this->request->data['myid']['email'];
+    public function gplogin() {
 
-					$this->request->data['password'] 	= 	'zxswedcxswz';
+        $response = array();
 
 
 
-					if(!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL)===false){
+        //print_r($this->request->data); exit;
 
-						$this->Auth->config('authenticate', [
 
-							'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
 
-						]);
+        if (isset($this->request->data['action']) && $this->request->data['action'] == "gplogin") {
 
 
 
-						$this->Auth->constructAuthenticate();
+            $results = $this->Users->find('all', ['conditions' => ['Users.google_id' => $this->request->data['id']]]);
 
-						
+            $results = $results->first();
 
-						$this->request->data['email'] = $this->request->data['username'];
 
+            $email_check = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['email']]]);
 
+            $email_check = $email_check->first();
 
-						unset($this->request->data['username']);
 
-					}
+            if (!empty($results)) {
 
 
 
-					$user2 = $this->Auth->identify();
+                $this->request->data['username'] = $results['email'];
 
+                $this->request->data['password'] = 'zxswedcxswz';
 
 
-					if ($user2) {
 
+                if (!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL) === false) {
 
+                    $this->Auth->config('authenticate', [
+                        'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                    ]);
 
-						$this->Auth->setUser($user2);
 
 
+                    $this->Auth->constructAuthenticate();
 
-						$response['isSuccess']	=	'true';
 
-						$response['msg'] 		= 	'success_login';
 
-					}else{
+                    $this->request->data['email'] = $this->request->data['username'];
 
-						$response['isSuccess'] 	= 	'false';
 
-						$response['msg']		=	'Error in Signing in. Please Try Again.';
 
-					}
+                    unset($this->request->data['username']);
+                }
 
-				}
 
-			}	
 
-		}	
+                $user1 = $this->Auth->identify();
 
 
 
-		$response['msg']	=	$this->getLanguage($response['msg']);
+                if ($user1) {
 
 
 
-		echo json_encode($response);
+                    $this->Auth->setUser($user1);
 
-		exit;
 
-	}
 
+                    $response['isSuccess'] = 'true';
 
+                    $response['msg'] = 'Logged in successfully';
+                } else {
 
+                    $response['isSuccess'] = 'false';
 
+                    $response['msg'] = 'Error in Signing in. Please Try Again.';
+                }
+            } elseif (!empty($email_check)) {
+                $response['isSuccess'] = 'false';
 
-	public function gplogin(){
+                $response['msg'] = 'You are already a user with email ID ' . $this->request->data['email'] . '. please login using your credentials.';
+            } else {
 
-		$response = array();
 
 
+                $post = array();
 
-		//print_r($this->request->data); exit;
 
 
+                $post['google_id'] = $this->request->data['id'];
 
-		if(isset($this->request->data['action']) && $this->request->data['action']=="gplogin"){			
+                $post['first_name'] = $this->request->data['first_name'];
 
+                $post['last_name'] = $this->request->data['last_name'];
 
+                $post['email'] = $this->request->data['email'];
 
-			$results = $this->Users->find('all', ['conditions' => ['Users.google_id' => $this->request->data['id']]]);
+                $post['name'] = $this->request->data['name'];
 
-			$results = $results->first();
+                $post['password'] = 'zxswedcxswz';
 
+                $post['status'] = '1';
 
-			$email_check = $this->Users->find('all', ['conditions' => ['Users.email' => $this->request->data['email']]]);
+                $post['role'] = 'user';
 
-			$email_check = $email_check->first();
 
 
-			if(!empty($results)){
 
 
+                $user2 = $this->Users->newEntity();
 
-				$this->request->data['username']	=	$results['email'];
 
-				$this->request->data['password'] 	= 	'zxswedcxswz';
 
+                $user2 = $this->Users->patchEntity($user2, $post);
 
+                $new_user = $this->Users->save($user2);
 
-				if(!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL)===false){
 
-					$this->Auth->config('authenticate', [
 
-						'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
+                if ($new_user) {
 
-					]);
+                    $this->request->data['username'] = $this->request->data['email'];
 
+                    $this->request->data['password'] = 'zxswedcxswz';
 
 
-					$this->Auth->constructAuthenticate();
 
+                    if (!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL) === false) {
 
+                        $this->Auth->config('authenticate', [
+                            'Form' => ['fields' => ['username' => 'email', 'password' => 'password']]
+                        ]);
 
-					$this->request->data['email'] = $this->request->data['username'];
 
 
+                        $this->Auth->constructAuthenticate();
 
-					unset($this->request->data['username']);
 
-				}
 
+                        $this->request->data['email'] = $this->request->data['username'];
 
 
-				$user1 = $this->Auth->identify();
 
+                        unset($this->request->data['username']);
+                    }
 
 
-				if ($user1) {
 
+                    $user2 = $this->Auth->identify();
 
 
-					$this->Auth->setUser($user1);
 
+                    if ($user2) {
 
 
-					$response['isSuccess']	=	'true';
 
-					$response['msg'] 		= 	'Logged in successfully';
+                        $this->Auth->setUser($user2);
 
-				}else{
 
-					$response['isSuccess'] 	= 	'false';
 
-					$response['msg']		=	'Error in Signing in. Please Try Again.';
+                        $response['isSuccess'] = 'true';
 
-				}
+                        $response['msg'] = 'Logged in successfully';
+                    } else {
 
+                        $response['isSuccess'] = 'false';
 
+                        $response['msg'] = 'Error in Signing in. Please Try Again.';
+                    }
+                } else {
 
-			}elseif(!empty($email_check)){
-				$response['isSuccess'] 	= 	'false';
+                    $response['isSuccess'] = 'false';
 
-				$response['msg']		=	'You are already a user with email ID '.$this->request->data['email'].'. please login using your credentials.';
+                    $response['msg'] = 'Error in Signing in. Please Try Again.';
+                }
+            }
+        }
 
-			}else{
 
 
+        echo json_encode($response);
 
-				$post = array();
+        exit;
+    }
 
+    public function changeLanguage() {
 
+        if ($this->request->is('post')) {
 
-				$post['google_id']		=	$this->request->data['id'];
+            $language = $this->request->data['language'];
 
-				$post['first_name'] = 	$this->request->data['first_name'];
 
-				$post['last_name'] 	= 	$this->request->data['last_name'];
 
-				$post['email'] 		= 	$this->request->data['email'];
+            $session = $this->request->session();
 
-				$post['name'] 		= 	$this->request->data['name'];
+            $session->write('Config.language', $language);
 
-				$post['password'] 	= 	'zxswedcxswz';
 
-				$post['status'] 	= 	'1';
 
-				$post['role'] 		= 	'user';
+            echo $language;
+        }
 
 
 
+        exit;
+    }
 
+    public function verifications($id = null) {
 
-				$user2 = $this->Users->newEntity();
 
 
+        $json = array();
 
-				$user2 = $this->Users->patchEntity($user2, $post);
+        $u_info = $this->Auth->user();
 
-				$new_user = $this->Users->save($user2);
 
+        if ($this->request->is(['patch', 'post', 'put'])) {
 
 
-				if($new_user){
 
-					$this->request->data['username']	=	$this->request->data['email'];
+            $user = $this->Users->get($u_info['id'], [
+                'contains' => []
+            ]);
 
-					$this->request->data['password'] 	= 	'zxswedcxswz';
 
 
+            if ($_GET['action'] == 'id_card') {
 
-					if(!filter_var($this->request->data['username'], FILTER_VALIDATE_EMAIL)===false){
 
-						$this->Auth->config('authenticate', [
 
-							'Form'=>['fields'=>['username'=>'email', 'password'=>'password']]
+                $post = $this->request->data;
 
-						]);
 
 
+                if ($this->request->data['id_image']['name'] != '') {
 
-						$this->Auth->constructAuthenticate();
+                    if ($user->id_image != '' || $user->id_image != null) {
 
-						
+                        unlink(WWW_ROOT . 'images/users/id_card/' . $user->id_image);
+                    }
 
-						$this->request->data['email'] = $this->request->data['username'];
 
 
+                    $image = $this->request->data['id_image'];
 
-						unset($this->request->data['username']);
+                    $name = time() . $image['name'];
 
-					}
+                    $tmp_name = $image['tmp_name'];
 
+                    $upload_path = WWW_ROOT . 'images/users/id_card/' . $name;
 
+                    move_uploaded_file($tmp_name, $upload_path);
 
-					$user2 = $this->Auth->identify();
 
 
+                    $post['id_image'] = $name;
 
-					if ($user2) {
+                    $post['id_number'] = $this->request->data['id_number'];
+                } else {
 
+                    $post['id_number'] = $this->request->data['id_number'];
+                }
 
 
-						$this->Auth->setUser($user2);
 
+                $user = $this->Users->patchEntity($user, $post);
 
 
-						$response['isSuccess']	=	'true';
 
-						$response['msg'] 		= 	'Logged in successfully';
+                if ($this->Users->save($user)) {
 
-					}else{
+                    $json['isSuccess'] = 'true';
 
-						$response['isSuccess'] 	= 	'false';
+                    $json['msg'] = 'text_id_updated';
+                } else {
 
-						$response['msg']		=	'Error in Signing in. Please Try Again.';
+                    $json['isSuccess'] = 'false';
 
-					}
+                    $json['msg'] = 'text_id_not_updated';
+                }
+            }
 
-				}else{
 
-					$response['isSuccess'] 	= 	'false';
 
-					$response['msg']		=	'Error in Signing in. Please Try Again.';
+            if ($_GET['action'] == 'bank') {
 
-				}
 
-			}	
 
-		}	
+                $post = $this->request->data;
 
 
 
-		echo json_encode($response);
+                if ($this->request->data['bank_image']['name'] != '') {
 
-		exit;
+                    if ($user->account_image != '' || $user->account_image != null) {
 
-	}
+                        unlink(WWW_ROOT . 'images/users/bank/' . $user->account_image);
+                    }
 
 
 
-	public function changeLanguage(){
+                    $image = $this->request->data['bank_image'];
 
-		if ($this->request->is('post')) {
+                    $name = time() . $image['name'];
 
-			$language = $this->request->data['language'];
+                    $tmp_name = $image['tmp_name'];
 
+                    $upload_path = WWW_ROOT . 'images/users/bank/' . $name;
 
+                    move_uploaded_file($tmp_name, $upload_path);
 
-			$session = $this->request->session();
 
-			$session->write('Config.language', $language);
 
+                    $post['account_image'] = $name;
 
+                    $post['account_bank'] = $this->request->data['bank_name'];
 
-			echo $language;
+                    $post['account_number'] = $this->request->data['bank_number'];
+                } else {
 
-		}
+                    $post['account_bank'] = $this->request->data['bank_name'];
 
+                    $post['account_number'] = $this->request->data['bank_number'];
+                }
 
 
-		exit;
 
-	}
+                $user = $this->Users->patchEntity($user, $post);
 
 
 
-	public function verifications($id = null){
+                if ($this->Users->save($user)) {
 
+                    $json['isSuccess'] = 'true';
 
+                    $json['msg'] = 'text_bank_updated';
+                } else {
 
-		$json = array();
+                    $json['isSuccess'] = 'false';
 
-		$u_info = $this->Auth->user();
+                    $json['msg'] = 'text_bank_not_updated';
+                }
+            }
 
 
-		if ($this->request->is(['patch', 'post', 'put'])) {
+            if ($_GET['action'] == 'send_mail') {
+                $email = $u_info['email'];
 
+                $random_number = rand(100000, 999999);
 
+                $this->Users->updateAll(array('email_verification_code' => $random_number), array('id' => $u_info['id']));
 
-			$user = $this->Users->get($u_info['id'], [
+                $ms = "Trip<br/>";
+                $ms .= 'Your Email verification code.';
+                $ms .= '<h1>' . $random_number . '</h1>';
 
-				'contains' => []
+                $email = new Email('default');
 
-			]);
+                $email->from(['gurpreet@avainfotech.com' => 'Trip'])
+                        ->emailFormat('html')
+                        ->template('default', 'default')
+                        ->to($email)
+                        ->subject('Email Verification code')
+                        ->send($ms);
 
+                $json['msg'] = 'text_verfication_email_sent';
+            }
 
+            if ($_GET['action'] == 'verify_mail') {
+                $email = $u_info['email'];
 
-			if($_GET['action'] == 'id_card'){
+                $code = $this->request->data['code'];
 
+                if ($user->email_verification_code == $code) {
+                    $this->Users->updateAll(array('email_verified' => '1', 'email_verification_code' => null), array('id' => $u_info['id']));
 
+                    $ms = "Trip<br/>";
+                    $ms .= 'Your Email has been verified successfully.';
 
-				$post 		= $this->request->data;
+                    $email = new Email('default');
 
+                    $email->from(['gurpreet@avainfotech.com' => 'Trip'])
+                            ->emailFormat('html')
+                            ->template('default', 'default')
+                            ->to($email)
+                            ->subject('Email verified successfully')
+                            ->send($ms);
 
+                    $json['isSuccess'] = 'true';
+                    $json['msg'] = 'text_verified';
+                } else {
+                    $json['isSuccess'] = 'false';
+                    $json['msg'] = 'alert_verfication_incorrect';
+                }
+            }
 
-				if($this->request->data['id_image']['name'] != ''){	
 
-					if($user->id_image != '' || $user->id_image != null){
 
-						unlink(WWW_ROOT.'images/users/id_card/'.$user->id_image);
+            $json['msg'] = $this->getLanguage($json['msg']);
 
-					}	
 
-				
 
-					$image = $this->request->data['id_image'];
+            echo json_encode($json);
 
-					$name = time().$image['name'];
+            exit;
+        }
+    }
 
-					$tmp_name = $image['tmp_name'];
+    public function sendOtp() {
 
-					$upload_path = WWW_ROOT.'images/users/id_card/'.$name;
+        $sid = 'AC7773cf20375834f3411cb950d7fc3c3f';
 
-					move_uploaded_file($tmp_name, $upload_path);
+        $token = 'a531c90806f52534de96f331307e972b';
 
-					
+        $client = new Client($sid, $token);
 
-					$post['id_image'] 	= 	$name;
 
-					$post['id_number']	=	$this->request->data['id_number'];
 
-				}else{
+        $random_number = rand(1000, 9999);
 
-					$post['id_number']	=	$this->request->data['id_number'];
 
-				}
 
+        $client->messages->create(
+                '+91' . $this->request->data['mobile_number'], array(
+            'from' => '+17816912753',
+            'body' => 'Your OTP is :' . $random_number
+                )
+        );
 
 
-				$user = $this->Users->patchEntity($user, $post);
 
-            		
+        $session = $this->request->session();
 
-        		if ($this->Users->save($user)) {
+        $session->write('Phone.otp', $random_number);
+        $session->write('Phone.phone', $this->request->data['mobile_number']);
 
-					$json['isSuccess'] 	= 	'true';
 
-					$json['msg']		=	'text_id_updated';
 
-				}else{
+        $json = array();
 
-					$json['isSuccess'] 	= 	'false';
 
-					$json['msg']		=	'text_id_not_updated';
 
-				}
+        $json['isSuccess'] = 'true';
 
-				
+        $json['msg'] = 'OTP sent successfully';
 
-			}
 
 
+        echo json_encode($json);
 
-			if($_GET['action'] == 'bank'){
+        exit;
+    }
 
+    public function verifyOtp() {
 
+        $json = array();
 
-				$post 		= $this->request->data;
 
 
+        if ($this->request->is('post')) {
 
-				if($this->request->data['bank_image']['name'] != ''){	
 
-					if($user->account_image != '' || $user->account_image != null){
 
-						unlink(WWW_ROOT.'images/users/bank/'.$user->account_image);
+            $entered_otp = $this->request->data['otp'];
 
-					}	
 
-				
 
-					$image = $this->request->data['bank_image'];
+            $session = $this->request->session();
 
-					$name = time().$image['name'];
 
-					$tmp_name = $image['tmp_name'];
 
-					$upload_path = WWW_ROOT.'images/users/bank/'.$name;
+            $real_otp = $session->read('Phone.otp');
 
-					move_uploaded_file($tmp_name, $upload_path);
 
-					
 
-					$post['account_image'] 	= 	$name;
+            if ($entered_otp == $real_otp) {
 
-					$post['account_bank']	=	$this->request->data['bank_name'];
 
-					$post['account_number']	=	$this->request->data['bank_number'];
 
-				}else{
+                $session->delete('Phone.otp');
 
-					$post['account_bank']	=	$this->request->data['bank_name'];
 
-					$post['account_number']	=	$this->request->data['bank_number'];
 
-				}
+                $u = $this->Auth->user();
 
 
 
-				$user = $this->Users->patchEntity($user, $post);
+                $user = $this->Users->get($u['id'], [
+                    'contains' => []
+                ]);
 
-            		
 
-        		if ($this->Users->save($user)) {
+                $post['phone'] = $session->read('Phone.phone');
+                $post['phone_verified'] = '1';
 
-					$json['isSuccess'] 	= 	'true';
 
-					$json['msg']		=	'text_bank_updated';
+                $session->delete('Phone.phone');
 
-				}else{
+                $user = $this->Users->patchEntity($user, $post);
 
-					$json['isSuccess'] 	= 	'false';
 
-					$json['msg']		=	'text_bank_not_updated';
 
-				}
+                if ($this->Users->save($user)) {
 
-				
+                    $session->write('Auth.User.phone_verified', '1');
 
-			}
+                    $json['isSuccess'] = 'true';
 
+                    $json['msg'] = 'alert_otp_correct';
+                } else {
 
-			if($_GET['action'] == 'send_mail'){
-				$email = $u_info['email'];
+                    $json['isSuccess'] = 'false';
 
-				$random_number = rand ( 100000 , 999999 );
+                    $json['msg'] = 'alert_otp_incorrect';
+                }
+            } else {
 
-				$this->Users->updateAll(array('email_verification_code' => $random_number), array('id' => $u_info['id']));
+                $json['isSuccess'] = 'false';
 
-				$ms = "Trip<br/>";
-				$ms.= 'Your Email verification code.';
-				$ms.= '<h1>'.$random_number.'</h1>';
+                $json['msg'] = 'alert_otp_incorrect';
+            }
+        }
 
-				$email = new Email('default');
 
-				$email->from(['gurpreet@avainfotech.com' => 'Trip'])
-					->emailFormat('html')
-					->template('default', 'default')
-					->to($email)
-					->subject('Email Verification code')
-					->send($ms);
 
-				$json['msg'] = 'text_verfication_email_sent';	
-			}
+        $json['msg'] = $this->getLanguage($json['msg']);
 
-			if($_GET['action'] == 'verify_mail'){
-				$email = $u_info['email'];
 
-				$code = $this->request->data['code'];
 
-				if($user->email_verification_code == $code){
-					$this->Users->updateAll(array('email_verified' => '1', 'email_verification_code' => null), array('id' => $u_info['id']));
+        echo json_encode($json);
 
-					$ms = "Trip<br/>";
-					$ms.= 'Your Email has been verified successfully.';
+        exit;
+    }
 
-					$email = new Email('default');
+    public function triplisting() {
+        
+    }
 
-					$email->from(['gurpreet@avainfotech.com' => 'Trip'])
-						->emailFormat('html')
-						->template('default', 'default')
-						->to($email)
-						->subject('Email verified successfully')
-						->send($ms);
+    public function paypaladaptive() {
 
-					$json['isSuccess'] 	=		'true';
-					$json['msg'] 		= 		'text_verified';	
-				}else{
-					$json['isSuccess'] 	=		'false';
-					$json['msg'] 		= 		'alert_verfication_incorrect';	
-				}
+        include(ROOT . '/vendor/paypal/adaptivepayments-sdk-php/samples/Configuration.php');
 
-				
-			}
+        //print_r($configuration);
+        //exit;
 
+        define('PAYPAL_REDIRECT_URL', 'https://www.sandbox.paypal.com/webscr&cmd=');
+        define('DEVELOPER_PORTAL', 'https://developer.paypal.com');
 
+        if ($this->request->is('post')) {
 
-			$json['msg']	=	$this->getLanguage($json['msg']);
+            $returnUrl = Router::url('/', true) . "/users/paypalsuccess";
+            $cancelUrl = Router::url('/', true) . "/users/paypalindex";
+            $ipnNotificationUrl = Router::url('/', true) . "/users/paypalipn";
+            $memo = "Adaptive Payment - chained Payment";
+            $actionType = "PAY";
+            $currencyCode = "USD";
 
 
+            $_POST['id'] = base64_encode(1);
 
-			echo json_encode($json);
+            if ($_POST['id'] == base64_encode(1)) {
+                $receiverEmail = array("vikrant-facilitator@avainfotech.com", "vkrtteee@gmail.com");
+                $receiverAmount = array("5", "3");
+                $primaryReceiver = array("true", "false");
+            }
 
-			exit;
+            if (isset($receiverEmail)) {
+                $receiver = array();
+                /*
+                 * A receiver's email address 
+                 */
+                for ($i = 0; $i < count($receiverEmail); $i++) {
+                    $receiver[$i] = new Receiver();
+                    $receiver[$i]->email = $receiverEmail[$i];
+                    /*
+                     *  	Amount to be credited to the receiver's account 
+                     */
+                    $receiver[$i]->amount = $receiverAmount[$i];
+                    /*
+                     * Set to true to indicate a chained payment; only one receiver can be a primary receiver. Omit this field, or set it to false for simple and parallel payments. 
+                     */
+                    $receiver[$i]->primary = $primaryReceiver[$i];
+                }
+                $receiverList = new ReceiverList($receiver);
+            }
 
-		}
+            /*
+             * The action for this request. Possible values are:
 
+              PAY - Use this option if you are not using the Pay request in combination with ExecutePayment.
+              CREATE - Use this option to set up the payment instructions with SetPaymentOptions and then execute the payment at a later time with the ExecutePayment.
+              PAY_PRIMARY - For chained payments only, specify this value to delay payments to the secondary receivers; only the payment to the primary receiver is processed.
 
+             */
+            /*
+             * The code for the currency in which the payment is made; you can specify only one currency, regardless of the number of receivers 
+             */
+            /*
+             * URL to redirect the sender's browser to after canceling the approval for a payment; it is always required but only used for payments that require approval (explicit payments) 
+             */
+            /*
+             * URL to redirect the sender's browser to after the sender has logged into PayPal and approved a payment; it is always required but only used if a payment requires explicit approval 
+             */
+            $payRequest = new PayRequest(new RequestEnvelope("en_US"), $actionType, $cancelUrl, $currencyCode, $receiverList, $returnUrl, $ipnNotificationUrl);
+            // Add optional params
 
-	}
+            if ($memo != "") {
+                $payRequest->memo = $memo;
+            }
 
 
+            /*
+             * 	 ## Creating service wrapper object
+              Creating service wrapper object to make API call and loading
+              Configuration::getAcctAndConfig() returns array that contains credential and config parameters
+             */
+            $service = new AdaptivePaymentsService($configuration->getAcctAndConfig());
+            print_r($configuration->getAcctAndConfig());
+            exit;
+            // try {
+            /* wrap API method calls on the service object with a try catch */
+            $response = $service->Pay($payRequest);
+            exit;
+            $ack = strtoupper($response->responseEnvelope->ack);
+            if ($ack == "SUCCESS") {
+                $payKey = $response->payKey;
+                $_SESSION['pay_key'] = $payKey;
+                $payPalURL = PAYPAL_REDIRECT_URL . '_ap-payment&paykey=' . $payKey . '&expType=light';
 
-	public function sendOtp(){
+                return $this->redirect($payPalURL);
 
-		$sid = 'AC7773cf20375834f3411cb950d7fc3c3f';
+                //header('Location', $payPalURL);
+            }
+            // } catch (Exception $ex) {
+            // 	require_once '../Common/Error.php';
+            // 	exit;
+            // }
+        }
+    }
 
-		$token = 'a531c90806f52534de96f331307e972b';
+    public function paypalipn() {
+        $myfile = fopen("ipn_data.txt", "a+") or die("Unable to open file!");
+        fwrite($myfile, print_r($_POST, true));
+        fclose($myfile);
+    }
 
-		$client = new Client($sid, $token);
+    public function paypalsuccess() {
+        
+    }
 
-
-
-		$random_number = rand ( 1000 , 9999 );
-
-
-
-		$client->messages->create(
-
-			'+91'.$this->request->data['mobile_number'],
-
-			array(
-
-				'from' => '+17816912753',
-
-				'body' => 'Your OTP is :'.$random_number
-
-			)
-
-		);
-
-
-
-		$session = $this->request->session();
-
-		$session->write('Phone.otp', $random_number);
-		$session->write('Phone.phone', $this->request->data['mobile_number']);
-
-
-
-		$json = array();
-
-		
-
-		$json['isSuccess'] 	= 	'true';
-
-		$json['msg']		=	'OTP sent successfully';
-
-
-
-		echo json_encode($json);
-
-		exit;
-
-	}
-
-
-
-	public function verifyOtp(){
-
-		$json = array();
-
-
-
-		if($this->request->is('post')){
-
-
-
-			$entered_otp = $this->request->data['otp'];
-
-
-
-			$session = $this->request->session();
-
-
-
-			$real_otp = $session->read('Phone.otp');
-
-
-
-			if($entered_otp == $real_otp){
-
-
-
-				$session->delete('Phone.otp');
-
-
-
-				$u = $this->Auth->user();
-
-
-
-				$user = $this->Users->get($u['id'], [
-
-					'contains' => []
-
-				]);
-
-
-				$post['phone']			= $session->read('Phone.phone');
-				$post['phone_verified'] = '1';
-
-
-				$session->delete('Phone.phone');
-
-				$user = $this->Users->patchEntity($user, $post);
-
-            		
-
-        		if ($this->Users->save($user)) {
-
-        			$session->write('Auth.User.phone_verified', '1');
-
-        			$json['isSuccess'] 	= 	'true';
-
-					$json['msg']		=	'alert_otp_correct';
-
-        		}else{
-
-        			$json['isSuccess'] 	= 	'false';
-
-					$json['msg']		=	'alert_otp_incorrect';
-
-        		}
-
-
-
-			}else{
-
-				$json['isSuccess'] 	= 	'false';
-
-				$json['msg']		=	'alert_otp_incorrect';
-
-			}
-
-
-
-		}
-
-
-
-		$json['msg']	=	$this->getLanguage($json['msg']);
-
-
-
-		echo json_encode($json);
-
-		exit;
-
-
-
-	}
-
-
-	public function triplisting(){
-		
-	}
-
-	public function paypaladaptive(){
-
-		include(ROOT.'/vendor/paypal/adaptivepayments-sdk-php/samples/Configuration.php');
-		
-		//print_r($configuration);
-
-		//exit;
-
-		define('PAYPAL_REDIRECT_URL', 'https://www.sandbox.paypal.com/webscr&cmd=');
-		define('DEVELOPER_PORTAL', 'https://developer.paypal.com');
-		
-		if($this->request->is('post')){
-		
-			$returnUrl = Router::url('/', true)."/users/paypalsuccess";
-			$cancelUrl = Router::url('/', true)."/users/paypalindex";
-			$ipnNotificationUrl = Router::url('/', true)."/users/paypalipn";
-			$memo = "Adaptive Payment - chained Payment";
-			$actionType = "PAY";
-			$currencyCode = "USD";
-
-
-			$_POST['id'] = base64_encode(1);
-
-			if ($_POST['id'] == base64_encode(1)) {
-				$receiverEmail = array("vikrant-facilitator@avainfotech.com", "vkrtteee@gmail.com");
-				$receiverAmount = array("5", "3");
-				$primaryReceiver = array("true", "false");
-			}
-
-			if (isset($receiverEmail)) {
-				$receiver = array();
-				/*
-				 * A receiver's email address 
-				 */
-				for ($i = 0; $i < count($receiverEmail); $i++) {
-					$receiver[$i] = new Receiver();
-					$receiver[$i]->email = $receiverEmail[$i];
-					/*
-					 *  	Amount to be credited to the receiver's account 
-					 */
-					$receiver[$i]->amount = $receiverAmount[$i];
-					/*
-					 * Set to true to indicate a chained payment; only one receiver can be a primary receiver. Omit this field, or set it to false for simple and parallel payments. 
-					 */
-					$receiver[$i]->primary = $primaryReceiver[$i];
-				}
-				$receiverList = new ReceiverList($receiver);
-			}
-
-			/*
-			 * The action for this request. Possible values are:
-
-			  PAY - Use this option if you are not using the Pay request in combination with ExecutePayment.
-			  CREATE - Use this option to set up the payment instructions with SetPaymentOptions and then execute the payment at a later time with the ExecutePayment.
-			  PAY_PRIMARY - For chained payments only, specify this value to delay payments to the secondary receivers; only the payment to the primary receiver is processed.
-
-			 */
-			/*
-			 * The code for the currency in which the payment is made; you can specify only one currency, regardless of the number of receivers 
-			 */
-			/*
-			 * URL to redirect the sender's browser to after canceling the approval for a payment; it is always required but only used for payments that require approval (explicit payments) 
-			 */
-			/*
-			 * URL to redirect the sender's browser to after the sender has logged into PayPal and approved a payment; it is always required but only used if a payment requires explicit approval 
-			 */
-			$payRequest = new PayRequest(new RequestEnvelope("en_US"), $actionType, $cancelUrl, $currencyCode, $receiverList, $returnUrl, $ipnNotificationUrl);
-			// Add optional params
-
-			if ($memo != "") {
-				$payRequest->memo = $memo;
-			}
-
-			
-			/*
-			 * 	 ## Creating service wrapper object
-			  Creating service wrapper object to make API call and loading
-			  Configuration::getAcctAndConfig() returns array that contains credential and config parameters
-			 */
-			$service = new AdaptivePaymentsService($configuration->getAcctAndConfig());
-			print_r($configuration->getAcctAndConfig());
-			exit;
-			// try {
-				/* wrap API method calls on the service object with a try catch */
-				$response = $service->Pay($payRequest);exit;
-				$ack = strtoupper($response->responseEnvelope->ack);
-				if ($ack == "SUCCESS") {
-					$payKey = $response->payKey;
-					$_SESSION['pay_key']=$payKey;
-					$payPalURL = PAYPAL_REDIRECT_URL . '_ap-payment&paykey=' . $payKey. '&expType=light';
-
-					return $this->redirect($payPalURL);
-
-					//header('Location', $payPalURL);
-				}
-			// } catch (Exception $ex) {
-			// 	require_once '../Common/Error.php';
-			// 	exit;
-			// }
-		}	
-	}
-	
-	public function paypalipn(){
-		$myfile = fopen("ipn_data.txt", "a+") or die("Unable to open file!");
-		fwrite($myfile, print_r($_POST, true));
-		fclose($myfile);
-	}	
-	
-	public function paypalsuccess(){
-		
-	}
-
-
-	/***************** Trip Functions(END) ******************/
-
+    /*     * *************** Trip Functions(END) ***************** */
 }
-
-
-

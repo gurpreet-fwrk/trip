@@ -26,9 +26,11 @@ $cakeDescription = '';
     </title>
     <link rel="icon" type="image/x-icon" href="<?php echo $this->request->webroot."images/website/logo-fav.png";?>" />
 
-    <?= $this->Html->css( array('bootstrap.min', 'slick-theme', 'bootstrap-theme.min', 'slick', 'checkbox', 'style', 'custom/jquery-ui.min.css') ) ?>
+    <?= $this->Html->css( array('bootstrap.min', 'slick-theme', 'bootstrap-theme.min', 'slick', 'checkbox', 'style', 'custom/jquery-ui.min.css', 'lightgallery') ) ?>
     
-    <?= $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery-ui.min.js', 'slick.min', 'jquery-session')) ?>
+    <script src="https://cdn.jsdelivr.net/picturefill/2.3.1/picturefill.min.js"></script> 
+    
+    <?= $this->Html->script(array('jquery.min.js', 'bootstrap.min.js', 'jquery-ui.min.js', 'slick.min', 'jquery-session', 'lightgallery-all.min')) ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

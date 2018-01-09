@@ -513,6 +513,17 @@
                             </div>
                         </div>
                         
+                        <div class="form-group">
+                            <label for="exampleInputEmail1"></label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="hotel_pickup" value="1"> Free Hotel Pickup
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
                         
                     </div>
                     

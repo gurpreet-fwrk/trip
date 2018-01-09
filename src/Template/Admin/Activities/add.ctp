@@ -41,6 +41,13 @@
                         <?php echo $this->Form->control('title_ar', ['class' => 'form-control', 'label' => false, 'dir' => 'rtl']); ?>
                     </div>
                 </div> 
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Icon</label>
+                        <?php echo $this->Form->control('icon', ['id' => 'profilePic', 'class' => 'form-control', 'type' => 'file', 'label' => false]); ?>
+                        <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>" style="width: 140px; margin-top: 20px;" class="previewHolder">
+                    </div>
+                </div> 
                 <div class="box-footer">
                     <?= $this->Form->button(__('Submit'), ['class' => 'btn btn-success']) ?>
                 </div>  
@@ -61,7 +68,8 @@ $(document).ready(function() {
             },
             title_ar:{
                 required: true
-            }
+            },
+            icon: { extension: "jpg|jpeg|png"}
         },
         messages: {
             activitycategory_id:{
@@ -72,8 +80,24 @@ $(document).ready(function() {
             },
             title_en:{
                 required: "This Field is required."
-            }
+            },
+            icon: { extension: "Only jpg, jpeg and png formats are accepted"}
         }
     });
 });
+
+function readURL(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $("#profilePic").parent().next('.previewHolder').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    $("#profilePic").change(function() {
+      readURL(this);
+    });
 </script>             

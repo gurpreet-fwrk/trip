@@ -72,7 +72,24 @@ class ActivitiesController extends AppController
     {
         $activity = $this->Activities->newEntity();
         if ($this->request->is('post')) {
-            $activity = $this->Activities->patchEntity($activity, $this->request->getData());
+            
+            $post = $this->request->data;
+
+            if($this->request->data['icon']['name'] != ''){
+
+                $image = $this->request->data['icon'];
+                $name = time().$image['name'];
+                $tmp_name = $image['tmp_name'];
+                $upload_path = WWW_ROOT.'images/uploads/'.$name;
+                move_uploaded_file($tmp_name, $upload_path);
+                
+                $post['icon'] = $name;
+            }else{
+                $post['icon'] = '';
+            } 
+            
+            
+            $activity = $this->Activities->patchEntity($activity, $post);
             if ($this->Activities->save($activity)) {
                 $this->Flash->success(__('The activity has been saved.'));
 
@@ -98,7 +115,34 @@ class ActivitiesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $activity = $this->Activities->patchEntity($activity, $this->request->getData());
+            
+            $post = $this->request->data;
+            
+            if($this->request->data['icon']['name'] != ''){
+                    
+                if($activity->icon != ''){
+
+                    $file_path = WWW_ROOT.'images/uploads/'.$activity->icon;
+
+                    if(file_exists($file_path)){
+                        unlink($file_path);
+                    }
+                }   
+            
+                $image = $this->request->data['icon'];
+                $name = time().$image['name'];
+                $tmp_name = $image['tmp_name'];
+                $upload_path = WWW_ROOT.'images/uploads/'.$name;
+                move_uploaded_file($tmp_name, $upload_path);
+                
+                $post['icon'] = $name;
+            
+            }else{
+                unset($post['icon']);
+                //$post = $this->request->data;
+            }
+            
+            $activity = $this->Activities->patchEntity($activity, $post);
             if ($this->Activities->save($activity)) {
                 $this->Flash->success(__('The activity has been saved.'));
 

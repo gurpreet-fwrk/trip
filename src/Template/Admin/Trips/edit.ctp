@@ -143,8 +143,15 @@
                     
                     <div class="form-group">
                         <label for="exampleInputEmail1">Photos</label>
-                        <input type="file" name="images[]" id="overview_images" class="form-control" multiple="" accept="image/*" required>
-                        <div class="row"></div>
+                        <input type="file" name="images[]" id="overview_images" class="form-control" multiple="" accept="image/*">
+                        <div class="row">
+                            <?php foreach($galleries as $gallery){ ?>
+                            <div class="col-md-3">
+                                <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $gallery['file'] ?>" width="100%">
+                            </div>
+                            <?php } ?>
+                            
+                        </div>
                     </div>
                     
                 </div>
@@ -184,7 +191,23 @@
                         <input type="hidden" name="meetingpoints">
                     </div>     
                     
-                     
+                    <?php
+
+                    $schedule = array();
+
+                    if($trip->schedule != ''){
+
+                        $schedule1 = json_decode($trip->schedule);
+
+                        foreach ($schedule1 as $row) { 
+                            if (is_object($row)) {
+                                $schedule[] = get_object_vars($row);
+                            }
+                        }
+                    }
+                    //echo "<pre>"; print_r($schedule); echo "</pre>";
+
+                    ?>
                 
                     <div class="form-group">
                         <label for="exampleInputEmail1">Schedule</label>
@@ -196,9 +219,21 @@
                                             <option value="">Hours</option>
                                             <?php for($i=0; $i<24; $i++){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[0]['hours'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+                                            
+                                            <?php if($schedule[0]['hours'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
@@ -208,18 +243,30 @@
                                             <option value="">Minutes</option>
                                             <?php for($i=0; $i<=45; $i+=15){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[0]['minutes'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+
+                                            <?php if($schedule[0]['minutes'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
                                     </td>
                                     <td>
                                         <div class="mnt_meetingpoints">
-                                            <div></div>
+                                            <div><?php echo $schedule[0]['content']; ?></div>
                                         </div>
-                                        <input type="hidden" name="schedule[0][content]">
+                                        <input type="hidden" name="schedule[0][content]" value="<?php echo $schedule[0]['content']; ?>">
                                     </td>
                                 </tr>
                                 <tr>
@@ -228,9 +275,21 @@
                                             <option value="">Hours</option>
                                             <?php for($i=0; $i<24; $i++){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[1]['hours'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+                                            
+                                            <?php if($schedule[1]['hours'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
@@ -240,16 +299,28 @@
                                             <option value="">Minutes</option>
                                             <?php for($i=0; $i<=45; $i+=15){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[1]['minutes'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+
+                                            <?php if($schedule[1]['minutes'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <textarea class="form-control" name="schedule[1][content]" required></textarea>
+                                            <textarea class="form-control" name="schedule[1][content]" required><?php echo $schedule[1]['content']; ?></textarea>
                                         </div>
                                     </td>
                                 </tr>
@@ -259,9 +330,21 @@
                                             <option value="">Hours</option>
                                             <?php for($i=0; $i<24; $i++){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[2]['hours'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+                                            
+                                            <?php if($schedule[2]['hours'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
@@ -271,22 +354,94 @@
                                             <option value="">Minutes</option>
                                             <?php for($i=0; $i<=45; $i+=15){ ?>
                                             <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[2]['minutes'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
                                             <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+
+                                            <?php if($schedule[2]['minutes'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
                                             <?php }else{ ?>
                                             <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
                                             <?php } ?>
                                             <?php } ?>          
                                         </select>
                                     </td>
                                     <td>
                                         <div class="form-group">
-                                            <textarea class="form-control" name="schedule[2][content]" required></textarea>
+                                            <textarea class="form-control" name="schedule[2][content]" required><?php echo $schedule[2]['content']; ?></textarea>
                                         </div>
                                     </td>
                                 </tr>
+                                <?php $schedule_row = 3; ?>
+                                <?php for($j=3; $j<count($schedule);$j++){ ?>
+                                <tr id="schedule_row-<?php echo $schedule_row; ?>">
+                                    <td>
+                                        <select name="schedule[<?php echo $j; ?>][hours]" class="form-control" required>
+                                            <option value="">Hours</option>
+                                            <?php for($i=0; $i<24; $i++){ ?>
+                                            <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[$j]['hours'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
+                                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+                                            
+                                            <?php if($schedule[$j]['hours'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                                            <?php }else{ ?>
+                                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
+                                            <?php } ?>
+                                            <?php } ?>          
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="schedule[<?php echo $j; ?>][minutes]" class="form-control" required>
+                                            <option value="">Minutes</option>
+                                            <?php for($i=0; $i<=45; $i+=15){ ?>
+                                            <?php if(strlen((string)$i) == 1){ ?>
+                                            
+                                            <?php if($schedule[$j]['minutes'] == '0'.$i){ ?>
+                                            <option value="<?php echo '0'.$i; ?>" selected><?php echo '0'.$i; ?></option>
+                                            <?php }else{ ?>
+                                            <option value="<?php echo '0'.$i; ?>"><?php echo '0'.$i; ?></option>
+                                            <?php } ?>
+
+                                            <?php }else{ ?>
+
+                                            <?php if($schedule[$j]['minutes'] == $i){ ?>
+                                            <option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                                            <?php }else{ ?>
+                                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                            <?php } ?>
+                                            
+                                            <?php } ?>
+                                            <?php } ?>          
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <textarea class="form-control" name="schedule[<?php echo $j ?>][content]" required><?php echo $schedule[$j]['content']; ?></textarea>
+                                        </div>
+                                        <button type="button" onclick="$('#schedule_row-<?php echo $schedule_row ?>').remove();" data-toggle="tooltip" rel="tooltip" title="Remove" class="btn btn-danger pull-right"><i class="fa fa-minus-circle"></i></button>
+                                    </td>
+                                </tr>
+                                <?php $schedule_row++; ?>
+                                <?php } ?>
                             </tbody>
                         </table>
-                        <?php $schedule_row = 3; ?>
+                        
                         <button type="button" onclick="addOptionValue()" class="btn btn-primary blue right">Add Row</button>
                     </div>
                     
@@ -437,7 +592,7 @@
                             Are there any extra expenses that travelers have to pay during the trip?
                             <?php echo $this->Form->control('extra_expense_en', array('class' => 'form-control', 'label' => false, 'placeholder' => "e.g. your pocket money", 'required')); ?>
                         </div>
-                    </div>
+                    </div>                    
                     
                     <div class="form-group">
                         <label for="exampleInputEmail1"><i class="fa fa-users" aria-hidden="true"></i> Maximun travelers</label>
@@ -461,27 +616,41 @@
                                 <h4 class="box-title">
                                     <div class="form-group">
                                         <div class="radio">    
-                                            <input type='radio' name='pricing_type' value='basic' required /> Basic
+                                            <?php if($trip->pricing_type == 'basic'){ ?>
+                                            <input type='radio' name='pricing_type' value='basic' checked="" required />
+                                            <?php }else{ ?>
+                                            <input type='radio' name='pricing_type' value='basic' required />
+                                            <?php } ?> Basic
                                         </div>
                                     </div>    
                                 </h4>
                             </div>
-                            <div id="collapse" class="trans_acc panel-collapse collapse">
+                            <div id="collapse" class="trans_acc panel-collapse collapse<?php echo ($trip->pricing_type == 'basic') ? ' in' : ''; ?>">
                                 <div class="box-body">
                                     <div class="form-group">
                                         <div class="panel-body sub subs">
                                             <div class="col-sm-6">
                                                 <div class="pric">
                                                     <h4>Price (per person)</h4>
-                                                    <input type="number" min="0" placeholder="0" id="price_per_person" class="valid" aria-invalid="false">
+                                                    <?php if($trip->pricing_type == 'basic'){ ?>
+                                                    <input type="number" min="0" placeholder="0" id="price_per_person" value="<?php echo $trip->basic_price_per_person; ?>">
+                                                    <?php }else{ ?>
+                                                    <input type="number" min="0" placeholder="0" id="price_per_person">
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="pric pric_rt">
                                                     <h4>Total (per trip)</h4>
-                                                    <p id="total_ppp">0.00 - 0.00 <span style="color:#000;">THB</span></p>
-                                                    <input type="hidden" name="basic_single_price" value="4.00">
-                                                    <input type="hidden" name="basic_total_price1" value="20.00">
+                                                    <?php if($trip->pricing_type == 'basic'){ ?>
+                                                    <p id="total_ppp"><?php echo number_format($trip->basic_price_per_person,2) ?> - <?php echo number_format($trip->basic_total_price,2) ?> <span>THB</span></p>
+                                                    <input type="hidden" name="basic_single_price" value="<?php echo number_format($trip->basic_price_per_person,2) ?>">
+                                                    <input type="hidden" name="basic_total_price1" value="<?php echo number_format($trip->basic_total_price,2) ?>">
+                                                    <?php }else{ ?>
+                                                    <p id="total_ppp">0.00 - 0.00 <span>THB</span></p>
+                                                    <input type="hidden" name="basic_single_price" value="0.00">
+                                                    <input type="hidden" name="basic_total_price1" value="0.00">
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -495,12 +664,16 @@
                                 <h4 class="box-title">
                                     <div class="form-group">
                                         <div class="radio">    
-                                            <input type='radio' name='pricing_type' value='advance' required /> Advance
+                                            <?php if($trip->pricing_type == 'advance'){ ?>
+                                            <input type='radio' name='pricing_type' value='advance' checked=""  required />
+                                            <?php }else{ ?>
+                                            <input type='radio' name='pricing_type' value='advance'required />
+                                            <?php } ?> Advance
                                         </div>
                                     </div>    
                                 </h4>
                             </div>
-                            <div id="collapse" class="trans_acc panel-collapse collapse">
+                            <div id="collapse" class="trans_acc panel-collapse collapse<?php echo ($trip->pricing_type == 'advance') ? ' in' : ''; ?>">
                                 <div class="box-body">
                                     <div class="form-group">
                                         <div class="panel-body sub subs">
@@ -516,26 +689,48 @@
                                                         </div>
                                                     </div>
                                                     <div class="advance_pricing">
-<!--                                                        <div class="thb">
-                                                            <div class="row no-margin">
-                                                                <div class="col-sm-4 text-center">
-                                                                    <div class="qt">1 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div>
-                                                                </div>
-                                                                <div class="col-sm-4 text-center">
-                                                                    <div class="place">
-                                                                        <input type="number" placeholder="0" min="0" class="advance_pricing_amt" data-qty="1">
-                                                                        <input type="hidden" name="apricing[1][persons]" value="1">
-                                                                        <input type="hidden" name="apricing[1][single]" value="0.00">
-                                                                        <input type="hidden" name="apricing[1][total_price]" value="0.00">
+                                                        
+                                                        <?php if ($trip->pricing_type == 'advance' && !empty($selected_tripprices)) { ?>
+                                                            <?php for ($i = 0; $i < count($selected_tripprices); $i++) { ?>
+
+                                                                <div class="thb">
+                                                                    <div class="row no-margin">
+                                                                        <div class="col-sm-4 text-center"><div class="qt"><?php echo $i + 1; ?> <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div></div>
+                                                                        <div class="col-sm-4 text-center"><div class="place">
+                                                                                <input type="text" placeholder="0" min="0" value="<?php echo $selected_tripprices[$i]['price_per_person']; ?>" class="advance_pricing_amt" data-qty="<?php echo $i; ?>">
+                                                                                <input type="hidden" name="apricing[<?php echo $i; ?>][persons]" value="<?php echo $selected_tripprices[$i]['person']; ?>">
+                                                                                <input type="hidden" name="apricing[<?php echo $i; ?>][single]" value="<?php echo $selected_tripprices[$i]['price_per_person']; ?>">
+                                                                                <input type="hidden" name="apricing[<?php echo $i; ?>][total_price]" value="<?php echo $selected_tripprices[$i]['total_price']; ?>">
+                                                                            </div></div>
+                                                                        <div class="col-sm-4 text-center"><div class="amnt"><p><?php echo number_format($selected_tripprices[$i]['price_per_person'], 2); ?> - <?php echo number_format($selected_tripprices[$i]['total_price'], 2); ?> <span >THB</span></p></div></div>  
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-4 text-center">
-                                                                    <div class="amnt">
-                                                                        <p>0.00 - 0.00 <span>THB</span></p>
+                                                            <?php } ?>
+
+
+                                                        <?php } else { ?>
+hello
+                                                            <div class="thb">
+                                                                <div class="row no-margin">
+                                                                    <div class="col-sm-4 text-center">
+                                                                        <div class="qt">1 <i class="fa fa-times" aria-hidden="true"></i> <i class="fa fa-user" aria-hidden="true"></i></div>
+                                                                    </div>
+                                                                    <div class="col-sm-4 text-center">
+                                                                        <div class="place">
+                                                                            <input type="number" placeholder="0" min="0" class="advance_pricing_amt" data-qty="1">
+                                                                            <input type="hidden" name="apricing[0][persons]" value="1">
+                                                                            <input type="hidden" name="apricing[0][single]" value="0.00">
+                                                                            <input type="hidden" name="apricing[0][total_price]" value="0.00">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4 text-center">
+                                                                        <div class="amnt">
+                                                                            <p>0.00 - 0.00 <span>THB</span></p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>-->
+                                                        <?php } ?>
                                                     </div>
                                                 </div>    
                                             </div>
@@ -552,14 +747,37 @@
                         <div class="form-group">
                             <div class="checkbox">
                                 <label>
+                                    <?php if($trip->child_price_enabled == 1){ ?>
+                                    <input type="checkbox" name="child_price_enabled" checked=""> Enable Child Price (Age 2-12)
+                                    <?php }else{ ?>
                                     <input type="checkbox" name="child_price_enabled"> Enable Child Price (Age 2-12)
+                                    <?php } ?>
                                 </label>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <div class="child_price" style="display:none;">
+                            <div class="child_price" style="<?php echo ($trip->child_price_enabled == '1') ? 'display:block;' : 'display:none;'; ?>">
+                                <?php if($trip->child_price_enabled == 1){ ?>
+                                Price Per child <input type="number" name="child_price" min="0" placeholder="0" value="<?php echo number_format($trip->child_price, 2); ?>"> THB
+                                <?php }else{ ?>
                                 Price Per child <input type="number" name="child_price" min="0" placeholder="0"> THB
+                                <?php } ?>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exampleInputEmail1"></label>
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <label>
+                                        <?php if($trip->hotel_pickup == 1){ ?>
+                                        <input type="checkbox" name="hotel_pickup" value="1" checked=""> Free Hotel Pickup
+                                        <?php }else{ ?>
+                                        <input type="checkbox" name="hotel_pickup" value="1"> Free Hotel Pickup
+                                        <?php } ?>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         
@@ -633,7 +851,11 @@
                         <p>- You will not receive a payment for taking the photographer out on the tour. The photographer will take care of his own expenses (transport, meals, admission fee, etc.).</p>
                         <div class="checkbox">
                             <label>
+                                <?php if($trip->request_photographer == 0){ ?>
                                 <input type="checkbox" value="1" name="request_photographer"> Request For Photographer
+                                <?php }else{ ?>
+                                <input type="checkbox" value="1" name="request_photographer" checked=""> Request For Photographer
+                                <?php } ?>
                             </label>
                         </div>
                         
@@ -643,6 +865,7 @@
                 </div>
                 
             </div>
+            <input type="hidden" name="user_id" value="<?php echo $trip->user_id; ?>">
             <div class="box-footer">
                 <?= $this->Form->button(__('Submit'), ['id' => 'trip-form-submit', 'class' => 'btn btn-success']) ?>
             </div>
@@ -666,10 +889,6 @@ $(document).ready(function(){
     console.log(meetingpoints);
     
     $.session.set('mp_array', JSON.stringify(meetingpoints));
-});
-
-$(document).ready(function(){
-    $("#max_travelers").trigger('change');
 });
 
 $().ready(function() {
@@ -711,9 +930,6 @@ $("input[name='include_exclude']").change(function(){
     $(this).parent().parent().parent().parent().parent().parent().find('.trans_acc').removeClass('in'); 
     $(this).parent().parent().parent().parent().next('div').addClass('in'); 
 });
-
-$("input[name='pricing_type']:first").trigger('click');
-$("input[name='pricing_type']:first").parent().parent().parent().parent().next('div').addClass('in'); 
 
 $("input[name='pricing_type']").change(function(){   
     $(this).parent().parent().parent().parent().parent().parent().find('.trans_acc').removeClass('in'); 

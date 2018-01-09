@@ -2257,6 +2257,7 @@ span.no_notify {
     top: 0;
     bottom: 0;
     margin: auto;
+    border-radius: 50%;
 }
 
 .host_name {
@@ -3607,4 +3608,7 @@ padding: 3px 5px 5px;
 	width:100% !important;
 	}
 
+}
+.faq_ques.fd img {
+    width: 10%;
 }

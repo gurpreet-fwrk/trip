@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+use Cake\Event\Event;
 use App\Controller\AppController;
 
 use \Statickidz\GoogleTranslate;
@@ -14,7 +14,18 @@ use \Statickidz\GoogleTranslate;
  */
 class TripsController extends AppController
 {
+    
+    public function beforeFilter(Event $event) {
 
+
+
+        parent::beforeFilter($event);
+
+        $this->Auth->allow(['view']);
+
+        $this->authcontent();
+    }
+    
     /**
      * Index method
      *
@@ -42,9 +53,29 @@ class TripsController extends AppController
      */
     public function view($id = null)
     {
+        
+        $id = substr(base64_decode($id), 4);
+        
         $trip = $this->Trips->get($id, [
-            'contain' => ['Locations', 'Transportations', 'Meetingpoints', 'Meetingpointtypes', 'Tripfeatures', 'Extraconditions', 'Tripactivities', 'Triplocations', 'Tripprices']
-        ]);
+            'contain' => [
+                'Locations',
+                'Tripgallery',
+                'Users',
+                'Transportations',
+                'Transportationvehicles',
+                'Triplocations' => [
+                    'Locations'
+                    ],
+                'Tripactivities' => [
+                    'Activities'
+                    ],
+                'Tripmeetingpoints',
+                'Tripprices',
+                'Tripextraconditions' => [
+                    'Extraconditions'
+                    ]
+                ]
+        ])->toArray();
 
         $this->set('trip', $trip);
         $this->set('_serialize', ['trip']);

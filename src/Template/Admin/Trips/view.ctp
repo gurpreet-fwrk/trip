@@ -254,7 +254,7 @@
                                 <th><?= __('Extra expense travelers should prepare') ?></th>
                                 <td><?= h($trip->extra_expense_en) ?></td>
                             </tr>
-                            
+
                             <tr>
                                 <th><?= __('Maximun travelers') ?></th>
                                 <td><?= h($trip->travellers) ?></td>
@@ -312,6 +312,17 @@
                                     <?php echo ($trip->child_price_enabled == '0')? 'No' : 'Yes'; ?>
                                     <br>
                                     <?php echo ($trip->child_price_enabled == '1')? $trip->child_price : ''; ?>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <th><?= __('Free Hotel Pickup') ?></th>
+                                <td><?php if($trip->hotel_pickup == 1){
+                                        echo 'Yes';
+                                    }else{
+                                        echo 'No';
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                         </tbody>
