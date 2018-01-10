@@ -75,6 +75,7 @@ class Trip extends Entity
         'hotel_pickup' => true,
         'request_photographer' => true,
         'avg_rating' => true,
+        'language'  =>  true,
         'status' => true,
         'created' => true,
         'modified' => true,

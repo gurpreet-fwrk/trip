@@ -22,6 +22,8 @@ use Cake\View\View;
 use App\Language\English;
 use App\Language\Arabic;
 
+use \Statickidz\GoogleTranslate;
+
 /**
  * Text helper library.
  *
@@ -121,6 +123,20 @@ class TextHelper extends Helper
             echo $data;
         else
             return $data;
+    }
+    
+    public function changelanguage($from, $to, $text){
+
+            $source = $from;
+
+            $target = $to;
+
+            $trans = new GoogleTranslate();
+
+            $result = $trans->translate($source, $target, $text);
+
+            return $result;
+
     }
 
 

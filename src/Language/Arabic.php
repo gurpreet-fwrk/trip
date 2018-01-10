@@ -214,6 +214,20 @@ class Arabic{
                 $lang['text_delete_trip']                    =	'حذف هذه الرحلة';
                 
 		/***** Add Trip Page (End) *****/
+                
+                /********* Trip Detail Page  **********/
+                
+                $lang['text_satisfaction_guaranteed']        =        ' رضا مضمونة';
+                $lang['text_hotel_pickup']                   =        ' مجانا فندق بيك اب';
+                $lang['text_hosted_by']                   =        ' استضافه';
+                $lang['text_itinerary']                   =        ' مسار الرحلة';
+                $lang['text_price_condition']                   =        'حالة السعر';
+                $lang['text_add_wishlist']                   =        'أضف إلى قائمة الامنيات';
+                $lang['text_share']                   =        'شارك';
+                $lang['text_similar_trips']                   =        'رحلات مماثلة';
+                
+                
+                /********* Trip Detail Page (End)  **********/
 
 		if(isset($lang[$text])){
 			return $lang[$text];

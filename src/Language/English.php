@@ -216,8 +216,22 @@ class English{
                 
 
 		/***** Add Trip Page (End) *****/
+                
+                /********* Trip Detail Page  **********/
+                
+                $lang['text_satisfaction_guaranteed']        =        ' Satisfaction guaranteed';
+                $lang['text_hotel_pickup']                   =        ' Free Hotel Pickup';
+                $lang['text_hosted_by']                   =        ' Hosted By';
+                $lang['text_itinerary']                   =        ' Itinerary';
+                $lang['text_price_condition']                   =        'Price condition';
+                $lang['text_add_wishlist']                   =        'Add to wishlist';
+                $lang['text_share']                   =        'Share';
+                $lang['text_similar_trips']                   =        'Similar Trips';
+                
+                
+                /********* Trip Detail Page (End)  **********/
 
-		if(isset($lang[$text])){
+		if(isset($lang[$text])){ 
 			return $lang[$text];
 		}else{
 			return $text;
