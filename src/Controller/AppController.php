@@ -132,6 +132,16 @@ class AppController extends Controller
 
         $this->set('config_language', $session->read('Config.language'));
 
+        
+        /*************************************/
+        
+        
+        if(!$session->read('Config.currency')){
+            $session->write('Config.currency', 'THB');
+        }
+        
+        $this->set('config_currency', $session->read('Config.currency'));
+            
         /*************************************/
 		
 		

@@ -48,8 +48,8 @@ $cakeDescription = '';
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
     
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>-->
     <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
     <style>
@@ -247,10 +247,17 @@ $cakeDescription = '';
                         </select>
                     </li>
                     <li class="slt">
-                        <select>
-                            <option value="d" selected><?php echo $this->Text->lang('text_usd'); ?></option>
-                            <option value="e"><?php echo $this->Text->lang('text_dollar'); ?></option>
-                            <option value="f"><?php echo $this->Text->lang('text_euro'); ?></option>
+                        
+                        <?php $currencies = ['USD' => 'US Dollar', 'EUR' => 'EU Euro', 'GBP' => 'British Pound', 'CNY' => 'Chinese Yuan', 'JPY' => 'Japanese Yen', 'SGD' => 'Singapore Dollar', 'AUD' => 'Australian Dollar', 'HKD' => 'Hongkong Dollar', 'SEK' => 'Swedish Krona', 'NOK' => 'Norwegian Krone', 'CHF' => 'Swiss Franc', 'RUB' => 'Russian Ruble', 'MYR' => 'Malaysian Ringgit', 'THB' => 'Thai Baht'] ?>
+                        
+                        <select id="change_crr">
+                            <?php foreach($currencies as $key => $value){ ?>
+                            <?php if($key == $config_currency){ ?>
+                            <option value="<?php echo $key; ?>" selected="selected"><?php echo $value; ?></option>
+                            <?php }else{ ?>
+                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                            <?php } ?>
+                            <?php } ?>
                         </select>
                     </li>
                     <li class="tripbtn"><a href="<?php echo $this->request->webroot ?>trips"><span><?php echo $this->Text->lang('list_trip'); ?></span></a></li>
@@ -637,5 +644,36 @@ $cakeDescription = '';
 });
 	</script>
 
+        
+<script>
+
+$("#change_crr").change(function(){
+   var to_currency = $(this).val();
+   
+   $.ajax({
+      url: '<?php echo $this->request->webroot ?>trips/ajaxcurrencyconverter',
+      data: {to_currency: to_currency},
+      method: 'post',
+      dataType: 'json',
+      success: function(json){
+          
+        var single_price = $(".trip_price input[name='single_price']").val();
+        var total_price = $(".trip_price input[name='total_price']").val();
+        
+        var final_single = single_price * json.amount;
+        var final_total = total_price * json.amount;
+        
+          
+        $(".trip_price #single").html(final_single.toFixed(2)+' '+json.currency);
+        $(".trip_price #total").html(final_total.toFixed(2)+' '+json.currency);
+
+        $(".trip_price input[name='single_price']").val(final_single);
+        $(".trip_price input[name='total_price']").val(final_total);
+          
+      }
+   });
+   
+});
+</script>
 </body>
 </html>

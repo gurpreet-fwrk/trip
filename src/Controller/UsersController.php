@@ -2383,6 +2383,10 @@ class UsersController extends AppController {
     public function paypalsuccess() {
         
     }
+    
+    public function availabilities(){
+        
+    }
 
     /*     * *************** Trip Functions(END) ***************** */
 }

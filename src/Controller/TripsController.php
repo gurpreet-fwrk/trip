@@ -21,7 +21,7 @@ class TripsController extends AppController {
 
         parent::beforeFilter($event);
 
-        $this->Auth->allow(['view']);
+        $this->Auth->allow(['view', 'ajaxtripdata', 'ajaxcurrencyconverter']);
 
         $this->authcontent();
     }
@@ -77,6 +77,8 @@ class TripsController extends AppController {
 
         $this->set('trip', $trip);
         $this->set('_serialize', ['trip']);
+        
+        /*************/
         
         $this->loadModel('Wishlist');
         $wishlist = $this->Wishlist->find('all', [
@@ -648,8 +650,11 @@ class TripsController extends AppController {
     public function ajaxcurrencyconverter() {
 
         if ($this->request->is(array('post', 'put'))) {
-            $amount = $this->request->data['amount'];
-            $from_Currency = $this->request->data['from_currency'];
+            
+            $session = $this->request->session();
+                        
+            $amount = 1;
+            $from_Currency = $session->read('Config.currency');
             $to_Currency = $this->request->data['to_currency'];
 
             $from_Currency = urlencode($from_Currency);
@@ -657,10 +662,38 @@ class TripsController extends AppController {
             $get = file_get_contents("https://finance.google.com/finance/converter?a=$amount&from=$from_Currency&to=$to_Currency");
             $get = explode("<span class=bld>", $get);
             $get = explode("</span>", $get[1]);
-            $converted_currency = preg_replace("/[^0-9\.]/", null, $get[0]);
+            
+            if($from_Currency != $to_Currency){
+                $converted_currency['amount'] = preg_replace("/[^0-9\.]/", null, $get[0]);
+                $converted_currency['currency'] = $to_Currency;
+            }else{
+                $converted_currency['amount'] = 1;
+                $converted_currency['currency'] = $to_Currency;
+            }    
+            
+            $session->write('Config.currency', $to_Currency);
+            
         }
         echo json_encode($converted_currency);
         exit;
+    }
+    
+    
+    public function ajaxtripdata(){
+        if ($this->request->is(['patch', 'post', 'put'])) {
+		
+            switch($_GET['action']){
+                case 'getAdvancePriceBypersons':
+                        $this->loadModel('Tripprices');
+                        $prices = $this->Tripprices->find('all', [
+                                'conditions' => ['Tripprices.person' => $this->request->data['travelers'], 'Tripprices.trip_id' => $this->request->data['trip_id']]
+                        ]);
+                        $prices = $prices->first()->toArray();
+                        echo json_encode($prices);
+                break;
+            }
+            exit;
+        }    
     }
 
 }

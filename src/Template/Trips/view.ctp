@@ -251,11 +251,11 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                 
                 <div id="map" style="width:100%;height:400px;background:#498ebe" class="mp"></div>
             </div>
-                </div>
             <!--col-sm-9-->
 
             <div class="col-sm-3">
                 <div class="instant">
+                    <form action="">
                     <div id="datepickers" class="datepicks"></div>
                     <div class="pern">
                         <p><i class="fa fa-users" aria-hidden="true"></i> Guest(s)</p>
@@ -267,22 +267,43 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                             </select>
                         </span>
                         <div class="line" style="margin-bottom:10px;"></div>
+                        <?php
+                        $amount = 1;
+                        $from_Currency = urlencode('THB');
+                        $to_Currency = urlencode($config_currency);
+                        $get = file_get_contents("https://finance.google.com/finance/converter?a=$amount&from=$from_Currency&to=$to_Currency");
+                        
+                        if($from_Currency != $to_Currency){
+                            $get = explode("<span class=bld>", $get);
+                            $get = explode("</span>", $get[1]);
+                            $converted_currency = preg_replace("/[^0-9\.]/", null, $get[0]);
+                        }else{
+                            $converted_currency = 1;
+                        }
+                        ?>
                         
                         <?php if($trip['pricing_type'] == 'basic'){ ?>
-                        <div class="trip_price" data-price="<?php echo $trip['basic_price_per_person']; ?>">
+                        <div class="trip_price" data-price="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>; ?>">
                             <p> <i class="fa fa-user" aria-hidden="true"></i> Price per person</p>
-                            <span><?php echo $trip['basic_price_per_person']; ?> THB</span>
+                            <span id="single"><?php echo number_format($trip['basic_price_per_person'], 2); ?> <?php echo $config_currency; ?></span>
+                            <input type="hidden" name="single_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
                             <p> <i class="fa fa-usd" aria-hidden="true"></i> Total price</p>
-                            <span id="total"><?php echo $trip['basic_price_per_person']; ?> THB</span>
+                            <span id="total"><?php echo number_format($trip['basic_price_per_person'], 2); ?> <?php echo $config_currency; ?></span>
+                            <input type="hidden" name="total_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
                         </div>
                         <?php } ?>
                         
                         <?php if($trip['pricing_type'] == 'advance'){ ?>
+                        
+                        
+                        
                         <div class="trip_price">
                             <p> <i class="fa fa-user" aria-hidden="true"></i> Price per person</p>
-                            <span>1,750 THB</span>
+                            <span id="single"><?php echo number_format($trip['tripprices'][0]['price_per_person'] * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
+                            <input type="hidden" name="single_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
                             <p> <i class="fa fa-usd" aria-hidden="true"></i> Total price</p>
-                            <span id="total">3,500 THB</span>
+                            <span id="total"><?php echo number_format($trip['tripprices'][0]['total_price'] *$converted_currency, 2); ?> <?php echo $config_currency; ?></span>
+                            <input type="hidden" name="total_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
                         </div>
                         <?php } ?>
                         
@@ -290,6 +311,7 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                     <p>100% Satisfaction guaranteed <sub>?</sub> </p>
                     <button type="submit" class="btn btn-primary blue">Instant book</button>
                     <button class="btn btn-default" type="submit" style="border-radius:0px;">Send a message</button>
+                    </form>
                 </div>
             </div>
             <!--col-sm-3-->
@@ -375,8 +397,6 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                 <!--col-sm-4--> 
 
             </div>
-        </div>
-    </div>
 </section>
 
 <?php //echo "<pre>"; print_r($trip); echo "</pre>"; ?>
@@ -450,14 +470,36 @@ $("#add_wishlist").click(function(){
 });
 
 $("#max_trav").change(function(){
+
     var travelers = $(this).val();
     
-    var single_price = $(".trip_price").attr("data-price");
+    var pricing_type = '<?php echo $trip['pricing_type'] ?>';
     
-    var total_price = travelers * single_price;
+    if(pricing_type == 'basic'){
+        var single_price = $(".trip_price").attr("data-price");
+        var total_price = travelers * single_price;
+        $(".trip_price #total").html(total_price+' THB');
+        $(".trip_price input[name='total_price']").val(json.total_price);
+    }else{
+        
+        $.ajax({
+           url: '<?php echo $this->request->webroot ?>trips/ajaxtripdata?action=getAdvancePriceBypersons',
+           data: {travelers: travelers, trip_id: '<?php echo $trip["id"] ?>'},
+           method: 'post',
+           dataType: 'json',
+           success: function(json){
+               $(".trip_price #single").html(json.price_per_person+' THB');
+               $(".trip_price #total").html(json.total_price+' THB');
+               
+               $(".trip_price input[name='single_price']").val(json.price_per_person);
+               $(".trip_price input[name='total_price']").val(json.total_price);
+           }
+        });
+        
+    }
     
-    $(".trip_price #total").html(total_price+' THB');
     
 });
     
 </script> 
+
