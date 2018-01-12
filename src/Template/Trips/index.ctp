@@ -7,7 +7,7 @@
 
                         <!--small_slider-->
                         <div class="small_slider slider_manage">
-                            <a class="btn btn-primary blue" href="#">Manage availability</a>
+                            <a class="btn btn-primary blue" href="<?php echo $this->request->webroot ?>users/availabilities">Manage availability</a>
                             <h3>Trip</h3>
                             <div class="carousel slide" id="carousel-example-generic" data-ride="carousel">
                                 <ol class="carousel-indicators">

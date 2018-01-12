@@ -2385,6 +2385,44 @@ class UsersController extends AppController {
     }
     
     public function availabilities(){
+        $this->loadModel('Availabilities');
+        
+        if(!$this->Auth->user('id')){
+            $this->redirect('/');
+        }
+        
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            
+            $this->Availabilities->deleteAll(['Availabilities.user_id' => $this->Auth->user('id')]);
+            
+            $dates = explode(",", $this->request->data['dates']);
+
+            $post = array();
+            
+            foreach($dates as $date){
+                if($date != ''){
+                
+                    $post['user_id']    =   $this->Auth->user('id');
+                    $post['date']       =   $date;
+
+                    $ava = $this->Availabilities->newEntity();
+                    $ava = $this->Availabilities->patchEntity($ava, $post);
+
+                    $this->Availabilities->save($ava);
+                }
+                
+            }
+            
+            $this->Flash->success(__('Your Availablity dates has been updated successfully.'));
+            
+        }
+        
+        $availabilities = $this->Availabilities->find('all',[
+            'conditions' => ['Availabilities.user_id' => $this->Auth->user('id')]
+        ])->all()->toArray();
+        
+        $this->set(compact('availabilities'));
+        $this->set('_serialize', ['availabilities']);
         
     }
 
