@@ -33,9 +33,10 @@
                 <div class="item">
                     <div class="main_box">
                         <a href="<?php echo $this->request->webroot ?>trips/view/<?php echo base64_encode('view'.$trip['id']); ?>">
-                            <?php if(!empty($trip['tripgallery'])){ ?>
-                            <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $trip['tripgallery'][0]['file']; ?>" class="img-responsive center-block">
+                            <?php if($trip['image'] != ''){ ?>
+                            <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $trip['image']; ?>" class="img-responsive center-block">
                             <?php }else{ ?>
+                            <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>" class="img-responsive center-block">
                             <?php } ?>
                         </a>
                         <div class="content_box">
@@ -70,7 +71,7 @@
 
 
                                     <p>
-                                        <span><?php echo $trip['location']['title_'.$config_language]; ?></span>
+                                        <span><?php echo $trip['location']['name_'.$config_language]; ?></span>
                                         <i class="">
                                             <img src="<?php echo $this->request->webroot ?>images/website/loc.png" class="img-responsive center-block">
                                         </i>

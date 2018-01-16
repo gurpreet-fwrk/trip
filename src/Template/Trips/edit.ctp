@@ -230,6 +230,22 @@
                   <?php echo $this->Form->control('summary_'.$config_language, array('class' => 'form-control', 'label' => false, 'id' => 'trip_summary')); ?>
 <!--                  <p class="help-block right">250 Characters left</p>-->
                 </div>
+                  
+                <div class="form-group">
+                  <label for="exampleInputSummary"><?php echo $this->Text->lang('text_summary_your_trip'); ?></label>
+                  <?php echo $this->Form->control('image', array('class' => 'form-control', 'type' => 'file', 'label' => false, 'id' => 'featured_image')); ?>
+
+                        <div class="row prev_img">
+                            <div class="col-md-12">
+                                <?php if($trip['image'] != ''){ ?>
+                                <img src="<?php echo $this->request->webroot.'images/trips/'.$trip['image'] ?>" width="100%" class="previewHolder">
+                                <?php }else{ ?>
+                                <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>" width="100%" class="previewHolder">
+                                <?php } ?>
+                            </div>
+                        </div>
+                </div>
+                  
                 <div class="form-group photos">
                   <label for="exampleInputPassword1"><?php echo $this->Text->lang('text_photos'); ?></label>
                   <p class="help-block"><?php echo $this->Text->lang('text_upload_only_photos'); ?></p>
@@ -1371,6 +1387,9 @@ function handleForm(e) {
     var title = $("#trip_title").val();
     var summary = $("#trip_summary").val();
 
+    //var input = document.querySelector('input[id="featured_image"]'),
+    var featured_image = $('#featured_image').prop('files')[0]; ;
+
     if(title == ''){
         $("#trip_title").after('<label class="error">Please Enter title</label>');
         return false;
@@ -1391,6 +1410,8 @@ function handleForm(e) {
     data.append('trip_id', <?php echo $trip_id ?>);
 
     data.append('tab', 'overview');
+
+    data.append("featured_image", featured_image);
 
     for(var i=0, len=storedFiles.length; i<len; i++) {
         data.append('images[]', storedFiles[i]); 
@@ -1946,5 +1967,20 @@ $(document).delegate("#request-photo", "click", function(){
     });
 });
 
+/***** Preview (Featured Image) ******/
 
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('.previewHolder').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#featured_image").change(function() {
+  readURL(this);
+});
 </script>

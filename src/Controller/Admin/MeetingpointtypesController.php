@@ -81,7 +81,7 @@ class MeetingpointtypesController extends AppController
             $this->Flash->error(__('The meetingpointtype could not be saved. Please, try again.'));
         }
         $locations = $this->Meetingpointtypes->Locations->find('list', ['limit' => 200]);
-        $meetingpoints = $this->Meetingpointtypes->Meetingpoints->find('list', ['limit' => 200]);
+        //$meetingpoints = $this->Meetingpointtypes->Meetingpoints->find('list', ['limit' => 200]);
         $this->set(compact('meetingpointtype', 'meetingpoints', 'locations'));
         $this->set('_serialize', ['meetingpointtype']);
     }

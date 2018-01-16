@@ -114,9 +114,24 @@
                     </div>
                     
                     <div class="form-group">
+                        <label for="exampleInputEmail1">Youtube Video URL</label>
+                        <?php echo $this->Form->control('video', array('class' => 'form-control', 'label' => false)); ?>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Featured Image</label>
+                        <?php echo $this->Form->control('image', array('class' => 'form-control','type' => 'file', 'label' => false, 'id' => 'featured_image', 'required')); ?>
+                        <div class="row prev_img">
+                            <div class="col-md-12">
+                                <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>" class="previewHolder" width="200px">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="exampleInputEmail1">Photos</label>
                         <input type="file" name="images[]" id="overview_images" class="form-control" multiple="" accept="image/*" required>
-                        <div class="row"></div>
+                        <div class="row prev_gal"></div>
                     </div>
                     
                 </div>
@@ -700,7 +715,8 @@ $(function() {
     };
 
     $('#overview_images').on('change', function() {
-        imagesPreview(this, $(this).parent().find('div'));
+        $('.prev_gal').html('');
+        imagesPreview(this, '.prev_gal');
     });
 });
 
@@ -1060,5 +1076,18 @@ $("#trip-form").validate();
 
 //var tripform = $("#trip-form").validate();
 
+function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('.previewHolder').attr('src', e.target.result);
+    }
 
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#featured_image").change(function() {
+  readURL(this);
+});
 </script>           

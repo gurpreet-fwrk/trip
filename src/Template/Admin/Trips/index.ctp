@@ -69,7 +69,11 @@
                      ['confirm' => __('Are you sure you want to delete # {0}?', $trip->id), 'class' => 'btn btn-danger btn-xs', 'escape' => false, 'title' => 'Delete']) ?>
                     
                     <?php
-                    $sizes = ['0' => 'Declined', '1' => 'Published', '3' => 'Pending'];
+                    if($trip->user_id == $loggeduser['id']){
+                        $sizes = ['1' => 'Published', '3' => 'Not Published'];
+                    }else{
+                        $sizes = ['0' => 'Declined', '1' => 'Published', '3' => 'Pending'];
+                    }
                     echo $this->Form->select('change_status', $sizes, ['default' => $trip->status, 'data-id' => $trip->id]);
                     ?>
                     

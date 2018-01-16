@@ -226,7 +226,11 @@ class Arabic{
                 $lang['text_share']                   =        'شارك';
                 $lang['text_similar_trips']                   =        'رحلات مماثلة';
                 
-                
+                $lang['text_price_person']                   =        'السعر للشخص الواحد';
+                $lang['text_price_total']                   =        'السعر الإجمالي';
+                $lang['text_guests']                   =        'الضيوف (النزلاء)';
+                $lang['text_instant_book']                   =        'كتاب فوري';
+                $lang['text_send_msg']                   =        'إرسال رسالة';
                 /********* Trip Detail Page (End)  **********/
 
 		if(isset($lang[$text])){

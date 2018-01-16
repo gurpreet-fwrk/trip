@@ -26,7 +26,7 @@ $cakeDescription = '';
     </title>
     <link rel="icon" type="image/x-icon" href="<?php echo $this->request->webroot."images/website/logo-fav.png";?>" />
 
-    <?= $this->Html->css( array('bootstrap.min', 'slick-theme', 'bootstrap-theme.min', 'slick', 'checkbox', 'style', 'custom/jquery-ui.min.css', 'lightgallery') ) ?>
+    <?= $this->Html->css( array('bootstrap.min', 'slick-theme', 'bootstrap-theme.min', 'slick', 'checkbox', 'style', 'lightgallery','datepicker') ) ?>
     
     <script src="https://cdn.jsdelivr.net/picturefill/2.3.1/picturefill.min.js"></script> 
     
@@ -656,7 +656,9 @@ $("#change_crr").change(function(){
       method: 'post',
       dataType: 'json',
       success: function(json){
-          
+        
+        $("#max_trav").val('1');
+        
         var single_price = $(".trip_price input[name='single_price']").val();
         var total_price = $(".trip_price input[name='total_price']").val();
         

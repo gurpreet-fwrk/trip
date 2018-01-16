@@ -125,7 +125,15 @@ class TripsController extends AppController
             $this->request->data['status'] = '1';
             
             $this->request->data['user_id'] = $this->Auth->user('id');
+            
+            $fileName = $this->request->data['image']['name'];
+            $fileName = date('His') . $fileName;
+            $uploadPath = WWW_ROOT . '/images/trips/'.$fileName;
+            move_uploaded_file($this->request->data['image']['tmp_name'], $uploadPath);
+            $this->request->data['image'] = $fileName;
+            
             //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+            
             if($this->request->data['pricing_type'] == 'basic'){
 
                 $this->request->data['basic_price_per_person'] = $this->request->data['basic_single_price'];
@@ -345,9 +353,26 @@ class TripsController extends AppController
             
             $this->request->data['status'] = '1';
             
-            //echo "<pre>"; print_r($this->request->data); echo "</pre>";
+            if($this->request->data['image']['name'] != ''){
+                
+                $file = WWW_ROOT . '/images/trips/'.$trip->image;
+                if(file_exists($file)){
+                    unlink($file);
+                }
+
+                $fileName = $this->request->data['image']['name'];
+                $fileName = date('His') . $fileName;
+                $uploadPath = WWW_ROOT . '/images/trips/'.$fileName;
+                move_uploaded_file($this->request->data['image']['tmp_name'], $uploadPath);
+                
+                $this->request->data['image']   =   $fileName;
+                
+            }else{
+                unset($this->request->data['image']);
+            }
             
-            //exit;
+            //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
+            
             if($this->request->data['pricing_type'] == 'basic'){
 
                 $this->request->data['basic_price_per_person'] = $this->request->data['basic_single_price'];

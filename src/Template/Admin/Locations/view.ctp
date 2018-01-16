@@ -1,6 +1,6 @@
 <section class="content-header">
     <h1>
-    <?= h('Locations') ?>
+    Locations
     <small></small>
     </h1>
     <ol class="breadcrumb">
@@ -16,29 +16,33 @@
         
         <div class="box">
   <div class="box-header">
-    <h3 class="box-title"><?= h($location->id) ?></h3>
+    <h3 class="box-title"><?= h($location->title_en) ?></h3>
   </div>
   <!-- /.box-header -->
   <div class="box-body no-padding">
     <table class="table table-condensed">
       <tbody>
         <tr>
-          
-        </tr>
-        <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($location->id) ?></td>
         </tr>
         <tr>
-          <th><?= __('Name') ?></th>
-          <td><?= h($location->name) ?></td>
+          <th><?= __('Title (English)') ?></th>
+          <td><?= h($location->name_en) ?></td>
         </tr>
         <tr>
-          <td>
-          <?php echo $this->Html->link(__('Edit Location'), ['action' => 'edit', $location->id], ['class' => 'btn btn-info']); ?>
-          </td>
-          <td></td>
+          <th><?= __('Title (Arabic)') ?></th>
+          <td><?= h($location->name_ar) ?></td>
         </tr>
+        <tr>
+          <th><?= __('Created') ?></th>
+          <td><?= h($location->created) ?></td>
+        </tr>
+        <tr>
+          <th><?= __('Modified') ?></th>
+          <td><?= h($location->modified) ?></td>
+        </tr>
+
       </tbody>
     </table>
   </div>

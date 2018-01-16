@@ -228,6 +228,11 @@ class English{
                 $lang['text_share']                   =        'Share';
                 $lang['text_similar_trips']                   =        'Similar Trips';
                 
+                $lang['text_price_person']                   =        'Price per person';
+                $lang['text_price_total']                   =        'Total Price';
+                $lang['text_guests']                   =        'Guest(s)';
+                $lang['text_instant_book']                   =        'Instant Book';
+                $lang['text_send_msg']                   =        'Send a message';
                 
                 /********* Trip Detail Page (End)  **********/
 

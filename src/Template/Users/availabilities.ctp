@@ -46,7 +46,7 @@
         
         <form action="<?php echo $this->request->webroot ?>users/availabilities" method="post">
         <input type="hidden" name="dates">
-        <input type="submit">
+        <input type="submit" class="btn btn-primary blue submt">
         </form>
         </div>
         <!--col-sm-9--> 

@@ -1,19 +1,28 @@
 <!-- Gallery Section Start Here -->
 <section class="gallery_sec">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
                 <ul id="lightgallery" class="list-unstyled row">
-                <?php foreach($trip['tripgallery'] as $image){ ?>
-                <li class="col-xs-12" data-responsive="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 375, <?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 480, <?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 800" data-src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?>"> <a href=""> <img class="img-responsive" src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?>"> </a> </li>
-                <?php } ?>
+                    
+                    <?php if($trip['video'] != ''){ ?>
+                    
+                    <?php if($trip['image'] != ''){
+                        $imagee = $this->request->webroot.'images/trips/'. $trip["image"];
+                    }else{
+                        $imagee = $this->request->webroot.'images/website/no-image.png';
+                    } ?>
+                    
+                    <a href="https://www.youtube.com/watch?v=meBbDqAXago" data-poster="<?php echo $imagee; ?>" >
+                        <img src="<?php echo $imagee; ?>" width="100%">
+                    </a>
+                    <?php } elseif($trip['image'] != ''){ ?>
+                    <li class="col-xs-12" data-responsive="<?php echo $this->request->webroot; ?>images/trips/<?php echo $trip['image']; ?> 375, <?php echo $this->request->webroot; ?>images/trips/<?php echo $trip['image']; ?> 480, <?php echo $this->request->webroot; ?>images/trips/<?php echo $trip['image']; ?> 800" data-src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $trip['image']; ?>"> <a href=""> <img class="img-responsive" src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $trip['image']; ?>"> </a> </li>
+                    <?php } ?>
+                    <?php foreach($trip['tripgallery'] as $image){ ?>
+                    <li class="col-xs-12" data-responsive="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 375, <?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 480, <?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?> 800" data-src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?>"> <a href=""> <img class="img-responsive" src="<?php echo $this->request->webroot; ?>images/trips/<?php echo $image['file']; ?>"> </a> </li>
+                    <?php } ?>
                 </ul>
-            </div>
-        </div>
-    </div>
 </section>
 <!-- Gallery Section End Here -->
-
+<?php //echo "<pre>"; print_r($trip); echo "</pre>" ?>;
 
 <section class="product_detail">
     <div class="container">
@@ -26,7 +35,7 @@
             <div class="col-sm-9">
                 
                 <div class="share">
-                    <a href="#"><i class="fa fa-share-alt" aria-hidden="true"></i> <span><?php echo $this->Text->lang('text_share'); ?></span></a>
+                    <a data-toggle="modal" data-target="#myModal"><i class="fa fa-share-alt" aria-hidden="true"></i> <span><?php echo $this->Text->lang('text_share'); ?></span></a>
                     <?php if($loggeduser){ ?>
                     <?php if(empty($wishlist)){ ?>
                     <a id="add_wishlist" data-id="<?php echo $trip['id']; ?>"><i class="fa fa-heart-o" aria-hidden="true"></i> <span><?php echo $this->Text->lang('text_add_wishlist'); ?></span></a>
@@ -205,7 +214,7 @@ Admission fees are included.' : 'يتم تضمين رسوم الدخول.'; ?></
                     </div>
                     <div class="faq meet">
                         <div class="faq_ques fd"><i class="fa fa-times" aria-hidden="true"></i> <?php echo ($config_language == 'en') ? 'Meals are excluded' : 'يتم استبعاد الوجبات'; ?></div>
-
+                    </div>
                     <?php }elseif($trip['include_exclude'] == 'all_excluded'){ ?>
 
                     <div class="faq meet">
@@ -217,7 +226,7 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                     </div>
                     <div class="faq meet">
                         <div class="faq_ques fd"><i class="fa fa-times" aria-hidden="true"></i> <?php echo ($config_language == 'en') ? 'Meals are excluded' : 'يتم استبعاد الوجبات'; ?></div>
-                    
+                    </div>
                     <?php } ?>
                 </div>
                 <!--ques-->
@@ -258,7 +267,7 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                     <form action="">
                     <div id="datepickers" class="datepicks"></div>
                     <div class="pern">
-                        <p><i class="fa fa-users" aria-hidden="true"></i> Guest(s)</p>
+                        <p><i class="fa fa-users" aria-hidden="true"></i> <?php echo $this->Text->lang('text_guests'); ?></p>
                         <span >
                             <select class="form-control" id="max_trav">
                                 <?php for($i=1;$i<=$trip['travellers'];$i++){ ?>
@@ -283,12 +292,12 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                         ?>
                         
                         <?php if($trip['pricing_type'] == 'basic'){ ?>
-                        <div class="trip_price" data-price="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>; ?>">
-                            <p> <i class="fa fa-user" aria-hidden="true"></i> Price per person</p>
-                            <span id="single"><?php echo number_format($trip['basic_price_per_person'], 2); ?> <?php echo $config_currency; ?></span>
+                        <div class="trip_price" data-price="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
+                            <p> <i class="fa fa-user" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_person'); ?></p>
+                            <span id="single"><?php echo number_format($trip['basic_price_per_person']  * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
                             <input type="hidden" name="single_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
-                            <p> <i class="fa fa-usd" aria-hidden="true"></i> Total price</p>
-                            <span id="total"><?php echo number_format($trip['basic_price_per_person'], 2); ?> <?php echo $config_currency; ?></span>
+                            <p> <i class="fa fa-usd" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_total'); ?></p>
+                            <span id="total"><?php echo number_format($trip['basic_price_per_person']  * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
                             <input type="hidden" name="total_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
                         </div>
                         <?php } ?>
@@ -298,24 +307,24 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                         
                         
                         <div class="trip_price">
-                            <p> <i class="fa fa-user" aria-hidden="true"></i> Price per person</p>
+                            <p> <i class="fa fa-user" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_person'); ?></p>
                             <span id="single"><?php echo number_format($trip['tripprices'][0]['price_per_person'] * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
                             <input type="hidden" name="single_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
-                            <p> <i class="fa fa-usd" aria-hidden="true"></i> Total price</p>
+                            <p> <i class="fa fa-usd" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_total'); ?></p>
                             <span id="total"><?php echo number_format($trip['tripprices'][0]['total_price'] *$converted_currency, 2); ?> <?php echo $config_currency; ?></span>
                             <input type="hidden" name="total_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
                         </div>
                         <?php } ?>
                         
                     </div>
-                    <p>100% Satisfaction guaranteed <sub>?</sub> </p>
-                    <button type="submit" class="btn btn-primary blue">Instant book</button>
-                    <button class="btn btn-default" type="submit" style="border-radius:0px;">Send a message</button>
+                    <p><?php echo $this->Text->lang('text_satisfaction_guaranteed'); ?> <sub>?</sub> </p>
+                    <button type="submit" class="btn btn-primary blue"><?php echo $this->Text->lang('text_instant_book'); ?></button>
+                    <button class="btn btn-default" type="submit" style="border-radius:0px;"><?php echo $this->Text->lang('text_send_msg'); ?></button>
                     </form>
                 </div>
             </div>
             <!--col-sm-3-->
-            <div class="view_fav similar"> 
+<!--            <div class="view_fav similar"> 
 
                 <h2><?php echo $this->Text->lang('text_similar_trips'); ?></h2>
                 <div class="col-sm-4">
@@ -340,9 +349,9 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                             <h4><img src="images/user.jpg"> <span>Platpur Expert Shady</span>.</h4>
                         </div>
                     </div>
-                    <!--show_data--> 
+                    show_data 
                 </div>
-                <!--col-sm-4--> 
+                col-sm-4 
 
                 <div class="col-sm-4">
                     <div class="show_data">
@@ -366,9 +375,9 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                             <h4><img src="images/user.jpg"> <span>Platpur Expert Shady</span>.</h4>
                         </div>
                     </div>
-                    <!--show_data--> 
+                    show_data 
                 </div>
-                <!--col-sm-4--> 
+                col-sm-4 
 
                 <div class="col-sm-4">
                     <div class="show_data">
@@ -392,11 +401,59 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                             <h4><img src="images/user.jpg"> <span>Platpur Expert Shady</span>.</h4>
                         </div>
                     </div>
-                    <!--show_data--> 
+                    show_data 
                 </div>
-                <!--col-sm-4--> 
+                col-sm-4 
 
+            </div>-->
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            
+            <div class="modal-body" style="overflow: hidden; text-align: center;">
+                <div class="col-md-12">
+                    
+                    <?php $actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; ?>
+                    
+                    <?php $webroot_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]"; ?>
+                    
+                    <div class="col-md-6">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $actual_link; ?>" target="_blank">
+                            <img src="<?php echo $this->request->webroot ?>images/website/facebook-c.png">
+                            <p>Facebook</p>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="https://twitter.com/home?status=<?php echo $actual_link; ?>" target="_blank">
+                            <img src="<?php echo $this->request->webroot ?>images/website/twitter-c.png">
+                            <p>Twitter</p>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="https://pinterest.com/pin/create/button/?url=<?php echo $webroot_link.'/'.$this->request->webroot ?>/images/trips/<?php echo $trip['tripgallery'][0]['file']; ?>&media=<?php echo $trip['tripgallery'][0]['file']; ?>&description=" target="_blank">
+                            <img src="<?php echo $this->request->webroot ?>images/website/pinterest-c.png">
+                            <p>Pinterest</p>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="https://plus.google.com/share?url=<?php echo $actual_link; ?>" target="_blank">
+                            <img src="<?php echo $this->request->webroot ?>images/website/google-c.png">
+                            <p>Google Plus</p>
+                        </a>
+                    </div>
+                </div>
             </div>
+            
+        </div>
+
+    </div>
+</div>
+
 </section>
 
 <?php //echo "<pre>"; print_r($trip); echo "</pre>"; ?>
@@ -410,9 +467,31 @@ $(document).ready(function(){
     $('#lightgallerys').lightGallery();
 });
 
-$(function() {
-  $( "#datepickers" ).datepicker();
-});
+/*** Datepicker (right side) ***/
+
+var enableDays = [];
+
+jQuery(function(){
+
+    var availabilities = $.parseJSON('<?php echo json_encode($availabilities) ?>');
+    for(i=0; i<Object.keys(availabilities).length; i++){
+            enableDays.push(availabilities[i]['date']);;
+    }
+
+    function enableAllTheseDays(date) {
+        var sdate = $.datepicker.formatDate( 'yy/m/d', date)
+        if($.inArray(sdate, enableDays) != -1) {
+            return [true];
+        }
+        return [false];
+    }
+
+    $('#datepickers').datepicker({dateFormat: 'yy/m/d', beforeShowDay: enableAllTheseDays});
+})
+
+/*** Datepicker (right side) (END) ***/
+
+/*** Google Map ***/
     
 var allocation = $.parseJSON('<?php echo json_encode($trip['tripmeetingpoints']) ?>');  
 
@@ -450,6 +529,9 @@ for(i=0; i<Object.keys(allocation).length; i++){
     })(marker, i));
   }
   
+/*** Google Map (END) ***/  
+
+/**** Add or remove from wishlist ****/
   
 $("#add_wishlist").click(function(){
    var trip_id = $(this).attr('data-id');
@@ -469,6 +551,10 @@ $("#add_wishlist").click(function(){
    
 });
 
+/**** Add or remove from wishlist (END) ****/
+
+
+
 $("#max_trav").change(function(){
 
     var travelers = $(this).val();
@@ -478,8 +564,8 @@ $("#max_trav").change(function(){
     if(pricing_type == 'basic'){
         var single_price = $(".trip_price").attr("data-price");
         var total_price = travelers * single_price;
-        $(".trip_price #total").html(total_price+' THB');
-        $(".trip_price input[name='total_price']").val(json.total_price);
+        $(".trip_price #total").html(total_price.toFixed(2)+' <?php echo $config_currency ?>');
+        $(".trip_price input[name='total_price']").val(total_price);
     }else{
         
         $.ajax({
@@ -488,18 +574,18 @@ $("#max_trav").change(function(){
            method: 'post',
            dataType: 'json',
            success: function(json){
-               $(".trip_price #single").html(json.price_per_person+' THB');
-               $(".trip_price #total").html(json.total_price+' THB');
+               
+               $(".trip_price #single").html(json.price_per_person.toFixed(2)+' '+json.currency);
+               $(".trip_price #total").html(json.total_price.toFixed(2)+' '+json.currency);
                
                $(".trip_price input[name='single_price']").val(json.price_per_person);
                $(".trip_price input[name='total_price']").val(json.total_price);
+               
+               $(".trip_price").attr("data-price", json.price_per_person);
            }
-        });
-        
+        }); 
     }
-    
-    
-});
+});   
     
 </script> 
 

@@ -17,8 +17,6 @@ class TripsController extends AppController {
 
     public function beforeFilter(Event $event) {
 
-
-
         parent::beforeFilter($event);
 
         $this->Auth->allow(['view', 'ajaxtripdata', 'ajaxcurrencyconverter']);
@@ -87,6 +85,16 @@ class TripsController extends AppController {
         
         $this->set('wishlist', $wishlist);
         $this->set('_serialize', ['wishlist']);
+        
+        /*************/
+        
+        $this->loadModel('Availabilities');
+        $availabilities = $this->Availabilities->find('all', [
+            'conditions' => ['Availabilities.user_id' => $trip['user']['id']]
+        ])->all()->toArray();
+        
+        $this->set('availabilities', $availabilities);
+        $this->set('_serialize', ['availabilities']);
         
     }
 
@@ -219,7 +227,7 @@ class TripsController extends AppController {
             /*             * *** Tab OVERVIEW ***** */
 
             if ($this->request->data['tab'] == 'overview') {
-
+                //echo "<pre>"; print_r($this->request->data); echo "</pre>"; exit;
                 $session = $this->request->session();
 
                 $session->read('Config.language');
@@ -230,7 +238,26 @@ class TripsController extends AppController {
 
                 $this->request->data['title_' . $change_language] = $title;
                 $this->request->data['summary_' . $change_language] = $summary;
+                
+                
+                if($this->request->data['featured_image'] != 'undefined'){
+                
+                    $file = WWW_ROOT . '/images/trips/'.$trip->image;
+                    if(file_exists($file)){
+                        unlink($file);
+                    }
 
+                    $fileName = $this->request->data['featured_image']['name'];
+                    $fileName = date('His') . $fileName;
+                    $uploadPath = WWW_ROOT . '/images/trips/'.$fileName;
+                    move_uploaded_file($this->request->data['featured_image']['tmp_name'], $uploadPath);
+
+                    $this->request->data['image']   =   $fileName;
+
+                }else{
+                    unset($this->request->data['featured_image']);
+                }
+                
                 if (isset($this->request->data['images'])) {
                     for ($i = 0; $i < count($this->request->data['images']); $i++) {
                         $fileName = $this->request->data['images'][$i]['name'];
@@ -689,6 +716,9 @@ class TripsController extends AppController {
                                 'conditions' => ['Tripprices.person' => $this->request->data['travelers'], 'Tripprices.trip_id' => $this->request->data['trip_id']]
                         ]);
                         $prices = $prices->first()->toArray();
+                        
+                        $prices['currency'] = $session->read('Config.currency');
+                        
                         echo json_encode($prices);
                 break;
             }

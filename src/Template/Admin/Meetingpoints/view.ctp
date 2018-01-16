@@ -22,19 +22,23 @@
                         <tbody>
                             <tr>
                                 <th><?= __('Location') ?></th>
-                                <td><?= $meetingpoint->has('location') ? $this->Html->link($meetingpoint->location->name, ['controller' => 'Locations', 'action' => 'view', $meetingpoint->location->id]) : '' ?></td>
+                                <td><?= $meetingpoint->has('location') ? $this->Html->link($meetingpoint->location->name_en, ['controller' => 'Locations', 'action' => 'view', $meetingpoint->location->id]) : '' ?></td>
                             </tr>
                             <tr>
                                 <th><?= __('Meeting Point Type') ?></th>
-                                <td><?= $meetingpoint->has('meetingpointtype') ? $this->Html->link($meetingpoint->meetingpointtype->title, ['controller' => 'Meetingpointtypes', 'action' => 'view', $meetingpoint->meetingpointtype->id]) : '' ?></td>
-                            </tr>
-                            <tr>
-                                <th><?= __('Meeting Point') ?></th>
-                                <td><?= h($meetingpoint->title) ?></td>
+                                <td><?= $meetingpoint->has('meetingpointtype') ? $this->Html->link($meetingpoint->meetingpointtype->title_en, ['controller' => 'Meetingpointtypes', 'action' => 'view', $meetingpoint->meetingpointtype->id]) : '' ?></td>
                             </tr>
                             <tr>
                                 <th><?= __('Id') ?></th>
                                 <td><?= $this->Number->format($meetingpoint->id) ?></td>
+                            </tr>
+                            <tr>
+                                <th><?= __('Meeting Point (EN)') ?></th>
+                                <td><?= h($meetingpoint->title_en) ?></td>
+                            </tr>
+                            <tr>
+                                <th><?= __('Meeting Point (AR)') ?></th>
+                                <td><?= h($meetingpoint->title_ar) ?></td>
                             </tr>
                             <tr>
                                 <th><?= __('Created') ?></th>

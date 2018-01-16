@@ -25,25 +25,14 @@
 <body class="hold-transition skin-blue sidebar-mini">
 
 	<style>
-	label.error{
-		color: red;
-		font-weight: 400;
-		font-style: italic;
-	}
-	
-	.message.success{
-		color: #fff;
-		background-color: green;
-		padding: 13px;
-		margin-bottom: 15px;
-	}
-	
-	.message.error{
-		color: #fff;
-		background-color: #c03131;
-		padding: 13px;
-		margin-bottom: 15px;
-	}
+	label.error{color: red;font-weight: 400;font-style: italic;}
+	.message.success{color: #fff;background-color: green;padding: 13px;margin-bottom: 15px;}
+	.message.error{color: #fff;background-color: #c03131;padding: 13px;margin-bottom: 15px;}
+        .select2-selection li{color: #000 !important;}
+        .mp-part li{cursor: pointer;}
+        #allmp li{width: 100%;}
+        #allmp li input{float: left;width: 10%;}
+        #allmp li label{width: 90%;padding-left: 10px;}
 	</style>
 
     <div class="wrapper">

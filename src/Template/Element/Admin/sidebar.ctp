@@ -86,7 +86,7 @@
           <ul class="treeview-menu">
             <li><a href="<?php echo $this->request->webroot; ?>admin/trips"><i class="fa fa-circle-o"></i>All Trips</a></li>
             <li><a href="<?php echo $this->request->webroot; ?>admin/locations"><i class="fa fa-circle-o"></i>Locations</a>
-            <li><a href="<?php echo $this->request->webroot; ?>admin/tripfeatures"><i class="fa fa-circle-o"></i>Trip Features</a></li>
+<!--            <li><a href="<?php echo $this->request->webroot; ?>admin/tripfeatures"><i class="fa fa-circle-o"></i>Trip Features</a></li>-->
           </ul>
         </li>
 
@@ -128,13 +128,13 @@
             <li><a href="<?php echo $this->request->webroot; ?>admin/meetingpoints"><i class="fa fa-circle-o"></i>Meeting Points</a>
           </ul>
         </li>
-        <li>
+<!--        <li>
           <a href="<?php echo $this->request->webroot; ?>admin/priceconditions">
             <i class="fa fa-info"></i> <span>Price Conditions</span>
             <span class="pull-right-container">
             </span>
           </a>
-        </li>
+        </li>-->
 
         <li>
           <a href="<?php echo $this->request->webroot; ?>admin/extraconditions">
