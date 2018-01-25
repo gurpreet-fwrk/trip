@@ -232,7 +232,7 @@ $cakeDescription = '';
             <div id="navbar" class="navbar-collapse collapse topbar">
                 <ul class="nav navbar-nav navbar-right header">
                     <li class="slt">
-                        <select onchange="changeLanguage(this);">
+                        <select onChange="changeLanguage(this);">
                             <?php if($config_language == 'en'){ ?>
                             <option value="en" selected>English</option>
                             <?php }else{ ?>
@@ -281,7 +281,8 @@ $cakeDescription = '';
                         <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?php echo $this->request->webroot ?>users/edit/<?php echo $loggeduser['id']; ?>"><?php echo $this->Text->lang('text_edit_profile'); ?></a></li>
+                            <li><a href="<?php echo $this->request->webroot ?>users/edit/<?php echo base64_encode('user'.$loggeduser['id']); ?>"><?php echo $this->Text->lang('text_edit_profile'); ?></a></li>
+                            <li><a href="<?php echo $this->request->webroot ?>users/dashboard/<?php echo base64_encode('user'.$loggeduser['id']); ?>"><?php echo $this->Text->lang('text_dashboard'); ?></a></li>
                         </ul>
                     </li>
                     <?php } ?>

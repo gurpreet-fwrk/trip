@@ -78,9 +78,9 @@ class UsersTable extends Table
             ->setForeignKey('user_id')
             ->setDependent(true);
 			
-		$this->hasMany('Reviews')
-            ->setForeignKey('trainer_id')
-            ->setDependent(true);	
+		$this->hasMany('Wishlist')
+            ->setForeignKey('user_id')
+            ->setDependent(true);		
 
     }
 

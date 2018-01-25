@@ -402,6 +402,7 @@ class UsersController extends AppController {
         //    $current_user = $current_user->first()->toArray();
         //    print_r($current_user);
 
+        $id = substr(base64_decode($id), 4);
 
         $user = $this->Users->get($id, [
             'contain' => []
@@ -770,17 +771,16 @@ class UsersController extends AppController {
     }
 
     public function home() {
-        
+
         $this->loadModel('Trips');
-        
+
         $trips = $this->Trips->find('all', [
-            'contain'       => ['Tripprices', 'Tripgallery', 'Transportations', 'Locations'],      
-            'conditions'    => ['Trips.status' => 1] 
-        ])->all()->toArray();
-        
+                    'contain' => ['Tripprices', 'Tripgallery', 'Transportations', 'Locations'],
+                    'conditions' => ['Trips.status' => 1]
+                ])->all()->toArray();
+
         $this->set(compact('trips'));
         $this->set('_serialize', ['trips']);
-        
     }
 
     public function forgot() {
@@ -2144,6 +2144,7 @@ class UsersController extends AppController {
 
     public function sendOtp() {
 
+
         $sid = 'AC7773cf20375834f3411cb950d7fc3c3f';
 
         $token = 'a531c90806f52534de96f331307e972b';
@@ -2383,46 +2384,95 @@ class UsersController extends AppController {
     public function paypalsuccess() {
         
     }
-    
-    public function availabilities(){
+
+    public function availabilities() {
         $this->loadModel('Availabilities');
-        
-        if(!$this->Auth->user('id')){
+
+        if (!$this->Auth->user('id')) {
             $this->redirect('/');
         }
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            
+
             $this->Availabilities->deleteAll(['Availabilities.user_id' => $this->Auth->user('id')]);
-            
+
             $dates = explode(",", $this->request->data['dates']);
 
             $post = array();
-            
-            foreach($dates as $date){
-                if($date != ''){
-                
-                    $post['user_id']    =   $this->Auth->user('id');
-                    $post['date']       =   $date;
+
+            foreach ($dates as $date) {
+                if ($date != '') {
+
+                    $post['user_id'] = $this->Auth->user('id');
+                    $post['date'] = $date;
 
                     $ava = $this->Availabilities->newEntity();
                     $ava = $this->Availabilities->patchEntity($ava, $post);
 
                     $this->Availabilities->save($ava);
                 }
-                
             }
-            
+
             $this->Flash->success(__('Your Availablity dates has been updated successfully.'));
-            
         }
-        
-        $availabilities = $this->Availabilities->find('all',[
-            'conditions' => ['Availabilities.user_id' => $this->Auth->user('id')]
-        ])->all()->toArray();
-        
+
+        $availabilities = $this->Availabilities->find('all', [
+                    'conditions' => ['Availabilities.user_id' => $this->Auth->user('id')]
+                ])->all()->toArray();
+
         $this->set(compact('availabilities'));
         $this->set('_serialize', ['availabilities']);
+    }
+
+    public function dashboard($id = null) {
+
+        $id = substr(base64_decode($id), 4);
+
+        $user = $this->Users->get($id, [
+            'contain' => [
+                'Wishlist' => [
+                    'Trips' => [
+                        'Locations',
+                        'Tripprices',
+                        'Users'
+                    ]
+                ]
+            ],
+            'conditions' => ['Users.id' => $this->Auth->user('id')]
+        ]);
+
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+        
+        /***********/
+        
+        $this->loadModel('Chat');
+        
+        $inbox = $this->Chat->find('all', [
+           'contain'    =>  [
+               'Trips'  =>  ['Locations','Users']
+            ],
+           'conditions' =>  ['Chat.sender' => $this->Auth->user('id')],
+           'group'      =>  ['trip_id']
+        ])->all()->toArray();
+        
+        $this->set(compact('inbox'));
+        $this->set('_serialize', ['inbox']);
+        
+        /***********/
+        
+        $this->loadModel('Chat');
+        
+        $messages = $this->Chat->find('all', [
+           'contain'    =>  [
+               'Trips'          =>  ['Users'],
+               'Sender_user'    =>  []
+            ],
+           'conditions' =>  ['Chat.reciever' => $this->Auth->user('id')]
+        ])->all()->toArray();
+        
+        $this->set(compact('messages'));
+        $this->set('_serialize', ['messages']);
         
     }
 

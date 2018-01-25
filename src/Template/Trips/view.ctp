@@ -264,12 +264,14 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
 
             <div class="col-sm-3">
                 <div class="instant">
-                    <form action="">
+                    <form id="requestBook">
                     <div id="datepickers" class="datepicks"></div>
+                    <input type="hidden" name="date" />
+                    <input type="hidden" name="trip_id" value="<?php echo $trip['id'] ?>" />
                     <div class="pern">
                         <p><i class="fa fa-users" aria-hidden="true"></i> <?php echo $this->Text->lang('text_guests'); ?></p>
                         <span >
-                            <select class="form-control" id="max_trav">
+                            <select class="form-control" id="max_trav" name="quantity">
                                 <?php for($i=1;$i<=$trip['travellers'];$i++){ ?>
                                 <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
                                 <?php } ?>
@@ -295,10 +297,10 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                         <div class="trip_price" data-price="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
                             <p> <i class="fa fa-user" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_person'); ?></p>
                             <span id="single"><?php echo number_format($trip['basic_price_per_person']  * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
-                            <input type="hidden" name="single_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
+                            <input type="hidden" name="single_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>" disabled="disabled">
                             <p> <i class="fa fa-usd" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_total'); ?></p>
                             <span id="total"><?php echo number_format($trip['basic_price_per_person']  * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
-                            <input type="hidden" name="total_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>">
+                            <input type="hidden" name="total_price" value="<?php echo $trip['basic_price_per_person'] * $converted_currency; ?>" disabled="disabled">
                         </div>
                         <?php } ?>
                         
@@ -309,17 +311,17 @@ Admission fees are excluded.' : 'يتم استبعاد رسوم الدخول.'; 
                         <div class="trip_price">
                             <p> <i class="fa fa-user" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_person'); ?></p>
                             <span id="single"><?php echo number_format($trip['tripprices'][0]['price_per_person'] * $converted_currency, 2); ?> <?php echo $config_currency; ?></span>
-                            <input type="hidden" name="single_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
+                            <input type="hidden" name="single_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>" disabled="disabled">
                             <p> <i class="fa fa-usd" aria-hidden="true"></i> <?php echo $this->Text->lang('text_price_total'); ?></p>
                             <span id="total"><?php echo number_format($trip['tripprices'][0]['total_price'] *$converted_currency, 2); ?> <?php echo $config_currency; ?></span>
-                            <input type="hidden" name="total_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>">
+                            <input type="hidden" name="total_price" value="<?php echo $trip['tripprices'][0]['price_per_person'] * $converted_currency; ?>" disabled="disabled">
                         </div>
                         <?php } ?>
                         
                     </div>
                     <p><?php echo $this->Text->lang('text_satisfaction_guaranteed'); ?> <sub>?</sub> </p>
-                    <button type="submit" class="btn btn-primary blue"><?php echo $this->Text->lang('text_instant_book'); ?></button>
-                    <button class="btn btn-default" type="submit" style="border-radius:0px;"><?php echo $this->Text->lang('text_send_msg'); ?></button>
+                    <button type="button" class="btn btn-primary blue" data-type="book"><?php echo $this->Text->lang('text_instant_book'); ?></button>
+                    <button class="btn btn-default" type="button" data-type="message" style="border-radius:0px;"><?php echo $this->Text->lang('text_send_msg'); ?></button>
                     </form>
                 </div>
             </div>
@@ -487,7 +489,16 @@ jQuery(function(){
     }
 
     $('#datepickers').datepicker({dateFormat: 'yy/m/d', beforeShowDay: enableAllTheseDays});
+	
+	//$("#datepickers").trigger("change");
+	
+	
 })
+
+$(document).delegate("#datepickers", "change",function(){
+	var selected = $('#datepickers').val();
+	$('input[name="date"]').val(selected);
+});
 
 /*** Datepicker (right side) (END) ***/
 
@@ -586,6 +597,19 @@ $("#max_trav").change(function(){
         }); 
     }
 });   
+
+/*********/ 
+
+$("#requestBook button").click(function(){
+
+    if($("input[name='date']").val() == ''){
+        alert('Please select date first.');
+        return false;
+    }else{
+	var formdata = $('#requestBook').serialize();
+	window.location.href = '<?php echo $this->request->webroot ?>orders/create?'+formdata+'&requestType='+$(this).attr('data-type');
+    }    
+});
     
 </script> 
 

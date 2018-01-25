@@ -143,6 +143,14 @@
             </span>
           </a>
         </li>
+        
+        <li>
+          <a href="<?php echo $this->request->webroot; ?>admin/users/subscribers">
+            <i class="fa fa-info"></i> <span>Subscribers</span>
+            <span class="pull-right-container">
+            </span>
+          </a>
+        </li>
       </ul>
     </section>
     <!-- /.sidebar -->

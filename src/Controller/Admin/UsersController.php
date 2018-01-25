@@ -12,7 +12,7 @@ use Cake\Core\Configure;
 
 use Cake\Error\Debugger;
 
-
+use Cake\Mailer\Email;
 
 /**
 
@@ -407,6 +407,45 @@ class UsersController extends AppController
 		
 		$this->set(compact('user'));
         $this->set('_serialize', ['user']);
+	}
+	
+	public function subscribers(){
+		$this->loadModel('Subscribers');
+		$subscribers = $this->Subscribers->find('all', [
+			'contain' 	=> [],
+			'order' 	=> ['Subscribers.id' => 'desc']
+		]);
+		
+		$this->set(compact('subscribers'));
+        $this->set('_serialize', ['subscribers']);
+		
+	}
+	
+	public function sendsubscription(){
+		if ($this->request->is('post')) {
+			
+			$this->loadModel('Subscribers');
+			$subscribers = $this->Subscribers->find('all', [
+				'contain' 		=> [],
+				'conditions'	=>	['Subscribers.type'	=>	$this->request->data['type']]
+			])->all();
+
+			$i = 0;
+
+			foreach($subscribers as $sub){
+				
+				$email = new Email('default');
+				$email->from(['gurpreet@avainfotech.com' => 'Platour'])
+					->to($sub->email)
+					->subject('Platour Subscription')
+					->send($this->request->data['content']);
+				$i++;
+			
+			}				
+			
+			$this->Flash->success(__('Email has been sent to '.$i.' subscribers'));
+			
+		}
 	}
 
 }

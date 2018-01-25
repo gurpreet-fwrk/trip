@@ -35,6 +35,8 @@ a:focus {
 
 .no-margin{margin:0px;}
 
+.margin-top{margin-top: 120px !important;}
+
 .tabcontent .form-group {
     float: left;
     width: 100%;
@@ -1748,6 +1750,10 @@ list-style:none;}
     padding: 0 2px;	
 }
 
+.overal_rating ul li.active {
+	color: #fdc00b;
+}	
+
 .forgot{
     height: auto !important;
 }
@@ -2020,6 +2026,7 @@ span.no_notify {
     padding-left: 10px;
     float: left;
     width: 100%;
+    color: #333;
 }
 
 .message h3 {
@@ -3189,8 +3196,40 @@ span.no_notify {
     content: "";
     position: absolute;
     border-left: 15px solid #dedede;
-    border-top: 15px solid;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    top: 18px;
 }
+/**/
+.we {
+    float: left;
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.chat_subtext {
+    position: relative;
+    width: 100%;
+    padding-right: 80px;
+}
+
+.chat_subtext:after {
+    content: "";
+    position: absolute;
+    border-left: 12px solid #dedede;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    top: 10px;
+    right: 68px;
+}
+
+.chat_subtext p {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 12px 8px;
+    position: relative;
+}
+/**/
 .yours .chat_user {
     left: 25px;
 }

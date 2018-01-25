@@ -5,8 +5,9 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Network\Session;
 
-class WishlistTable extends Table
+class OrdersTable extends Table
 {
 
     /**
@@ -17,15 +18,14 @@ class WishlistTable extends Table
      */
     public function initialize(array $config)
     {
+        $this->session = new Session();
+
         parent::initialize($config);
 
-        $this->setTable('wishlist');
+        $this->setTable('orders');
         $this->setPrimaryKey('id');
-		
-		$this->belongsTo('Trips')
-            ->setForeignKey('trip_id')
-            ->setDependent(true);
 
+        $this->addBehavior('Timestamp');
     }
 
     /**
@@ -40,20 +40,6 @@ class WishlistTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        
-
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        return $rules;
     }
 }

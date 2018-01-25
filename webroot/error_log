@@ -254,3 +254,29 @@ Stack trace:
 [01-Jan-2018 12:06:19 UTC] PHP Fatal error:  Call to a member function find() on boolean in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 214
 [01-Jan-2018 12:06:29 UTC] PHP Fatal error:  Call to a member function find() on boolean in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 214
 [01-Jan-2018 12:08:20 UTC] PHP Fatal error:  Call to a member function find() on boolean in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 214
+[05-Jan-2018 08:45:53 UTC] PHP Fatal error:  Call to undefined method App\Controller\Admin\TripsController::language() in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 122
+[05-Jan-2018 08:46:44 UTC] PHP Fatal error:  Class 'App\Controller\Admin\GoogleTranslate' not found in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 258
+[08-Jan-2018 07:06:44 UTC] PHP Fatal error:  Call to a member function toArray() on null in /home/singhgurpreet/public_html/trip/src/Controller/Admin/TripsController.php on line 354
+[09-Jan-2018 09:06:09 UTC] PHP Fatal error:  Call to undefined method App\Model\Entity\Trip::all() in /home/singhgurpreet/public_html/trip/src/Controller/TripsController.php on line 78
+[09-Jan-2018 11:21:52 UTC] PHP Fatal error:  Cannot use object of type stdClass as array in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 102
+[09-Jan-2018 11:21:55 UTC] PHP Fatal error:  Cannot use object of type stdClass as array in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 102
+[10-Jan-2018 07:06:00 UTC] PHP Fatal error:  Call to undefined method App\View\AppView::changelanguage2() in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 229
+[10-Jan-2018 07:07:21 UTC] PHP Fatal error:  Class 'Cake\View\Helper\GoogleTranslate' not found in /home/singhgurpreet/public_html/trip/src/View/Helper/TextHelper.php on line 132
+[10-Jan-2018 07:08:04 UTC] PHP Fatal error:  Class 'Cake\View\Helper\GoogleTranslate' not found in /home/singhgurpreet/public_html/trip/src/View/Helper/TextHelper.php on line 132
+[10-Jan-2018 07:08:59 UTC] PHP Parse error:  syntax error, unexpected 'if' (T_IF) in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 235
+[10-Jan-2018 07:43:28 UTC] PHP Parse error:  syntax error, unexpected '$config_language' (T_VARIABLE) in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 232
+[10-Jan-2018 07:43:30 UTC] PHP Parse error:  syntax error, unexpected '$config_language' (T_VARIABLE) in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 232
+[10-Jan-2018 07:43:32 UTC] PHP Parse error:  syntax error, unexpected '$config_language' (T_VARIABLE) in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 232
+[10-Jan-2018 10:04:08 UTC] PHP Fatal error:  Call to a member function toArray() on null in /home/singhgurpreet/public_html/trip/src/Controller/TripsController.php on line 84
+[10-Jan-2018 10:13:21 UTC] PHP Fatal error:  Call to a member function toArray() on null in /home/singhgurpreet/public_html/trip/src/Controller/TripsController.php on line 84
+[12-Jan-2018 07:13:31 UTC] PHP Fatal error:  Call to a member function user() on null in /home/singhgurpreet/public_html/trip/src/Controller/UsersController.php on line 2392
+[15-Jan-2018 13:14:19 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/singhgurpreet/public_html/trip/src/Template/Admin/Extraconditions/view.ctp on line 27
+[15-Jan-2018 13:14:37 UTC] PHP Parse error:  syntax error, unexpected '->' (T_OBJECT_OPERATOR) in /home/singhgurpreet/public_html/trip/src/Template/Admin/Extraconditions/view.ctp on line 27
+[23-Jan-2018 09:57:47 UTC] PHP Parse error:  syntax error, unexpected '>' in /home/singhgurpreet/public_html/trip/src/Template/Users/dashboard.ctp on line 135
+[23-Jan-2018 12:04:16 UTC] PHP Parse error:  syntax error, unexpected '=', expecting ']' in /home/singhgurpreet/public_html/trip/src/Controller/UsersController.php on line 2446
+[23-Jan-2018 12:05:02 UTC] PHP Parse error:  syntax error, unexpected '=', expecting ']' in /home/singhgurpreet/public_html/trip/src/Controller/UsersController.php on line 2446
+[24-Jan-2018 06:12:40 UTC] PHP Parse error:  syntax error, unexpected 'new' (T_NEW), expecting identifier (T_STRING) in /home/singhgurpreet/public_html/trip/src/Controller/OrdersController.php on line 14
+[24-Jan-2018 06:55:51 UTC] PHP Parse error:  syntax error, unexpected end of file, expecting ',' or ';' in /home/singhgurpreet/public_html/trip/src/Template/Trips/view.ctp on line 228
+[24-Jan-2018 10:13:52 UTC] PHP Fatal error:  Call to undefined function App\Controller\Admin\loadModel() in /home/singhgurpreet/public_html/trip/src/Controller/Admin/UsersController.php on line 413
+[24-Jan-2018 12:23:10 UTC] PHP Fatal error:  Call to a member function get() on boolean in /home/singhgurpreet/public_html/trip/src/Controller/OrdersController.php on line 25
+[24-Jan-2018 12:23:14 UTC] PHP Fatal error:  Call to a member function get() on boolean in /home/singhgurpreet/public_html/trip/src/Controller/OrdersController.php on line 25

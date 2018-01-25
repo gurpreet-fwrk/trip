@@ -207,6 +207,8 @@ class AppController extends Controller
     public function beforeRender(Event $event)
 
     {
+        
+        //$this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'home', 'admin' => false);
 
         if (!array_key_exists('_serialize', $this->viewVars) &&
 

@@ -100,10 +100,11 @@ Router::scope('/', function (RouteBuilder $routes) {
 
      */
 
-         $routes->connect('/', ['controller' => 'Users', 'action' => 'home']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'home']);
 	$routes->connect('/page/:slug', ['controller' => 'staticpages', 'action' => 'view'], ['pass' => ['slug']]);
-         $routes->connect('/admin', ['prefix' => 'admin', 'controller' => 'Dashboard', 'action' => 'index']);
-  
+$routes->connect('/admin', ['prefix' => 'admin', 'controller' => 'Dashboard', 'action' => 'index']);
+
+
     /**
 
      * ...and connect the rest of 'Pages' controller's URLs.
