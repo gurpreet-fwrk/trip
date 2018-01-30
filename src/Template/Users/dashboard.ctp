@@ -130,8 +130,9 @@
                                 <?php //echo "<pre>"; print_r($inbox); echo "</pre>"; ?>
                                 <?php if(!empty($inbox)){ ?>
                                 <?php foreach($inbox as $data){ ?>
-                                <div class="show_data show_inbox"> <a href="" class="draft">
-                                        <div class="camera_caption"><span>Proceed to payment</span></div>
+                                <div class="show_data show_inbox">
+                                    <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $data['trip_id']; ?>/<?php echo $data['reciever']; ?>/<?php echo $data['sender']; ?>" class="draft">
+                                        <div class="camera_caption" style="background: #D0021B"><span>Proceed to payment</span></div>
                                     </a>
                                     <div class="proceed">
                                         <div class="row">

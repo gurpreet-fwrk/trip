@@ -1562,7 +1562,9 @@ list-style:none;}
     height: 0;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
-    border-right: 15px solid #9b9b9b;
+    border-right: 15px solid #D0021B;
+    /*border-right: 15px solid #9b9b9b;*/
+    
 }
 
 .draft {

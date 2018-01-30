@@ -2464,11 +2464,12 @@ class UsersController extends AppController {
         $this->loadModel('Chat');
         
         $messages = $this->Chat->find('all', [
-           'contain'    =>  [
-               'Trips'          =>  ['Users'],
-               'Sender_user'    =>  []
-            ],
-           'conditions' =>  ['Chat.reciever' => $this->Auth->user('id')]
+            'contain'    =>  [
+                'Trips'          =>  ['Users'],
+                'Sender_user'    =>  []
+             ],
+            'conditions' =>  ['Chat.reciever' => $this->Auth->user('id')],
+            'order'      =>  ['Chat.id'  =>  'desc']
         ])->all()->toArray();
         
         $this->set(compact('messages'));

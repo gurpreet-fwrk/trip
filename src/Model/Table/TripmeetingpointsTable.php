@@ -46,6 +46,12 @@ class TripmeetingpointsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        
+        $this->belongsTo('Trips', [
+            'foreignKey' => 'trip_id',  
+            'joinType' => 'INNER'
+        ]);
+        
     }
 
     /**

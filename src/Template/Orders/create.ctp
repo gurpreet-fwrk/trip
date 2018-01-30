@@ -5,11 +5,15 @@
         <div class="stepwizard">
             <div class="stepwizard-row setup-panel">
                 <div class="stepwizard-step">
+                    <?php if(isset($_GET['step']) && $_GET['step'] == 2){ ?>
+                    <a href="#step-2" type="button" class="btn btn-default btn-circle">1</a>
+                    <?php }else{ ?>
                     <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                    <?php } ?>
                     <p>Trip Info</p>
                 </div>
                 <div class="stepwizard-step">
-                    <a href="#step-2" type="button" class="btn btn-default btn-circle">2</a>
+                    <a href="#step-2" type="button" class="btn <?php echo (isset($_GET['step']) && $_GET['step'] == 2) ? 'btn-primary' : 'btn-default'; ?> btn-circle">2</a>
                     <p>Payment</p>
                 </div>
 
@@ -23,7 +27,7 @@
                     <div class="accordian_wrapper">
                         <div class="accordian_head id">
                             <div class="snd"><img src="<?php echo $this->request->webroot ?>images/website/booking1.png" /></div>
-                            <input type='radio' id='r17' name='occupation' value='Working' required />
+                            <input type='radio' id='r17' name='occupation' value='Working'<?php echo (isset($_GET['requestType']) && $_GET['requestType'] == 'message') ? ' checked' : ''; ?> required />
                             <a href="javascript:void(0)"> <span>Send a message</span>
                                 <p>Ask Local Expert for more detail</p>
                             </a>
@@ -32,11 +36,11 @@
                             <form method="post" action="<?php echo $this->request->webroot ?>orders/chat/<?php echo $_GET['trip_id']; ?>/<?php echo $loggeduser['id']; ?>/<?php echo $trip['user']['id']; ?>">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><i class="fa fa-calendar" aria-hidden="true"></i> Trip date</label>
-                                    <input class="form-control" type="text" id="datepick" placeholder="Select Date" value="<?php echo $_GET['date']; ?>">
+                                    <input class="form-control" type="text" id="datepick" name="trip_date" placeholder="Select Date" value="<?php echo $_GET['date']; ?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><i class="fa fa-users" aria-hidden="true"></i> Guest(s)</label>
-                                    <select class="form-control">
+                                    <select class="form-control" name="guests">
                                    	<?php for($i=1;$i<=$trip['travellers'];$i++){ ?>
                                     <?php if($i == $_GET['quantity']){ ?>
                                     <option value="<?php echo $i; ?>" selected="selected"><?php echo $i; ?></option>
@@ -67,7 +71,7 @@
                     <div class="accordian_wrapper">
                         <div class="accordian_head id">
                             <div class="snd"><img src="<?php echo $this->request->webroot ?>images/website/booking2.png" /></div>
-                            <input type='radio' id='r17' name='occupation' value='Working' required />
+                            <input type='radio' id='r17' name='occupation' value='Working'<?php echo (isset($_GET['requestType']) && $_GET['requestType'] == 'book') ? ' checked' : ''; ?> required />
                             <a href="javascript:void(0)"> <span>Book now</span>
                                 <p>Book now to reserve the tour.</p>
                             </a>
@@ -95,75 +99,47 @@
                                     <label>
                                         <input type="checkbox"> Tourist SIM Card with Unlimited Data + FREE Call Credit </label>
                                 </div>-->
+                                <?php
+                                $mps = array();
+                                foreach($tripmeetingpoints as $mp){
+                                    if($config_language == 'ar' && $mp['language'] == 'ar'){
+                                        $mps[$mp['meeting_point_type']][] = $mp['meeting_point'];
+                                    } elseif($config_language == 'en' && $mp['language'] == 'ar'){
+
+                                        $mps[$this->Text->changelanguage('ar', 'en', $mp['meeting_point_type'])][] = $this->Text->changelanguage('ar', 'en', $mp['meeting_point']);
+                                    } elseif($config_language == 'ar' && $mp['language'] == 'en'){
+                                        $mps[$this->Text->changelanguage('en', 'ar', $mp['meeting_point_type'])][] = $this->Text->changelanguage('en', 'ar', $mp['meeting_point']);
+                                    }else{
+                                        $mps[$mp['meeting_point_type']][] = $mp['meeting_point'];
+                                    }
+                                }
+                                //echo "<pre>"; print_r($mps); echo "</pre>";
+                                ?>
+                                
                                 <span>Please select your meeting point</span>
                                 <div class="panel-group meting" id="accordion" role="tablist" aria-multiselectable="true">
+                                    <?php $j = 1; ?>
+                                    <?php foreach($mps as $key => $value){ ?>
                                     <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingOne">
-                                            <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> <i class="fa fa-bus" aria-hidden="true"></i> BTS Station </a> </h4>
+                                        <div class="panel-heading" role="tab" id="heading<?php echo $j; ?>">
+                                            <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $j; ?>" aria-expanded="true" aria-controls="collapse<?php echo $j; ?>"> <i class="fa fa-caret-right" aria-hidden="true"></i> <?php echo $key; ?> </a> </h4>
                                         </div>
-                                        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                        <div id="collapse<?php echo $j; ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                             <div class="panel-body">
                                                 <div class="form-group">
+                                                    <?php for($i = 0; $i< count($value); $i++){ ?>
                                                     <div class="radio-btn">
-                                                        <input type="radio" value="value-1" id="bta" name="bts">
-                                                        <label for="bta" onclick>Bangkok</label>
+                                                        <input type="radio" value="<?php echo $key.', '.$value[$i]; ?>" name="meetingpoint">
+                                                        <label for="bta" onclick><?php echo $value[$i]; ?></label>
                                                     </div>
-                                                    <div class="radio-btn">
-                                                        <input type="radio" value="value-2" id="btb" name="bts">
-                                                        <label for="btb" onclick>Ayutthaya</label>
-                                                    </div>
-                                                    <div class="radio-btn">
-                                                        <input type="radio" value="value-3" id="btc" name="bts">
-                                                        <label for="btc" onclick>Chiang Mai</label>
-                                                    </div>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                            <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> <i class="fa fa-building" aria-hidden="true"></i> Hotel Pickup(Bangkok) </a> </h4>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <div class="panel-body">
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" id="exampleInputHotel" placeholder="Hotel">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingThree">
-                                            <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> <i class="fa fa-bus" aria-hidden="true"></i> MRT Station </a> </h4>
-                                        </div>
-                                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                                            <div class="panel-body">
-                                                <div class="form-group">
-                                                    <div class="radio-btn">
-                                                        <input type="radio" value="value-4" id="mrta" name="mrt">
-                                                        <label for="mrta" onclick>Bangkok</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                            <h4 class="panel-title"> <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour"><i class="fa fa-bus" aria-hidden="true"></i> Railway Station(Bangkok) </a> </h4>
-                                        </div>
-                                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <div class="panel-body">
-                                                <div class="form-group">
-                                                    <div class="radio-btn">
-                                                        <input type="radio" value="value-4" id="raila" name="rail">
-                                                        <label for="raila" onclick>Bangkok</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    <?php $j++; ?>
+                                    <?php } ?>
+                                    
                                 </div>
                                 <p class="help-block"><a href="#">Select Later</a></p>
                                 <button type="submit" class="btn btn-default blue">Continue</button>
@@ -182,30 +158,32 @@
                     <form class="dest">
                         <div class="form-group">
                             <label for="exampleInputFirst">First Name</label>
-                            <input type="text" class="form-control" id="exampleInputFirst">
+                            <input type="text" class="form-control" id="exampleInputFirst" value="<?php echo $userdata['first_name']; ?>">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputLast">Last Name</label>
-                            <input type="text" class="form-control" id="exampleInputLast">
+                            <input type="text" class="form-control" id="exampleInputLast" value="<?php echo $userdata['last_name']; ?>">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail">Email</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1">
+                            <input type="email" class="form-control" id="exampleInputEmail1" value="<?php echo $userdata['email']; ?>">
                         </div>
 
                         <div class="form-group">
                             <label for="exampleInputMobile">Mobile</label>
-                            <input type="number" class="form-control" id="exampleInputMobile">
+                            <input type="number" class="form-control" id="exampleInputMobile" value="<?php echo $userdata['phone']; ?>">
                         </div>
 
                         <div class="form-group">
                             <label for="exampleInputGuests">Country of Passport</label>
                             <select class="form-control">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                <?php foreach($countries as $country){ ?>
+                                <?php if($country['name'] == $userdata['country']){ ?>
+                                <option value="<?php echo $country['name']; ?>" selected="selected"><?php echo $country['name']; ?></option>
+                                <?php }else{ ?>
+                                <option value="<?php echo $country['name']; ?>"><?php echo $country['name']; ?></option>
+                                <?php } ?>
+                                <?php } ?>
                             </select>
                         </div>
 
@@ -221,7 +199,7 @@
                             </label>
                         </div>
 
-                        <a href="#"><img src="images/paypal.png" /></a>
+                        <a href="#"><img src="<?php echo $this->request->webroot ?>images/website/paypal.png" /></a>
 
                     </form>
                 </div>
@@ -234,29 +212,69 @@
 
         <div class="col-sm-3">
             <div class="guest">
-                <h3>Old Town Walking Tour &amp; Local Food</h3>
-                <div class="head"><img src="images/log.png"></div>
-                <div class="head_pic"><img src="images/logo.png"><span>Platour Local Expert</span></div>
+                <h3><?php echo (!empty($trip)) ? $trip['title_'.$config_language] : ''; ?></h3>
+                <div class="head">
+                    <?php if($trip['image'] != ''){ ?>
+                    <img src="<?php echo $this->request->webroot ?>images/trips/<?php echo $trip['image']; ?>">
+                    <?php }else{ ?>
+                    <img src="<?php echo $this->request->webroot.'images/website/no-image.png' ?>">
+                    <?php } ?>
+                </div>
+                <div class="head_pic"><img src="<?php echo $this->request->webroot ?>/images/users/<?php echo ($trip['user']['image'] != '') ? $trip['user']['image']: 'noimage.png' ?>" /><span><?php echo (!empty($trip['user'])) ? $trip['user']['name'] : ''; ?></span></div>
                 <ul>
                     <li>
                         <span>Guest(s) :</span>
-                        <span>2 person(s)</span>
+                        <span><?php echo (isset($_GET['quantity'])) ? $_GET['quantity'] : 0; ?> person(s)</span>
                     </li>
+                    
+                    <?php
+                    $amount = 1;
+                    $from_Currency = urlencode('THB');
+                    $to_Currency = urlencode($config_currency);
+                    $get = file_get_contents("https://finance.google.com/finance/converter?a=$amount&from=$from_Currency&to=$to_Currency");
+
+                    if($from_Currency != $to_Currency){
+                        $get = explode("<span class=bld>", $get);
+                        $get = explode("</span>", $get[1]);
+                        $converted_currency = preg_replace("/[^0-9\.]/", null, $get[0]);
+                    }else{
+                        $converted_currency = 1;
+                    }
+                    ?>
+                    
                     <li>
                         <span>Trip cost :</span>
-                        <span>3,500.00 THB</span>
+                        <?php if($trip['pricing_type'] == 'basic'){ ?>
+                        <span><?php echo $trip['basic_price_per_person'] * $_GET['quantity']; ?>  THB</span>
+                        <?php }elseif($trip['pricing_type'] == 'basic'){ ?>
+                        <?php foreach($tripdata['trip']['tripprices'] as $price){ ?>
+                        <?php if($price['person'] == $_GET['quantity']){ ?>
+                        <span><?php echo $price['price_per_person'] * $_GET['quantity']; ?> THB</span>
+                        <?php } ?>
+                        <?php } ?>
+                        <?php } ?>
                     </li>
-                    <li>
+<!--                    <li>
                         <span>Booking fee + Tax : </span>
                         <span>700.00 THB</span>
-                    </li>
-                    <li class="sml">
+                    </li>-->
+<!--                    <li class="sml">
                         <span>Book now &amp; Save:</span>
                         <span>-325.50 THB</span>
-                    </li>
+                    </li>-->
                     <li class="totl">
                         <span>Total price :</span>
-                        <span>4,073.50 THB </span>
+                        <?php if($trip['pricing_type'] == 'basic'){ ?>
+                        <span><?php echo $trip['basic_price_per_person'] * $_GET['quantity']; ?>  THB</span>
+                        <p><?php echo 'Converted from '.($trip['basic_price_per_person'] * $_GET['quantity'] * $converted_currency).' '. $config_currency; ?></p>
+                        <?php }elseif($trip['pricing_type'] == 'basic'){ ?>
+                        <?php foreach($tripdata['tripprices'] as $price){ ?>
+                        <?php if($price['person'] == $_GET['quantity']){ ?>
+                        <span><?php echo $price['price_per_person'] * $_GET['quantity']; ?> THB</span>
+                        <p><?php echo 'Converted from '.($price['price_per_person'] * $_GET['quantity'] * $converted_currency).' '. $config_currency; ?></p>
+                        <?php } ?>
+                        <?php } ?>
+                        <?php } ?>
                     </li>
                 </ul>
 
@@ -269,9 +287,15 @@
                 </form>
 
                 <div class="condt">
-                    <span>Price Condition</span>
-                    <span>Food excluded</span>
-                    <p>Travelers pay for their meal(s) during a trip.</p>
+<!--                    <span>Price Condition</span>-->
+                    <?php if($trip['include_exclude'] == 'all_inclusive'){ ?>
+                    <span><?php echo ($config_language == 'en') ? 'All inclusive' : 'الجميع مشمول'; ?></span>
+                    <?php }elseif($trip['include_exclude'] == 'food_excluded'){ ?>
+                    <span><?php echo ($config_language == 'en') ? 'Food Excluded' : 'الغذاء المستثنى'; ?></span>
+                    <?php }elseif($trip['include_exclude'] == 'all_excluded'){ ?>
+                    <span><?php echo ($config_language == 'en') ? 'Food, Transportation, Admission fee excluded' : 'الغذاء، النقل، رسوم القبول مستثناة'; ?></span>
+                    <?php } ?>
+<!--                    <p>Travelers pay for their meal(s) during a trip.</p>-->
                 </div>
 
             </div>
@@ -366,5 +390,13 @@ $(document).ready(function () {
   });
 
   $('div.setup-panel div a.btn-primary').trigger('click');
+});
+
+/***********************/
+
+
+$(".return-false").click(function(e){
+    e.preventDefault();
+    alert('Hello');
 });
 </script>
