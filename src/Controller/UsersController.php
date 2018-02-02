@@ -2446,14 +2446,13 @@ class UsersController extends AppController {
         
         /***********/
         
-        $this->loadModel('Chat');
+        $this->loadModel('Orders');
         
-        $inbox = $this->Chat->find('all', [
+        $inbox = $this->Orders->find('all', [
            'contain'    =>  [
                'Trips'  =>  ['Locations','Users']
             ],
-           'conditions' =>  ['Chat.sender' => $this->Auth->user('id')],
-           'group'      =>  ['trip_id']
+           'conditions' =>  ['Orders.user_id' => $this->Auth->user('id'), 'Orders.status ' => 2]
         ])->all()->toArray();
         
         $this->set(compact('inbox'));

@@ -26,6 +26,14 @@ class OrdersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        
+        $this->belongsTo('Trips', [
+            'foreignKey' => 'trip_id'
+        ]);
+        
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     /**

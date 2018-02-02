@@ -9,6 +9,7 @@
                         <div class="chat_text">
                             <div class="form-group">
                                 <textarea class="form-control" rows="8" name="message"></textarea>
+                                <input type="hidden" name="trip_date" value="<?php echo date('d-m-Y', strtotime($tripdata['trip_date'])); ?>">
                                 <button type="button" class="btn btn-primary blue">Send message</button>
                             </div>
                             <div class="chat_user">
@@ -60,21 +61,31 @@
                         <ul class="choose_edit current_trip">
                             <li>
                                 <h4><i class="fa fa-calendar" ></i> Trip date</h4>
-                                <p><?php echo date('F d, Y', strtotime($tripdata['trip_date'])); ?> <button class="btn btn-link" id="edit" type="button">(Edit)</button></p>
+                                <p><?php echo date('F d, Y', strtotime($tripdata['trip_date'])); ?>
+                                    <?php if($tripdata['trip']['user']['id'] != $sender || $tripdata['status'] != 1){ ?>
+                                    <button class="btn btn-link" id="edit" type="button">(Edit)</button>
+                                    <?php } ?>
+                                </p>
                                 <input type="hidden" name="step" value="2">
                                 <input type="hidden" name="trip_id" value="<?php echo $tripdata['trip_id']; ?>">
                                 <input type="hidden" name="date" value="<?php echo date('Y/m/d', strtotime($tripdata['trip_date'])); ?>">
                             </li>
                             <li>
                                 <h4><i class="fa fa-users" ></i> Guest(s)</h4>
-                                <p><?php echo $tripdata['guests']; ?> <button type="button" class="btn btn-link" id="edit">(Edit)</button></p>
+                                <p><?php echo $tripdata['guests']; ?>
+                                    <?php if($tripdata['trip']['user']['id'] != $sender || $tripdata['status'] != 1){ ?>
+                                    <button class="btn btn-link" id="edit" type="button">(Edit)</button>
+                                    <?php } ?>
+                                </p>
                                 <input type="hidden" name="quantity" value="<?php echo $tripdata['guests']; ?>">
                             </li>
+                            <?php if($tripdata['trip']['user']['id'] != $sender){ ?>
                             <li>
                                 <h4><i class="fa fa-map-marker" ></i> Meeting point</h4>
                                 <p><button type="button" class="btn btn-primary blue" data-toggle="modal" data-target="#mp_modal">Choose</button></p>
                                 <input type="hidden" name="meetingpoint">
                             </li>
+                            <?php } ?>
                             <li>
                                 <h4><i class="fa fa-usd" ></i> Total price</h4>
 
@@ -105,12 +116,18 @@
                                 <?php } ?>
                             </li>
                         </ul>
-
+                        <input type="hidden" name="order_type" value="update">
+                        <input type="hidden" name="order_id" value="<?php echo $tripdata['id']; ?>">
                         
+                        
+                        <?php if($tripdata['trip']['user']['id'] != $sender){ ?>
                         <div class="current_trip">
                             <p>The trip fee will be charged upon local experts confirmation</p>
+                            <?php if($tripdata['status'] != 1){ ?>
                             <button type="submit" class="btn btn-primary blue">Book</button>
+                            <?php } ?>
                         </div>
+                        <?php } ?>
                     </form>
                     
                     <form action="<?php echo $this->request->webroot ?>orders/create">
@@ -156,12 +173,15 @@
                             </li>
                         </ul>    
 
-
-
+                        <input type="hidden" name="order_type" value="update">
+                        <input type="hidden" name="order_id" value="<?php echo $tripdata['id']; ?>">
+                            
                         <div class="edit_trip" style="display: none;">
                             <p>The trip fee will be charged upon local experts confirmation</p>
+                            <?php if($tripdata['status'] != 1){ ?>
                             <button type="submit" class="btn btn-primary blue">Book</button>
                             <button type="button" class="btn btn-primary blue" id="cancel">Cancel</button>
+                            <?php } ?>
                         </div>
                     </form>
                 </div>
@@ -238,10 +258,11 @@ setInterval(function()
 
 $(document).delegate("#send-form", "click", function(){
     var message = $("#send-form textarea").val();
+    var trip_date = $("#send-form input[name='trip_date']").val();
     if(message != ''){
         $.ajax({
            url: "<?php echo (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" ?>" ,
-           data: {message: message},
+           data: {message: message, trip_date: trip_date},
            method: 'post',
            beforeSend: function(){
                $("#send-form button").text('Please Wait...');

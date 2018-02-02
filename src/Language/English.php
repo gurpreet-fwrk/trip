@@ -235,6 +235,8 @@ class English{
                 $lang['text_send_msg']                   =        'Send a message';
                 
                 /********* Trip Detail Page (End)  **********/
+                
+                $lang['text_bookings']                   =        'Bookings';
 
 		if(isset($lang[$text])){ 
 			return $lang[$text];

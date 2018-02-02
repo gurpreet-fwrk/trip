@@ -231,7 +231,10 @@ class Arabic{
                 $lang['text_guests']                   =        'الضيوف (النزلاء)';
                 $lang['text_instant_book']                   =        'كتاب فوري';
                 $lang['text_send_msg']                   =        'إرسال رسالة';
+                
                 /********* Trip Detail Page (End)  **********/
+                
+                $lang['text_bookings']                   =        'حجوزات';
 
 		if(isset($lang[$text])){
 			return $lang[$text];

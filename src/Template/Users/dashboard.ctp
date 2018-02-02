@@ -114,9 +114,9 @@
                                 <?php //echo "<pre>"; print_r($messages); echo "</pre>"; ?>
                                 <?php if(!empty($messages)){ ?>
                                 <?php foreach($messages as $message){ ?>
-                                <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $message['trip_id']; ?>/<?php echo $message['reciever']; ?>/<?php echo $message['sender']; ?>">
+                                <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $message['trip_id']; ?>/<?php echo $message['reciever']; ?>/<?php echo $message['sender']; ?>/<?php echo $message['trip_date']; ?>">
                                 <div class="message<?php echo ($message['read_status'] == 0) ? ' msg_back' : ''; ?>">
-                                    <h3><i class="fa <?php echo ($message['read_status'] == 0) ? ' fa-envelope-o' : 'fa-envelope-open-o'; ?>" aria-hidden="true"></i>Message <span><?php echo date('M d, Y', strtotime($message['created'])); ?></span> </h3>
+                                    <h3><i class="fa <?php echo ($message['read_status'] == 0) ? ' fa-envelope-o' : 'fa-envelope-open-o'; ?>" aria-hidden="true"></i>Message <span><?php echo date('M d, Y', strtotime($message['trip_date'])); ?></span> </h3>
                                     <p>You have a new message from <?php echo ucwords($message['sender_user']['name']); ?></p>
                                 </div>
                                 </a>
@@ -131,8 +131,9 @@
                                 <?php if(!empty($inbox)){ ?>
                                 <?php foreach($inbox as $data){ ?>
                                 <div class="show_data show_inbox">
-                                    <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $data['trip_id']; ?>/<?php echo $data['reciever']; ?>/<?php echo $data['sender']; ?>" class="draft">
-                                        <div class="camera_caption" style="background: #D0021B"><span>Proceed to payment</span></div>
+<!--                                    <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $data['trip_id']; ?>/<?php echo $data['reciever']; ?>/<?php echo $data['sender']; ?>" class="draft">-->
+                                     <a href="<?php echo $this->request->webroot ?>orders/chat/<?php echo $data['trip_id']; ?>/<?php echo $loggeduser['id']; ?>/<?php echo $data['trip']['user']['id']; ?>/<?php echo $data['trip_date']; ?>" class="draft">
+                                        <div class="camera_caption canceled" style="background: #D0021B"><span>Proceed to payment</span></div>
                                     </a>
                                     <div class="proceed">
                                         <div class="row">
@@ -159,10 +160,10 @@
                                                         <div class="inbox_text"> <img src="<?php echo $this->request->webroot ?>images/website/loc.png"> <span><?php echo $data['trip']['location']['name_'.$config_language]; ?></span> </div>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <div class="inbox_text"> <i class="fa fa-calendar" aria-hidden="true"></i> <span><?php echo date('F d, Y', strtotime($data['created'])); ?></span> </div>
+                                                        <div class="inbox_text"> <i class="fa fa-calendar" aria-hidden="true"></i> <span><?php echo date('F d, Y', strtotime($data['trip_date'])); ?></span> </div>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <div class="inbox_text"> <i class="fa fa-users" aria-hidden="true"></i> <span><?php echo $data['trip']['travellers']; ?> Max Travelers</span> </div>
+                                                        <div class="inbox_text"> <i class="fa fa-users" aria-hidden="true"></i> <span><?php echo $data['guests']; ?> guest(s)</span> </div>
                                                     </div>
                                                 </div>
                                             </div>

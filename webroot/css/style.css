@@ -35,7 +35,10 @@ a:focus {
 
 .no-margin{margin:0px;}
 
+.no-border{border:0px;}
+
 .margin-top{margin-top: 120px !important;}
+
 
 .tabcontent .form-group {
     float: left;
@@ -1562,7 +1565,57 @@ list-style:none;}
     height: 0;
     border-top: 15px solid transparent;
     border-bottom: 15px solid transparent;
+    border-right: 15px solid #9b9b9b;
+    
+}
+
+.pending {
+    background: #f0ad4e;
+}
+
+.pending:before {
+    position: absolute;
+    left: -15px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #f0ad4e;
+    /*border-right: 15px solid #9b9b9b;*/
+    
+}
+
+.canceled {
+    background: #D0021B;
+}
+
+.canceled:before {
+    position: absolute;
+    left: -15px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
     border-right: 15px solid #D0021B;
+    /*border-right: 15px solid #9b9b9b;*/
+    
+}
+
+.completed {
+    background: #5cb85c;
+}
+
+.completed:before {
+    position: absolute;
+    left: -15px;
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid #5cb85c;
     /*border-right: 15px solid #9b9b9b;*/
     
 }
@@ -2675,47 +2728,7 @@ span.no_notify {
     background-color: #28638c;
     border-color: #498ebe;
 }
-/*step wizard*/
-.stepwizard-step p {
-    margin-top: 10px;
-}
-.stepwizard-row {
-    display: table-row;
-}
-.stepwizard {
-    display: table;
-    width: 100%;
-    position: relative;
-	margin-top: 20px;
-}
-.stepwizard-step button[disabled] {
-    opacity: 1 !important;
-    filter: alpha(opacity=100) !important;
-}
-.stepwizard-row:before {
-    top: 30px;
-    bottom: 0;
-    position: absolute;
-    content: " ";
-    width: 50%;
-    height: 1px;
-    background-color: #ccc;
-}
-.stepwizard-step {
-    display: table-cell;
-    text-align: left;
-    position: relative;
-}
-.btn-circle {
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    padding: 6px 0;
-    font-size: 25px;
-    line-height: 45px;
-    border-radius: 50%;
-}
-/*step wizard end*/
+
 .guest {
     float: left;
     width: 100%;
@@ -3547,6 +3560,110 @@ padding: 3px 5px 5px;
     bottom: 0;
 }
 
+
+.faq_ques.fd img {
+    width: 10%;
+}
+/**/
+.instant form .datepicks .ui-datepicker-inline{
+    width:100%;
+    float:left;
+    margin-bottom: 20px;
+}
+
+.submt{
+    width: 35%;
+    display: block;
+    margin: auto;
+}
+
+/*booking*/
+
+.booking .nav-tabs>li a{
+    border-radius: 50%;
+    border: 1px solid #ccc;
+}
+
+.booking .nav-tabs>li.active>a{
+    background: #6cb4a0;
+    border-color:#6cb4a0;
+    color:#fff;
+}
+
+.booking .nav-tabs>li .btn-primary:hover, .booking .nav-tabs>li .btn-default:hover{
+        background-position: unset;
+}
+
+.booking .nav-tabs>li .btn-primary, .booking .nav-tabs>li .btn-primary:hover{
+    color:#fff;
+}
+
+.booking .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+        border: 1px solid #ccc;
+}
+
+.booking .nav-tabs>li.active>a:hover{
+    border: 1px solid #ccc;
+}
+
+.booking .nav-tabs>li .btn-default:focus{
+    background-position: unset;
+}
+
+.cell {
+    display: table;
+    width: 100%;
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.cell ul {
+    display:  table-row;
+}
+
+.cell ul li {
+    display: table-cell;
+    position: relative;
+    width: 50%;
+}
+
+.cell ul:before {
+    top: 30px;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 50%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.btn-circle {
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 25px;
+    line-height: 45px;
+    border-radius: 50%;
+}
+
+/*order confirmed*/
+.review .order_completed {
+    width: 100%;
+    float: left;
+    text-align: center;
+    font-size: 150px;
+    margin: 50px auto 50px;
+    color: #fff;
+}
+
+.review h3{
+    width: 100%;
+    float:left;
+    text-align: center;
+}
+
 /*responsive*/
 	
 /*27/11/2017*/
@@ -3649,19 +3766,4 @@ padding: 3px 5px 5px;
 	width:100% !important;
 	}
 
-}
-.faq_ques.fd img {
-    width: 10%;
-}
-/**/
-.instant form .datepicks .ui-datepicker-inline{
-    width:100%;
-    float:left;
-    margin-bottom: 20px;
-}
-
-.submt{
-    width: 35%;
-    display: block;
-    margin: auto;
 }

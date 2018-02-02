@@ -283,6 +283,7 @@ $cakeDescription = '';
                         <ul class="dropdown-menu">
                             <li><a href="<?php echo $this->request->webroot ?>users/edit/<?php echo base64_encode('user'.$loggeduser['id']); ?>"><?php echo $this->Text->lang('text_edit_profile'); ?></a></li>
                             <li><a href="<?php echo $this->request->webroot ?>users/dashboard/<?php echo base64_encode('user'.$loggeduser['id']); ?>"><?php echo $this->Text->lang('text_dashboard'); ?></a></li>
+                            <li><a href="<?php echo $this->request->webroot ?>orders"><?php echo $this->Text->lang('text_bookings'); ?></a></li>
                         </ul>
                     </li>
                     <?php } ?>

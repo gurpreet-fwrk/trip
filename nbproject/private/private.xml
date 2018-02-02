@@ -3,11 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/gitprojects/trip/src/View/Helper/TextHelper.php</file>
+            <file>file:/E:/gitprojects/trip/src/Template/Email/html/expertbooking.ctp</file>
             <file>file:/E:/gitprojects/trip/src/Controller/OrdersController.php</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Orders/chat.ctp</file>
-            <file>file:/E:/gitprojects/trip/src/Template/Trips/view.ctp</file>
             <file>file:/E:/gitprojects/trip/src/Template/Orders/create.ctp</file>
+            <file>file:/E:/gitprojects/trip/src/Template/Orders/index.ctp</file>
+            <file>file:/E:/gitprojects/trip/src/Template/Users/dashboard.ctp</file>
         </group>
     </open-files>
 </project-private>
